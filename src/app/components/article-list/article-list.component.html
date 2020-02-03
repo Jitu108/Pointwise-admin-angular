@@ -1,0 +1,54 @@
+<div class="col-sm-12 pt-5 row">
+    <div class="col-md-6">
+        <div class="col-md-12"><h2 class="header">{{Resources.Header}}</h2></div>
+    </div>
+    <div class="col-md-5">
+        <input #search (keyup)="searchArticle(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
+    </div>
+    <div class="col-md-1">
+        <div 
+            class="btn btn-primary" 
+            data-toggle="tooltip" title="{{Resources.AddToolTip}}" 
+            (click)="addArticle()">
+            <i class="icon ion-md-add"></i> {{Resources.AddCaption}}
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12 pt-3">
+<div class="col-md-12">
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th scope="col" class="text-center">{{Resources.TableHeaders.SlColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.AuthorColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.TitleColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.SummaryColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.UrlColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.PublicationDateColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.ContentColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.SourceColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.CategoryColumn}}</th>
+                <th class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let article of articles">
+                <td width="100" class="text-center">{{ article.id }}</td>
+                <td data-toggle="tooltip" title="{{article.author}}">{{ article.author | summary:20 }}</td>
+                <td data-toggle="tooltip" title="{{article.title}}">{{ article.title | summary:20 }}</td>
+                <td data-toggle="tooltip" title="{{article.summary}}">{{ article.summary | summary:20 }}</td>
+                <td data-toggle="tooltip" title="{{article.url}}"><a href="{{article.url}}" target="_blank">{{ article.url | summary: 20 }}</a></td>
+                <td>{{ article.publicationDate | date}}</td>
+                <td data-toggle="tooltip" title="{{article.content}}">{{ article.content | summary:20 }}</td>
+                <td>{{ article.source }}</td>
+                <td>{{ article.category }}</td>
+                <td width="250" class="text-center">
+                    <button type="button" class="btn btn-info btn-sm mr-3" (click)="editArticle(article.id)">{{Resources.EditCaption}}</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteArticle(article.id)">{{Resources.DeleteCaption}}</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>

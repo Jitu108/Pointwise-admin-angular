@@ -1,0 +1,62 @@
+@import '../../node_modules/bootstrap/dist/css/bootstrap';
+
+$ionicons-font-path: "~ionicons/dist/fonts";
+@import "~ionicons/dist/scss/ionicons.scss";
+
+@import '_variables';
+@import '_reset';
+@import 'component-form';
+
+.table-primary {
+    background-color: $c31;;
+    &:hover {
+        background-color: $c30;
+    }
+}
+
+.btn-primary {
+    background-color: $c60;
+    border-color: $c60;
+    &:hover {
+        background-color: $c61;
+        border-color: $c61;
+    }
+    &:active {
+        background-color: $c61 !important;
+        border-color: $c61 !important;
+    }
+    &:focus {
+        background-color: $c61;
+        border-color: $c61;
+    }
+    &:visited {
+        background-color: $c60;
+        border-color: $c60;
+    }
+}
+
+.btn-info {
+    background-color: $c70;
+    border-color: $c70;
+    &:hover {
+        background-color: $c71;
+        border-color: $c71;
+    }
+}
+
+.btn-danger {
+    background-color: $c80;
+    border-color: $c80;
+    &:hover {
+        background-color: $c81;
+        border-color: $c81;
+    }
+}
+
+h2.header {
+    color: $header-background;
+    text-transform:capitalize;
+    font-variant:small-caps;
+    font-weight:bold;
+
+}

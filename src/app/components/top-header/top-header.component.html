@@ -1,0 +1,32 @@
+<header>
+    <nav class="navbar navbar-expand-sm navbar-light bg-primary">
+        <div><a class="navbar-brand" routerLink="/">Pointwise</a>
+            <button 
+                class="navbar-toggler" 
+                type="button" 
+                data-toggle="collapse" 
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/articles">Article</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/categories">Category</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/sources">Source</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/tags">Tag</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

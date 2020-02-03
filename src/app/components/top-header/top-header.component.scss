@@ -1,0 +1,27 @@
+@import '../../../scss/styles.scss';
+
+.navbar {
+    background-color: $banner-background !important;
+    .navbar-brand {
+        color: $brand-color;
+        &:hover {
+            color: $brand-color-hover;
+        }
+    }
+
+    .navbar-nav {
+        .active {
+            .nav-link {
+                color: $banner-color-hover;
+            }
+        }
+
+        .nav-link {
+            color: $banner-color;
+            &:hover {
+                color:$banner-color-hover;
+            }
+        }
+    }
+}
+

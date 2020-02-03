@@ -1,0 +1,30 @@
+<div class="col-sm-12 pt-5">
+    <div class="col-md-6">
+        <form id="sourceForm" #sourceForm="ngForm" (ngSubmit)="onCategorySubmit(sourceForm)">
+            <fieldset class="scheduler-border">
+                <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
+            
+                <div class="form-group row">
+                    <label for="name" class="col-md-2 col-form-label">{{Resources.NameCaption}}</label>
+                    <div class="col-md-10">
+                        <input type="text" 
+                            class="form-control" 
+                            #name="ngModel" name="name" [(ngModel)]="categoryDetail.name" 
+                            placeholder="{{Resources.NamePlaceholder}}" required>
+                        <div [hidden]="name.valid || (name.pristine && !sourceForm.submitted)" class="text-danger">
+                            {{Resources.Validation.RequiredMessage}}
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group row">
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-primary mr-2">{{Resources.SaveCaption}}</button>
+                        <button type="button" class="btn btn-primary" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                    </div>
+
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
