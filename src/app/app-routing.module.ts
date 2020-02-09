@@ -19,37 +19,30 @@ const routes: Routes = [
   },
   {
     path: 'articles/detail',
-    //loadChildren: './components/article-form/article-form.module#ArticleFormModule'
     component: ArticleFormComponent
   },
   {
     path: 'categories',
     component: CategoryListComponent
-    //loadChildren: './components/category-list/category-list.module#CategoryListModule'
   },
   {
     path: 'categories/detail',
-    //loadChildren: './components/category-form/category-form.module#CategoryFormModule'
     component: CategoryFormComponent
   },
   {
     path: 'sources',
-    //loadChildren: './components/source-list/source-list.module#SourceListModule'
     component: SourceListComponent
   },
   {
     path: 'sources/detail',
-    //loadChildren: './components/source-form/source-form.module#SourceFormModule'
     component: SourceFormComponent
   },
   {
     path: 'tags',
-    //loadChildren: './components/tag-list/tag-list.module#TagListModule'
     component: TagListComponent
   },
   {
     path: 'tags/detail',
-    //loadChildren: './components/tag-form/tag-form.module#TagFormModule'
     component: TagFormComponent
   },
   {
