@@ -41,14 +41,14 @@ export class SourceListComponent implements OnInit {
 
   // Add Source
   addSource() {
-    this.router.navigate(['/source-detail']);
+    this.router.navigate(['/sources/detail']);
     console.log("Add Source");
   }
 
   // Edit Source
   editSource(id: number) {
     console.log("Edit Source : " + id);
-    this.router.navigate(['/source-detail'], {queryParams: {id: id}});
+    this.router.navigate(['/sources/detail'], {queryParams: {id: id}});
   }
 
   // Delete Source

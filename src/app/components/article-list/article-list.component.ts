@@ -48,14 +48,14 @@ getArticles() {
 
 // Add Article
 addArticle() {
-  this.router.navigate(['/article-detail']);
+  this.router.navigate(['/articles/detail']);
   console.log("Add Article");
 }
 
 // Edit Article
 editArticle(id: number) {
   console.log("Edit Article : " + id);
-  this.router.navigate(['/article-detail'], {queryParams: {id: id}});
+  this.router.navigate(['/articles/detail'], {queryParams: {id: id}});
 }
 
 // Delete Article

@@ -42,14 +42,14 @@ export class CategoryListComponent implements OnInit {
 
   // Add Category
   addCategory() {
-    this.router.navigate(['/category-detail']);
+    this.router.navigate(['/categories/detail']);
     console.log("Add Category");
   }
 
   // Edit Category
   editCategory(id: number) {
     console.log("Edit Category : " + id);
-    this.router.navigate(['/category-detail'], {queryParams: {id: id}});
+    this.router.navigate(['/categories/detail'], {queryParams: {id: id}});
   }
 
   // Delete Category
