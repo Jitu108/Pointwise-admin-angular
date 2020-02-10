@@ -1,6 +1,6 @@
 <div class="col-sm-12 pt-5">
     <div class="col-md-6">
-        <form id="sourceForm" #sourceForm="ngForm" (ngSubmit)="onCategorySubmit(sourceForm)">
+        <form id="categoryForm" #categoryForm="ngForm" (ngSubmit)="onCategorySubmit(categoryForm)">
             <fieldset class="scheduler-border">
                 <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
             
@@ -11,7 +11,7 @@
                             class="form-control" 
                             #name="ngModel" name="name" [(ngModel)]="categoryDetail.name" 
                             placeholder="{{Resources.NamePlaceholder}}" required>
-                        <div [hidden]="name.valid || (name.pristine && !sourceForm.submitted)" class="text-danger">
+                        <div [hidden]="name.valid || (name.pristine && !categoryForm.submitted)" class="text-danger">
                             {{Resources.Validation.RequiredMessage}}
                         </div>
                     </div>

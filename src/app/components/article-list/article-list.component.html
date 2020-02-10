@@ -27,6 +27,7 @@
                 <th scope="col">{{Resources.TableHeaders.UrlColumn}}</th>
                 <th scope="col">{{Resources.TableHeaders.PublicationDateColumn}}</th>
                 <th scope="col">{{Resources.TableHeaders.ContentColumn}}</th>
+                <th scope="col">{{Resources.TableHeaders.SynopsisColumn}}</th>
                 <th scope="col">{{Resources.TableHeaders.SourceColumn}}</th>
                 <th scope="col">{{Resources.TableHeaders.CategoryColumn}}</th>
                 <th class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
@@ -38,9 +39,10 @@
                 <td data-toggle="tooltip" title="{{article.author}}">{{ article.author | summary:20 }}</td>
                 <td data-toggle="tooltip" title="{{article.title}}">{{ article.title | summary:20 }}</td>
                 <td data-toggle="tooltip" title="{{article.summary}}">{{ article.summary | summary:20 }}</td>
-                <td data-toggle="tooltip" title="{{article.url}}"><a href="{{article.url}}" target="_blank">{{ article.url | summary: 20 }}</a></td>
-                <td>{{ article.publicationDate | date}}</td>
+                <td data-toggle="tooltip" title="{{article.url}}"><a href="{{article.url}}" target="_blank">Link</a></td>
+                <td>{{ article.publicationDate.toString() | date :'fullDate' }}</td>
                 <td data-toggle="tooltip" title="{{article.content}}">{{ article.content | summary:20 }}</td>
+                <td data-toggle="tooltip" title="{{article.synopsis}}"><synopsis [synopsis-text]="article.synopsis" ></synopsis></td>
                 <td>{{ article.source }}</td>
                 <td>{{ article.category }}</td>
                 <td width="250" class="text-center">

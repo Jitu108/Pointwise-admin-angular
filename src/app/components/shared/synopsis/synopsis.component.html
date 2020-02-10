@@ -1,0 +1,7 @@
+<div>
+    <ul>
+        <li style="list-style:circle" *ngFor="let point of synopsisPoints">
+            {{  strLength == 0 ? (point) : (point | summary:strLength) }}
+        </li>
+    </ul>
+</div>

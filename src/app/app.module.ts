@@ -16,6 +16,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { TopHeaderComponent } from './components/top-header/top-header.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { CategoryFormComponent } from './components/category-form/category-form.component';
+import { SynopsisComponent } from './components/shared/synopsis/synopsis.component';
+import { DropDownListComponent } from './components/shared/drop-down-list/drop-down-list.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { CategoryFormComponent } from './components/category-form/category-form.
     SourceListComponent,
     SourceFormComponent,
     TagListComponent,
-    TagFormComponent
+    TagFormComponent,
+    SynopsisComponent,
+    DropDownListComponent
   ],
   imports: [
     BrowserModule,

@@ -17,7 +17,7 @@ const routes: Routes = [
     //loadChildren: './components/article-list/article-list.module#ArticleListModule'
     component: ArticleListComponent
   },
-  {
+  { 
     path: 'articles/detail',
     component: ArticleFormComponent
   },

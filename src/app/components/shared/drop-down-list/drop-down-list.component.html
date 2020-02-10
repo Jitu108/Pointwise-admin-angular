@@ -1,0 +1,8 @@
+<select 
+    [(ngModel)]="selectedValue" 
+    name="ddl" id="ddl" 
+    (change)="selectionchanged()"
+    class="form-control">
+    <option value="">{{ selectCaption }}</option>
+    <option *ngFor="let item of items" [value]="item.id">{{ item.name }}</option>
+</select>

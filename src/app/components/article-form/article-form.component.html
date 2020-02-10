@@ -1,1 +1,157 @@
-<p>article-form works!</p>
+<div class="col-sm-12 pt-5">
+   
+    <form id="articleForm" #articleForm="ngForm" (ngSubmit)="onArticleSubmit(articleForm)">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="author" class="col-md-2 col-form-label">{{Resources.AuthorCaption}}</label>
+                        <div class="col-md-10">
+                            <input type="text" 
+                                class="form-control" 
+                                #author="ngModel" name="author" [(ngModel)]="articleDetail.author" 
+                                placeholder="{{Resources.AuthorPlaceholder}}" required>
+                            <div [hidden]="author.valid || (author.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.AuthorRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="title" class="col-md-2 col-form-label">{{Resources.TitleCaption}}</label>
+                        <div class="col-md-10">
+                            <input type="text" 
+                                class="form-control" 
+                                #title="ngModel" name="title" [(ngModel)]="articleDetail.title" 
+                                placeholder="{{Resources.TitlePlaceholder}}" required>
+                            <div [hidden]="title.valid || (title.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.TitleRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="summary" class="col-md-2 col-form-label">{{Resources.SummaryCaption}}</label>
+                        <div class="col-md-10">
+                            <textarea 
+                            class="form-control" 
+                                #summary="ngModel" name="summary" [(ngModel)]="articleDetail.summary" 
+                                placeholder="{{Resources.SummaryPlaceholder}}" required></textarea>
+                            <div [hidden]="summary.valid || (summary.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.SummaryRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="url" class="col-md-2 col-form-label">{{Resources.UrlCaption}}</label>
+                        <div class="col-md-10">
+                            <textarea
+                            class="form-control" 
+                                #url="ngModel" name="url" [(ngModel)]="articleDetail.url" 
+                                placeholder="{{Resources.UrlPlaceholder}}" required></textarea>
+                            <div [hidden]="url.valid || (url.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.UrlRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="publicationDate" class="col-md-2 col-form-label">{{Resources.PublicationDateCaption}}</label>
+                        <div class="col-md-10 input-group mb-3">
+                            <!-- <input type="text" class="form-control" 
+                                ngbDatepicker #d="ngbDatepicker" [footerTemplate]="template"
+                                aria-describedby="basic-addon2"
+                                #pubdate="ngModel"
+                                name="pubdate"
+                                [(ngModel)]="articleDetail.publicationDate"
+                                >
+                            <div class="input-group-append">
+                                <button 
+                                (click)="d.toggle()"
+                                class="btn btn-outline-secondary" type="button">Select</button>
+                            </div>
+                            
+                            <ng-template #template>
+                                <button (click)="model = today">Today</button>
+                                </ng-template> -->
+                            <!-- <div [hidden]="url.valid || (url.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.UrlRequiredMessage}}
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="content" class="col-md-2 col-form-label">{{Resources.ContentCaption}}</label>
+                        <div class="col-md-10">
+                            <textarea 
+                                class="form-control"
+                                #content="ngModel" name="content"[(ngModel)]="articleDetail.content" 
+                                placeholder="{{Resources.ContentPlaceholder}}" required>
+                            </textarea>
+                            <div [hidden]="content.valid || (content.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.ContentRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="synopsis" class="col-md-2 col-form-label">{{Resources.SynopsisCaption}}</label>
+                        <div class="col-md-10">
+                            <textarea 
+                                class="form-control"
+                                #synopsis="ngModel" name="synopsis"[(ngModel)]="articleDetail.synopsis" 
+                                placeholder="{{Resources.SynopsisPlaceholder}}">
+                            </textarea>
+                            <div [hidden]="synopsis.valid || (synopsis.pristine && !articleForm.submitted)" class="text-danger">
+                                {{Resources.Validation.SynopsisRequiredMessage}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="source" class="col-md-2 col-form-label">{{Resources.SourceCaption}}</label>
+                        <div class="col-md-10">
+                            <dropdown 
+                            [list]="sources" 
+                            [selected-id]="selectedSource"
+                            [select-caption]="selectSourceCaption"
+                            (selection-change)="onSourceSelectionChange($event)"
+                            ></dropdown>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="category" class="col-md-2 col-form-label">{{Resources.CategoryCaption}}</label>
+                        <div class="col-md-10">
+                            <dropdown 
+                            [list]="categories" 
+                            [selected-id]="selectedCategory"
+                            [select-caption]="selectCategoryCaption"
+                            (selection-change)="onCategorySelectionChange($event)"
+                            ></dropdown>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12 text-right">
+                            <button type="submit" class="btn btn-primary mr-2">{{Resources.SaveCaption}}</button>
+                            <button type="button" class="btn btn-primary" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-md-2"></div>
+                        <label for="author" class="col-md-1 col-form-label">Test</label>
+                        <div class="col-md-9">
+                            <synopsis [synopsis-text]="articleDetail.synopsis"></synopsis>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    
+</div>

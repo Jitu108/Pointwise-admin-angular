@@ -24,6 +24,7 @@ export class ArticleListComponent implements OnInit {
       UrlColumn: "Url",
       PublicationDateColumn: "Publication Date",
       ContentColumn: "Content",
+      SynopsisColumn: "Synopsis",
       SourceColumn: "Source",
       CategoryColumn: "Category",
       ActionColumn: "Action"
@@ -39,22 +40,22 @@ export class ArticleListComponent implements OnInit {
 
 // Load all Articles
 getArticles() {
-  debugger;
-  console.log("getArticles Called - Component");
+
+  //console.log("getArticles Called - Component");
   this.articles = this.articleService.getArticles();
-  console.log(this.articles);
+  //console.log(this.articles);
   return this.articles;
 }
 
 // Add Article
 addArticle() {
   this.router.navigate(['/articles/detail']);
-  console.log("Add Article");
+  //console.log("Add Article");
 }
 
 // Edit Article
 editArticle(id: number) {
-  console.log("Edit Article : " + id);
+  //console.log("Edit Article : " + id);
   this.router.navigate(['/articles/detail'], {queryParams: {id: id}});
 }
 
@@ -66,7 +67,7 @@ deleteArticle(id: number) {
 
 searchArticle(searchString: string) {
   this.articles = this.articleService.getArticlesBySearchString(searchString);
-  console.log(searchString);
+  //console.log(searchString);
 }
 
 }

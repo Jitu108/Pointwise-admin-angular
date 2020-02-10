@@ -4,6 +4,7 @@ export class Article {
         public author: string,
         public title: string,
         public summary: string,
+        public synopsis:string,
         public url: string,
         public publicationDate: Date,
         public content: string,

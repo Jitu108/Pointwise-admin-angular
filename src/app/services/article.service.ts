@@ -61,6 +61,7 @@ export class ArticleService {
             articleArray[i].url = article.url;
             articleArray[i].publicationDate = article.publicationDate;
             articleArray[i].content = article.content;
+            articleArray[i].synopsis = article.synopsis;
             articleArray[i].sourceId = article.sourceId;
             articleArray[i].categoryId = article.categoryId;
           }
@@ -148,6 +149,8 @@ export class ArticleService {
         'Two leopards, sloth bears electrocuted at Maharashtra ordinance factory', 
         // summary
         'The Chandrapur Ordnance Factory covers a vast forest area which is home to a variety of wildlife, including leopards. There have been several occassions when even tigers were spotted in the factory area, owing to its proximity to the Tadoba-Andhari Tiger Reserve (TATR).', 
+        // synopsis
+        '',
         // url
         'https://indianexpress.com/article/india/two-leopards-sloth-bears-electrocuted-at-maharashtra-ordinance-factory-6246450/', 
         // publicationDate
@@ -173,6 +176,8 @@ export class ArticleService {
           'With 324 Indians from coronavirus-hit Wuhan, Air India flight reaches Delhi', 
           // summary
           'For an initial check, screening camps have also been set up at Delhi\'s Indira Gandhi International Airport. The crew, which is also learnt to be under a seven-day lockdown, are unlikely to be allowed to meet even their families during this period.', 
+          // synopsis
+          '',
           // url
           'https://indianexpress.com/article/india/with-324-indians-from-coronavirus-hit-wuhan-air-india-flight-reaches-delhi-6245465/', 
           // publicationDate
