@@ -28,7 +28,6 @@ export class CategoryListComponent implements OnInit {
   constructor(private router: Router, private categoryService: CategoryService) { }
 
   ngOnInit() {
-    debugger;
     this.getCategories();
   }
 

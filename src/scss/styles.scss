@@ -1,3 +1,4 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '../../node_modules/bootstrap/dist/css/bootstrap';
 
 $ionicons-font-path: "~ionicons/dist/fonts";
@@ -59,4 +60,8 @@ h2.header {
     font-variant:small-caps;
     font-weight:bold;
 
+}
+
+.body-header {
+    margin-top: 3vh;
 }

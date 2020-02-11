@@ -9,6 +9,8 @@ import { CategoryListComponent } from './components/category-list/category-list.
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,6 +39,8 @@ import { DropDownListComponent } from './components/shared/drop-down-list/drop-d
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    MatCheckboxModule,
     AppRoutingModule,
     FormsModule,
     NgbModule,
