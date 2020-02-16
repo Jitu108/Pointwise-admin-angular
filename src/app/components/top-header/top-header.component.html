@@ -1,6 +1,6 @@
 <header>
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-primary">
-        <div><a class="navbar-brand" routerLink="/">Pointwise</a>
+    <nav class="navbar navbar-expand-sm navbar-light bg-primary">
+        <div matRipple><a class="navbar-brand" routerLink="/">Pointwise</a>
             <button 
                 class="navbar-toggler" 
                 type="button" 
@@ -14,16 +14,16 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item" [routerLinkActive]="['active']">
+                <li matRipple class="nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" routerLink="/articles">Article</a>
                 </li>
-                <li class="nav-item" [routerLinkActive]="['active']">
+                <li matRipple class="nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" routerLink="/categories">Category</a>
                 </li>
-                <li class="nav-item" [routerLinkActive]="['active']">
+                <li matRipple class="nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" routerLink="/sources">Source</a>
                 </li>
-                <li class="nav-item" [routerLinkActive]="['active']">
+                <li matRipple class="nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" routerLink="/tags">Tag</a>
                 </li>
             </ul>

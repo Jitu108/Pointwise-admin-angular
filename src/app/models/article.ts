@@ -11,6 +11,8 @@ export class Article {
         public sourceId: number,
         public categoryId: number,
         public source?: string,
-        public category?: string
+        public category?: string,
+        public image?: string | ArrayBuffer,
+        public imageName?: string,
     ) { }
 }

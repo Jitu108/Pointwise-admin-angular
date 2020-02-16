@@ -1,3 +1,5 @@
+import { Tag } from './../../models/tag';
+import { TagService } from './../../services/tag.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { SourceService } from './../../services/source.service';
 import { DropDownModel } from './../shared/drop-down-list/drop-down-list.component';
@@ -20,17 +22,20 @@ export class ArticleFormComponent implements OnInit {
   public localSynopsis: string[];
 
   public sources: DropDownModel[];
-
   public selectedSource: string;
   public selectSourceCaption = "Select Source";
 
   public categories: DropDownModel[];
-
   public selectedCategory: string;
   public selectCategoryCaption = "Select Category";
+
+  public tagList: Tag[];
+  public tags: string[];
+  public selectedTags: string[];
     
   public Resources = {
     Header: "Article",
+    ImageCaption: "Select Image",
     AuthorCaption: "Author",
     AuthorPlaceholder: "Author",
     TitleCaption: "Title",
@@ -39,13 +44,14 @@ export class ArticleFormComponent implements OnInit {
     SummaryPlaceholder: "Summary",
     UrlCaption: "Url",
     UrlPlaceholder: "Url",
-    PublicationDateCaption: "Pub. Date",
+    PublicationDateCaption: "Publication Date",
     ContentCaption: "Content",
     ContentPlaceholder: "Content",
     SynopsisCaption: "Synopsis",
     SynopsisPlaceholder: "Synopsis",
     SourceCaption: "Source",
     CategoryCaption: "Category",
+    TagCaption: "Tag",
     SaveCaption: "Save",
     CancelCaption: "Cancel",
     Validation: {
@@ -55,6 +61,12 @@ export class ArticleFormComponent implements OnInit {
       UrlRequiredMessage: "Url is required.",
       ContentRequiredMessage: "Content is required.",
       SynopsisRequiredMessage: "Synopsis is required."
+    },
+
+    PanelHeader: {
+      MetadataCaption: "Metadata",
+      ImageCaption: "Image",
+      ArticleCaption: "Article"
     }
   }
 
@@ -63,49 +75,60 @@ export class ArticleFormComponent implements OnInit {
     private router: Router,
     private articleService: ArticleService,
     private sourceService: SourceService,
-    private categoryService: CategoryService
-  ) { }
+    private categoryService: CategoryService,
+    private tagServcie: TagService
+  ) {  }
+
+  base64Image;
 
   ngOnInit() {
-    // Get all Sources
-    this.sources = this.sourceService.getSources()
-    .map(x => {
-      return { id: x.id.toString(), name: x.name };
-    });
+    this.loadData();
+  }
 
-    // Get all Categories
-    this.categories = this.categoryService.getCategories()
-    .map(x => {
-      return { id: x.id.toString(), name: x.name };
-    });
+  loadData() {
+       // Get all Sources
+       this.sources = this.sourceService.getSources()
+       .map(x => {
+         return { id: x.id.toString(), name: x.name };
+       });
+   
+       // Get all Categories
+       this.categories = this.categoryService.getCategories()
+       .map(x => {
+         return { id: x.id.toString(), name: x.name };
+       });
 
+       // Get all Tags
+       this.tagList = this.tagServcie.getTags();
 
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      this.articleId = params['id'];
-
-      //Edit
-      if(this.articleId !== undefined) {
-        this.getArticleDetailById(this.articleId);
-
-        this.mode = "Edit";
-      } else { // Add
-        this.articleDetail['id'] = 0;
-        this.mode = "Add";
-      }
-    });
+       this.tags = this.tagList.map(x => x.name );
+   
+   
+       this.activatedRoute.queryParams.subscribe((params: Params) => {
+         this.articleId = params['id'];
+   
+         //Edit
+         if(this.articleId !== undefined) {
+           this.getArticleDetailById(this.articleId);
+   
+           this.mode = "Edit";
+         } else { // Add
+           this.articleDetail['id'] = 0;
+           this.mode = "Add";
+         }
+       });
   }
 
   getArticleDetailById(id: string) {
     this.articleDetail = this.articleService.getArticleById(parseInt(id));
 
-    this.selectedCategory = this.articleDetail.categoryId.toString();
-    this.selectedSource = this.articleDetail.sourceId.toString();
+    this.selectedCategory = this.articleDetail.categoryId !== undefined? this.articleDetail.categoryId.toString() : "";
+    this.selectedSource = this.articleDetail.sourceId !== undefined? this.articleDetail.sourceId.toString() : "";
 
   }
+
   onArticleSubmit(form) {
-    debugger;
     if(form.valid) {
-      //this.articleDetail.publicationDate = new Date(this.articleDetail.publicationDate.year, this.articleDetail.publicationDate.month -1, this.articleDetail.publicationDate.day);
       this.articleService.updateArticle(this.articleDetail);
       this.router.navigate(['/articles']);
     }
@@ -117,9 +140,27 @@ export class ArticleFormComponent implements OnInit {
 
   onSourceSelectionChange(selectedSource: DropDownModel) {
     this.articleDetail.sourceId = selectedSource === null ? 0 : parseInt(selectedSource.id);
+    this.articleDetail.source = selectedSource === null ? "" : selectedSource.name;
   }
 
   onCategorySelectionChange(selectedCategory: DropDownModel) { 
     this.articleDetail.categoryId = selectedCategory === null ? 0 : parseInt(selectedCategory.id);
+    this.articleDetail.category = selectedCategory === null ? "" : selectedCategory.name;
+  }
+  onTagSelectionChange(selectedTags: string[]){
+    console.log(selectedTags);
+  }
+
+  onFileSelected(event) {
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+
+      reader.onload = (evnt) => { // called once readAsDataURL is completed
+        this.articleDetail.image = evnt.target.result;
+        this.articleDetail.imageName = event.target.files[0].name;
+      }
+    }
   }
 }

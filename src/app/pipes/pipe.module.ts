@@ -1,8 +1,6 @@
 import { SummaryPipe } from './summary.pipe';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
 
 @NgModule({
   declarations: [SummaryPipe],
@@ -10,10 +8,10 @@ import { CommonModule } from '@angular/common';
   exports: [SummaryPipe]
 })
 export class PipeModule { 
-  static forRoot(){
+  static forRoot(): ModuleWithProviders<PipeModule> {
     return {
-      ngModule: PipeModule,
-      providers: []
-    }
-  }
+        ngModule: PipeModule,
+        providers: []
+    };
+}
 }

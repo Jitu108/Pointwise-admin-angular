@@ -1,157 +1,209 @@
-<div class="col-sm-12 pt-5 body-header">
-   
-    <form id="articleForm" #articleForm="ngForm" (ngSubmit)="onArticleSubmit(articleForm)">
-        <fieldset class="scheduler-border">
-            <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label for="author" class="col-md-2 col-form-label">{{Resources.AuthorCaption}}</label>
-                        <div class="col-md-10">
-                            <input type="text" 
-                                class="form-control" 
-                                #author="ngModel" name="author" [(ngModel)]="articleDetail.author" 
-                                placeholder="{{Resources.AuthorPlaceholder}}" required>
-                            <div [hidden]="author.valid || (author.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.AuthorRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
+<div class="col-sm-12 body-header">
+   <div class="row">
+    <div class="col-md-6">
+    <form id="articleForm" #articleForm="ngForm" (ngSubmit)="onArticleSubmit(articleForm)" autocomplete="off">
+        <mat-card>
+            <legend class="scheduler-border mb-3">{{ mode }} {{Resources.Header}}</legend>
+        <mat-accordion multi="true">
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ Resources.PanelHeader.MetadataCaption }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+            
+            <div>
+                <mat-form-field  class="col-md-12">
+                    <mat-label>{{Resources.AuthorCaption}}</mat-label>
+                    <input type="text" matInput
+                        #author="ngModel" name="author" [(ngModel)]="articleDetail.author" 
+                        placeholder="{{Resources.AuthorPlaceholder}}" required>
 
-                    <div class="form-group row">
-                        <label for="title" class="col-md-2 col-form-label">{{Resources.TitleCaption}}</label>
-                        <div class="col-md-10">
-                            <input type="text" 
-                                class="form-control" 
-                                #title="ngModel" name="title" [(ngModel)]="articleDetail.title" 
-                                placeholder="{{Resources.TitlePlaceholder}}" required>
-                            <div [hidden]="title.valid || (title.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.TitleRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="summary" class="col-md-2 col-form-label">{{Resources.SummaryCaption}}</label>
-                        <div class="col-md-10">
-                            <textarea 
-                            class="form-control" 
-                                #summary="ngModel" name="summary" [(ngModel)]="articleDetail.summary" 
-                                placeholder="{{Resources.SummaryPlaceholder}}" required></textarea>
-                            <div [hidden]="summary.valid || (summary.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.SummaryRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="url" class="col-md-2 col-form-label">{{Resources.UrlCaption}}</label>
-                        <div class="col-md-10">
-                            <textarea
-                            class="form-control" 
-                                #url="ngModel" name="url" [(ngModel)]="articleDetail.url" 
-                                placeholder="{{Resources.UrlPlaceholder}}" required></textarea>
-                            <div [hidden]="url.valid || (url.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.UrlRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="publicationDate" class="col-md-2 col-form-label">{{Resources.PublicationDateCaption}}</label>
-                        <div class="col-md-10 input-group mb-3">
-                            <!-- <input type="text" class="form-control" 
-                                ngbDatepicker #d="ngbDatepicker" [footerTemplate]="template"
-                                aria-describedby="basic-addon2"
-                                #pubdate="ngModel"
-                                name="pubdate"
-                                [(ngModel)]="articleDetail.publicationDate"
-                                >
-                            <div class="input-group-append">
-                                <button 
-                                (click)="d.toggle()"
-                                class="btn btn-outline-secondary" type="button">Select</button>
-                            </div>
-                            
-                            <ng-template #template>
-                                <button (click)="model = today">Today</button>
-                                </ng-template> -->
-                            <!-- <div [hidden]="url.valid || (url.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.UrlRequiredMessage}}
-                            </div> -->
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="content" class="col-md-2 col-form-label">{{Resources.ContentCaption}}</label>
-                        <div class="col-md-10">
-                            <textarea 
-                                class="form-control"
-                                #content="ngModel" name="content"[(ngModel)]="articleDetail.content" 
-                                placeholder="{{Resources.ContentPlaceholder}}" required>
-                            </textarea>
-                            <div [hidden]="content.valid || (content.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.ContentRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="synopsis" class="col-md-2 col-form-label">{{Resources.SynopsisCaption}}</label>
-                        <div class="col-md-10">
-                            <textarea 
-                                class="form-control"
-                                #synopsis="ngModel" name="synopsis"[(ngModel)]="articleDetail.synopsis" 
-                                placeholder="{{Resources.SynopsisPlaceholder}}">
-                            </textarea>
-                            <div [hidden]="synopsis.valid || (synopsis.pristine && !articleForm.submitted)" class="text-danger">
-                                {{Resources.Validation.SynopsisRequiredMessage}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="source" class="col-md-2 col-form-label">{{Resources.SourceCaption}}</label>
-                        <div class="col-md-10">
-                            <dropdown 
-                            [list]="sources" 
-                            [selected-id]="selectedSource"
-                            [select-caption]="selectSourceCaption"
-                            (selection-change)="onSourceSelectionChange($event)"
-                            ></dropdown>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="category" class="col-md-2 col-form-label">{{Resources.CategoryCaption}}</label>
-                        <div class="col-md-10">
-                            <dropdown 
-                            [list]="categories" 
-                            [selected-id]="selectedCategory"
-                            [select-caption]="selectCategoryCaption"
-                            (selection-change)="onCategorySelectionChange($event)"
-                            ></dropdown>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-md-12 text-right">
-                            <button type="submit" class="btn btn-primary mr-2">{{Resources.SaveCaption}}</button>
-                            <button type="button" class="btn btn-primary" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <div class="col-md-2"></div>
-                        <label for="author" class="col-md-1 col-form-label">Test</label>
-                        <div class="col-md-9">
-                            <synopsis [synopsis-text]="articleDetail.synopsis"></synopsis>
-                        </div>
-                    </div>
-                </div>
+                    <mat-error *ngIf="!author.valid || !(author.pristine && !articleForm.submitted)">
+                        {{Resources.Validation.AuthorRequiredMessage}}
+                    </mat-error>
+                </mat-form-field>
             </div>
-        </fieldset>
+
+            <div>
+                <dropdown
+                    [id]="'source'"
+                    [name]="'source'"
+                    [list]="sources" 
+                    [selected-id]="selectedSource"
+                    [select-caption]="selectSourceCaption"
+                    [label]="Resources.SourceCaption"
+                    (selection-change)="onSourceSelectionChange($event)"
+                    ></dropdown>
+            </div>
+
+            <div>
+                <dropdown
+                    [id]="'category'"
+                    [name]="'category'"
+                    [list]="categories" 
+                    [selected-id]="selectedCategory"
+                    [select-caption]="selectCategoryCaption"
+                    [label]="Resources.CategoryCaption"
+                    (selection-change)="onCategorySelectionChange($event)"
+                    ></dropdown>
+            </div>
+
+            <div>
+                <chipset
+                [label]="Resources.TagCaption"
+                [selected-items]="selectedTags"
+                [list]="tags" 
+                (selection-change)="onTagSelectionChange($event)"
+                ></chipset>
+            </div>
+
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.UrlCaption}}</mat-label>
+                    <input type="text" matInput
+                    #url="ngModel" name="url" [(ngModel)]="articleDetail.url" 
+                    placeholder="{{Resources.UrlPlaceholder}}" required>
+                        <mat-error *ngIf="!(url.valid || (url.pristine && !articleForm.submitted))">
+                            {{Resources.Validation.UrlRequiredMessage}}
+                        </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.PublicationDateCaption}}</mat-label>
+                    <input matInput [matDatepicker]="picker"
+                    #pubdate="ngModel" name="pubdate" [(ngModel)]="articleDetail.publicationDate"
+                    >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ Resources.PanelHeader.ImageCaption }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="image-div">
+                    <div>
+                        <span class="image-label">{{ Resources.ImageCaption }}</span>
+                      </div>
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input"
+                        (change)="onFileSelected($event)">
+                        <label class="custom-file-label">{{ articleDetail.imageName }}</label>
+                      </div>
+                </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel expanded="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ Resources.PanelHeader.ArticleCaption }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.TitleCaption}}</mat-label>
+                    <input type="text" matInput
+                        #title="ngModel" name="title" [(ngModel)]="articleDetail.title" 
+                        placeholder="{{Resources.TitlePlaceholder}}" required>
+                        <mat-error *ngIf="!title.valid || !(title.pristine && !articleForm.submitted)">
+                            {{Resources.Validation.TitleRequiredMessage}}
+                        </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.SummaryCaption}}</mat-label>
+                    <textarea matInput
+                    #summary="ngModel" name="summary" [(ngModel)]="articleDetail.summary" 
+                    placeholder="{{Resources.SummaryPlaceholder}}" required></textarea>
+                        <mat-error *ngIf="!summary.valid || !(summary.pristine && !articleForm.submitted)">
+                            {{Resources.Validation.SummaryRequiredMessage}}
+                        </mat-error>
+                </mat-form-field>
+            </div>
+
+            
+
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.ContentCaption}}</mat-label>
+                    <textarea matInput
+                    #content="ngModel" name="content"[(ngModel)]="articleDetail.content" 
+                    placeholder="{{Resources.ContentPlaceholder}}" required>
+                    </textarea>
+                        <mat-error *ngIf="!content.valid || !(content.pristine && !articleForm.submitted)">
+                            {{Resources.Validation.UrlRequiredMessage}}
+                        </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="col-md-12">
+                    <mat-label>{{Resources.SynopsisCaption}}</mat-label>
+                    <textarea matInput matTextareaAutosize
+                    #synopsis="ngModel" name="synopsis"[(ngModel)]="articleDetail.synopsis" 
+                    placeholder="{{Resources.SynopsisPlaceholder}}">
+                    </textarea>
+                </mat-form-field>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+            <div class="form-group row mt-3">
+                <div class="col-md-12 text-right">
+                    <button mat-raised-button color="primary" class="mr-2">{{Resources.SaveCaption}}</button>
+                    <button mat-raised-button (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                </div>
+
+            </div>
+        </mat-card>
     </form>
-    
+     </div>
+        
+        <div class="col-md-6 row">
+            <div class="col-md-2"></div>
+            <article class="col-md-8 article">
+                <mat-card class="mat-card-custom">
+                <figure>
+                    <div class="image-container">
+                        <img alt="Article Image" [src]="articleDetail.image" class="image">
+                    </div>
+                    <figcaption class="caption">Representative Image</figcaption>
+                </figure>
+                <section class="main">
+                    <header>
+                        <h2>
+                            <a target="_blank" href="{{articleDetail.url}}">
+                                {{ articleDetail.title }}
+                            </a>
+                        </h2>
+                        <h6>{{ articleDetail.summary | summary:100 }}</h6>
+                    </header>
+                    <div class="articlebody">                    
+                        <synopsis [synopsis-text]="articleDetail.synopsis"></synopsis>
+                    </div>   
+                </section>             
+                <section class="footer clearfix">
+                    <div class="author">{{ articleDetail.source }} | <code>{{ articleDetail.category }}</code></div>
+                    <div class="publish-at">
+                    <span>Published At: </span>
+                    <span>{{ articleDetail.publicationDate | date }}</span></div>
+                </section>
+                
+                <section class="tags">
+                    <span>Tags:</span>
+                    <a>double asteroid</a>
+                    <a>2003 YT1</a>
+                    <a>asteroid earth</a>
+                </section>
+            </mat-card>
+            </article>
+   </div>
 </div>

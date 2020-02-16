@@ -1,19 +1,18 @@
 <div class="col-sm-12 pt-5 row body-header">
-        <div class="col-md-6">
-            <div class="col-md-12"><h2 class="header">{{Resources.Header}}</h2></div>
-        </div>
-        <div class="col-md-5">
-            <input #search (keyup)="searchSource(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
-        </div>
-        <div class="col-md-1">
-            <div 
-                class="btn btn-primary" 
-                data-toggle="tooltip" title="{{Resources.AddToolTip}}" 
-                (click)="addSource()">
-                <i style="font-size:60;" class="icon ion-md-add"></i> {{Resources.AddCaption}}
-            </div>
-            <!-- <button type="button" class="btn btn-primary" (click)="addSource()">Add Source</button> -->
-        </div>
+    <div class="col-md-6">
+        <div class="col-md-12"><h2 class="header">{{Resources.Header}}</h2></div>
+    </div>
+    <div class="col-md-5">
+        <input #search (keyup)="searchSource(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
+    </div>
+    <div class="col-md-1">
+        <button
+            class="btn-add-item"
+            mat-raised-button color="primary"  
+            (click)="addSource()">
+                <mat-icon>add</mat-icon> {{Resources.AddCaption}}
+        </button>
+    </div>
 </div>
 
 <div class="col-sm-12 pt-3">
@@ -31,8 +30,8 @@
                     <td width="100" class="text-center">{{ source.id }}</td>
                     <td>{{ source.name }}</td>
                     <td width="250" class="text-center">
-                        <button type="button" class="btn btn-info btn-sm mr-3" (click)="editSource(source.id)">{{Resources.EditCaption}}</button>
-                        <button type="button" class="btn btn-danger btn-sm" (click)="deleteSource(source.id)">{{Resources.DeleteCaption}}</button>
+                        <button mat-button color="primary" (click)="editSource(source.id)">{{Resources.EditCaption}}</button>
+                        <button mat-button (click)="deleteSource(source.id)">{{Resources.DeleteCaption}}</button>
                     </td>
                 </tr>
             </tbody>

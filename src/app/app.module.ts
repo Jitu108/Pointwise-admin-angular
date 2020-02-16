@@ -1,3 +1,4 @@
+import { MatComponentsModule } from './modules/mat-components.module';
 import { PipeModule } from './pipes/pipe.module';
 import { ArticleListComponent } from './components/article-list/article-list.component';
 import { ArticleFormComponent } from './components/article-form/article-form.component';
@@ -8,9 +9,8 @@ import { SourceFormComponent } from './components/source-form/source-form.compon
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +20,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { CategoryFormComponent } from './components/category-form/category-form.component';
 import { SynopsisComponent } from './components/shared/synopsis/synopsis.component';
 import { DropDownListComponent } from './components/shared/drop-down-list/drop-down-list.component';
+import { ChipsetComponent } from './components/shared/chipset/chipset.component';
 
 @NgModule({
   declarations: [
@@ -35,14 +36,17 @@ import { DropDownListComponent } from './components/shared/drop-down-list/drop-d
     TagListComponent,
     TagFormComponent,
     SynopsisComponent,
-    DropDownListComponent
+    DropDownListComponent,
+    ChipsetComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatCheckboxModule,
+    MatComponentsModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
+
     NgbModule,
     PipeModule.forRoot()
   ],

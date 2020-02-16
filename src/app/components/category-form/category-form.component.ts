@@ -41,7 +41,7 @@ export class CategoryFormComponent implements OnInit {
         //Edit
         if(this.categoryId !== undefined){
           console.log(this.categoryId);
-          this.getSourceDetailById(this.categoryId);
+          this.getCategoryDetailById(this.categoryId);
 
           this.mode = "Edit";
         } else { // Add
@@ -51,12 +51,12 @@ export class CategoryFormComponent implements OnInit {
       });
   }
 
-  getSourceDetailById(id: string) {
+  getCategoryDetailById(id: string) {
     this.categoryDetail = this.categoryService.getCategoryById(parseInt(id));
   }
 
   // Submit
-  onSourceSubmit(form) {
+  onCategorySubmit(form) {
     if(form.valid) {
       this.categoryService.updateCategory(this.categoryDetail);
       this.router.navigate(['/categories']);

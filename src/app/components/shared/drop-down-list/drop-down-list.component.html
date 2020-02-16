@@ -1,8 +1,37 @@
-<select 
+ <!-- <mat-form-field class="col-md-12">
+    <mat-label>{{ Label }}</mat-label>
+    <mat-select 
+        [(ngModel)]="selectedValue" 
+        [name]="name" [id]="id" 
+        (selectionChange)="selectionchanged()">
+        <mat-option value="">{{ selectCaption }}</mat-option>
+        <mat-option *ngFor="let item of items" [value]="item.id">{{ item.name }}</mat-option>
+    </mat-select>
+</mat-form-field>  -->
+
+<!-- <select 
     [(ngModel)]="selectedValue" 
-    name="ddl" id="ddl" 
+    [name]="name" [id]="id" 
     (change)="selectionchanged()"
     class="form-control">
     <option value="">{{ selectCaption }}</option>
     <option *ngFor="let item of items" [value]="item.id">{{ item.name }}</option>
-</select>
+</select> -->
+
+<!-- <form class="example-form"> -->
+    <mat-form-field class="col-md-12">
+      <input type="text"
+            matInput
+            autocomplete="off"
+            [name]="name" [id]="id" 
+            [placeholder]="label"
+            [formControl]="myControl"
+            [matAutocomplete]="auto"
+            (blur)="selectionchanged($event)">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)='optionSelected($event.option.value)'>
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  <!-- </form> -->

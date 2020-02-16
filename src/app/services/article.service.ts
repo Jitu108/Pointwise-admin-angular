@@ -63,7 +63,11 @@ export class ArticleService {
             articleArray[i].content = article.content;
             articleArray[i].synopsis = article.synopsis;
             articleArray[i].sourceId = article.sourceId;
+            articleArray[i].source = article.source;
             articleArray[i].categoryId = article.categoryId;
+            articleArray[i].category = article.category;
+            articleArray[i].image = article.image;
+            articleArray[i].imageName = article.imageName;
           }
         }
         this.setLocalStorage(articleArray);
@@ -164,7 +168,11 @@ export class ArticleService {
         // source
         '',
         // category
-        ''
+        '',
+        // Image
+        null,
+        // Image Name
+        ""
         ),
 
         new Article(
@@ -191,7 +199,11 @@ export class ArticleService {
           // source
           '',
           // category
-          ''
+          '',
+          // Image
+          null,
+          // Image Name
+          ""
           ),
       //new Article(2, 'Indian Culture'),
       //new Article(3, 'History of India')
