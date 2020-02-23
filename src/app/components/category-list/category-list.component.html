@@ -1,17 +1,20 @@
 <div class="col-sm-12 pt-5 row body-header">
-    <div class="col-md-6">
-        <div class="col-md-12"><h2 class="header">{{Resources.Header}}</h2></div>
-    </div>
-    <div class="col-md-5">
-        <input #search (keyup)="searchCategory(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
-    </div>
-    <div class="col-md-1">
+    <div class="col-sm-6 col-lg-8">
+        <div class="col-sm-12"><h2 class="header">{{Resources.Header}}
         <button
             class="btn-add-item"
-            mat-raised-button color="primary"  
+            mat-mini-fab color="primary"
+            matTooltip="{{ Resources.AddToolTip }}"
             (click)="addCategory()">
-                 <mat-icon>add</mat-icon> {{Resources.AddCaption}}
+                 <mat-icon>add</mat-icon>
         </button>
+        </h2>
+        
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+        <input #search (keyup)="searchCategory(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
+        
     </div>
 </div>
 
@@ -26,12 +29,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let category of categories">
-                    <td width="100" class="text-center">{{ category.id }}</td>
-                    <td>{{ category.name }}</td>
+                <tr *ngFor="let category of categories | async; let i = index">
+                    <td width="100" class="text-center">{{ i+1 }}</td>
+                    <td>{{ category.Name }}</td>
                     <td width="250" class="text-center">
-                        <button mat-button color="primary" (click)="editCategory(category.id)">{{Resources.EditCaption}}</button>
-                        <button mat-button (click)="deleteCategory(category.id)">{{Resources.DeleteCaption}}</button>
+                        <button mat-button color="primary" (click)="editCategory(category.Id)">{{Resources.EditCaption}}</button>
+                        <button mat-button (click)="deleteCategory(category.Id)">{{Resources.DeleteCaption}}</button>
                     </td>
                 </tr>
             </tbody>

@@ -1,7 +1,9 @@
+import { Observable } from 'rxjs';
 import { CategoryService } from './../../services/category.service';
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-category-list',
@@ -23,9 +25,11 @@ export class CategoryListComponent implements OnInit {
     }
   }
 
-  public categories: Category[] = [];
+  public categories: Observable<Category[]>;
   search: string;
-  constructor(private router: Router, private categoryService: CategoryService) { }
+  constructor(
+    private router: Router, 
+    private categoryService: CategoryService) { }
 
   ngOnInit() {
     this.getCategories();
@@ -33,32 +37,33 @@ export class CategoryListComponent implements OnInit {
 
   // Load all Categories
   getCategories() {
-    console.log("getCategories Called - Component");
-    this.categories = this.categoryService.getCategories();
-    console.log(this.categories);
+    //console.log("getCategories Called - Component");
+    this.categories = this.categoryService.getAll();
+    //console.log(this.categories);
     return this.categories;
   }
 
   // Add Category
   addCategory() {
     this.router.navigate(['/categories/detail']);
-    console.log("Add Category");
+    //console.log("Add Category");
   }
 
   // Edit Category
   editCategory(id: number) {
-    console.log("Edit Category : " + id);
+    //console.log("Edit Category : " + id);
     this.router.navigate(['/categories/detail'], {queryParams: {id: id}});
   }
 
   // Delete Category
   deleteCategory(id: number) {
-    this.categoryService.deleteCategory(id);
-    this.getCategories();
+    this.categoryService.delete(id);
+    //this.categoryService.deleteCategory(id);
+    //this.getCategories();
   }
 
   searchCategory(searchString: string) {
-    this.categories = this.categoryService.getCategoriesBySearchString(searchString);
+    //this.categories = this.categoryService.getCategoriesBySearchString(searchString);
     console.log(searchString);
   }
 

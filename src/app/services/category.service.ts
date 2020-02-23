@@ -1,6 +1,8 @@
+import { Category } from 'src/app/models/category';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { LocalStorageTable } from '../enums/local-storage-table.enum';
-import { Category } from '../models/category';
+import { CategoryRepository } from '../repository/category-repository.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,94 +11,45 @@ export class CategoryService {
 
   public categories: Category[] = [];
   
-  constructor() { }
+  constructor(private repository: CategoryRepository) { }
 
-  // Add Category
-  addCategory(category: Category) {
-    var categoryArray = this.getLocalStorage();
-    if(categoryArray != null) {
-      var maxId = Math.max.apply(Math, categoryArray.map((o:Category) => {return o.id}));
-      category.id = maxId + 1;
-    }
-    else {
-      category.id = 1;
-    }
-    categoryArray.push(category);
-    this.setLocalStorage(categoryArray);
-  }
 
-  // Update Category
-  updateCategory(category: Category) {
-    console.log(category);
-    if(category.id === 0) {
-      this.addCategory(category);
-    }
-    else {
-      var categoryInStore = this.getCategoryById(category.id);
-      console.log(categoryInStore);
-      if(categoryInStore === null) {
-        category.id = 0;
-        this.addCategory(category);
-      }
-      else {
-        categoryInStore.name = category.name;
-        var categoryArray = this.getLocalStorage();
-        for(var i in categoryArray) {
-          if(categoryArray[i].id == category.id){
-            categoryArray[i].name = category.name;
-          }
-        }
-        this.setLocalStorage(categoryArray);
-      }
-    }
+  // Save Category
+  save(id: number, category: Category) {
+    return this.repository.save(id, category);
   }
 
   // Delete Category
-  deleteCategory(id: number) {
-    var categoryArray = this.getLocalStorage();
-    for(var i in categoryArray) {
-      if(categoryArray[i].id === id) {
-        categoryArray.splice(+i, 1);
-        this.setLocalStorage(categoryArray);
-      }
-    }
+  delete(id: number) {
+    return this.repository.delete(id);
   }
 
   // Get Category By Id
-  getCategoryById(id: number) : Category {
-    var categoryArray = this.getLocalStorage();
-    var category = categoryArray.filter(category => category.id === id).pop();
-    return category;
+  getById(id: number) : Observable<Category> {
+    return this.repository.getById(id);
   }
 
   // Get all Categories
-  getCategories() : Category[] {
-    this.categories = this.getLocalStorage();
-
-    if(this.categories === null || this.categories.length === 0){
-      var dummyCategories = this.getDummyCategories();
-      this.categories = dummyCategories;
-      this.setLocalStorage(dummyCategories);
-    }
-    return this.categories;
+  getAll() : Observable<Category[]> {
+    return this.repository.getAll();
   }
 
   // Search Categories
-  getCategoriesBySearchString(searchString: string){
-    if(searchString === "") {
-      return this.getCategories();
-    }
-    var categories = this.getLocalStorage();
-    var result: Category[] = new Array();
+  getBySearchString(searchString: string){
+    // if(searchString === "") {
+    //   return this.getCategories();
+    // }
+    // var categories = this.getLocalStorage();
+    // var result: Category[] = new Array();
 
-    for(var index = 0; index <categories.length; index++) {
-      var entry = categories[index];
-      if(entry && entry.name && entry.name.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
-        result.push(entry);
-      }
-    }
-    this.categories = result;
-    return this.categories;
+    // for(var index = 0; index <categories.length; index++) {
+    //   var entry = categories[index];
+    //   if(entry && entry.name && entry.name.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
+    //     result.push(entry);
+    //   }
+    // }
+    // this.categories = result;
+    // return this.categories;
   }
 
   // Save dummy Categories
@@ -142,8 +95,5 @@ export class CategoryService {
   // Reset Local Storage
   setLocalStorage(categoryArray: Category[]) {
     localStorage.setItem(LocalStorageTable.Category, JSON.stringify(categoryArray));
-  }
-
-  
-  
+  }  
 }

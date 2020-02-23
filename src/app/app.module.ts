@@ -21,6 +21,7 @@ import { CategoryFormComponent } from './components/category-form/category-form.
 import { SynopsisComponent } from './components/shared/synopsis/synopsis.component';
 import { DropDownListComponent } from './components/shared/drop-down-list/drop-down-list.component';
 import { ChipsetComponent } from './components/shared/chipset/chipset.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { ChipsetComponent } from './components/shared/chipset/chipset.component'
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-
+    HttpClientModule,
     NgbModule,
     PipeModule.forRoot()
   ],

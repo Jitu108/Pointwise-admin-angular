@@ -15,7 +15,7 @@ export class ArticleService {
 
   constructor() { 
     this.sourceService = new SourceService();
-    this.categoryService = new CategoryService();
+    //this.categoryService = new CategoryService();
   }
 
   // Add Article
@@ -104,9 +104,9 @@ export class ArticleService {
     }
 
     for(var i=0; i < this.articles.length; i++){
-      if(this.categoryService.getCategoryById(this.articles[i].categoryId) !== undefined) {
-        this.articles[i].category = this.categoryService.getCategoryById(this.articles[i].categoryId).name;
-      }
+      // if(this.categoryService.getCategoryById(this.articles[i].categoryId) !== undefined) {
+      //   this.articles[i].category = this.categoryService.getCategoryById(this.articles[i].categoryId).Name;
+      // }
       
       if(this.sourceService.getSourceById(this.articles[i].sourceId) !== undefined) {
         this.articles[i].source = this.sourceService.getSourceById(this.articles[i].sourceId).name;

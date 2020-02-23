@@ -12,6 +12,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -29,7 +30,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatExpansionModule,
     MatIconModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ],
   providers: [MatDatepickerModule],
   exports:[
@@ -45,7 +47,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatExpansionModule,
     MatIconModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTooltipModule
   ]
 })
 export class MatComponentsModule { }

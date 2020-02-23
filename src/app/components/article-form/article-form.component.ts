@@ -93,10 +93,10 @@ export class ArticleFormComponent implements OnInit {
        });
    
        // Get all Categories
-       this.categories = this.categoryService.getCategories()
-       .map(x => {
-         return { id: x.id.toString(), name: x.name };
-       });
+      //  this.categories = this.categoryService.getCategories()
+      //  .map(x => {
+      //    return { id: x.id.toString(), name: x.name };
+      //  });
 
        // Get all Tags
        this.tagList = this.tagServcie.getTags();
