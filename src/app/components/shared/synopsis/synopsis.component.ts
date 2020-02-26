@@ -17,11 +17,7 @@ export class SynopsisComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { 
-    debugger;
-
-    
-  }
+  ngOnInit() { }
 
   stringFormat(str: string) {
   

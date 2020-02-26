@@ -8,6 +8,8 @@ import { ArticleService } from './../../services/article.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Article } from './../../models/article';
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-article-form',
@@ -21,12 +23,12 @@ export class ArticleFormComponent implements OnInit {
   public mode: string;
   public localSynopsis: string[];
 
-  public sources: DropDownModel[];
-  public selectedSource: string;
+  public sources$: Observable<DropDownModel[]>;
+  public selectedSource: Observable<string>;
   public selectSourceCaption = "Select Source";
 
-  public categories: DropDownModel[];
-  public selectedCategory: string;
+  public categories$: Observable<DropDownModel[]>;
+  public selectedCategory: Observable<string>;
   public selectCategoryCaption = "Select Category";
 
   public tagList: Tag[];
@@ -87,16 +89,20 @@ export class ArticleFormComponent implements OnInit {
 
   loadData() {
        // Get all Sources
-       this.sources = this.sourceService.getSources()
+       const sources = this.sourceService.getSources()
        .map(x => {
          return { id: x.id.toString(), name: x.name };
        });
-   
+       this.sources$ = of(sources);
+      
        // Get all Categories
-      //  this.categories = this.categoryService.getCategories()
-      //  .map(x => {
-      //    return { id: x.id.toString(), name: x.name };
-      //  });
+      this.categories$ = this.categoryService.getAll().pipe(
+        map(items => 
+          items.map(item => {
+            return {id:item.Id.toString(),  name:item.Name}
+          })
+        )
+      );
 
        // Get all Tags
        this.tagList = this.tagServcie.getTags();
@@ -122,8 +128,11 @@ export class ArticleFormComponent implements OnInit {
   getArticleDetailById(id: string) {
     this.articleDetail = this.articleService.getArticleById(parseInt(id));
 
-    this.selectedCategory = this.articleDetail.categoryId !== undefined? this.articleDetail.categoryId.toString() : "";
-    this.selectedSource = this.articleDetail.sourceId !== undefined? this.articleDetail.sourceId.toString() : "";
+    const selectedCategoryValue = this.articleDetail.categoryId !== undefined? this.articleDetail.categoryId.toString() : "";
+    this.selectedCategory = of(selectedCategoryValue);
+
+    const selectedSourceValue = this.articleDetail.sourceId !== undefined? this.articleDetail.sourceId.toString() : "";
+    this.selectedSource = of(selectedSourceValue);
 
   }
 
@@ -148,7 +157,9 @@ export class ArticleFormComponent implements OnInit {
     this.articleDetail.category = selectedCategory === null ? "" : selectedCategory.name;
   }
   onTagSelectionChange(selectedTags: string[]){
+    console.log("Tag Selection Change : ");
     console.log(selectedTags);
+    this.articleDetail.tags = selectedTags === null? selectedTags = [] : selectedTags;
   }
 
   onFileSelected(event) {

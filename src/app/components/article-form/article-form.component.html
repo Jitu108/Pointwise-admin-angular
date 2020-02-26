@@ -29,7 +29,7 @@
                 <dropdown
                     [id]="'source'"
                     [name]="'source'"
-                    [list]="sources" 
+                    [list]="sources$" 
                     [selected-id]="selectedSource"
                     [select-caption]="selectSourceCaption"
                     [label]="Resources.SourceCaption"
@@ -41,7 +41,7 @@
                 <dropdown
                     [id]="'category'"
                     [name]="'category'"
-                    [list]="categories" 
+                    [list]="categories$" 
                     [selected-id]="selectedCategory"
                     [select-caption]="selectCategoryCaption"
                     [label]="Resources.CategoryCaption"
@@ -198,10 +198,8 @@
                 </section>
                 
                 <section class="tags">
-                    <span>Tags:</span>
-                    <a>double asteroid</a>
-                    <a>2003 YT1</a>
-                    <a>asteroid earth</a>
+                    <span *ngIf="articleDetail.tags?.length > 0">Tags:</span>
+                    <a *ngFor="let tag of articleDetail.tags">{{ tag }} </a>
                 </section>
             </mat-card>
             </article>

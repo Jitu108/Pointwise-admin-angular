@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, concatAll, withLatestFrom} from 'rxjs/operators';
 
 @Component({
   selector: 'dropdown',
@@ -13,9 +13,9 @@ export class DropDownListComponent implements OnInit {
   myControl = new FormControl();
   filteredOptions: Observable<string[]>;
 
-  @Input("list") items: DropDownModel[];
+  @Input("list") items: Observable<DropDownModel[]>;
   @Input("select-caption") selectCaption: string = "Select";
-  @Input("selected-id") selectedValue: string;
+  @Input("selected-id") selectedValue: Observable<string>;
   @Input("label") label: string;
   @Input("id") id: string;
   @Input("name") name: string;
@@ -25,33 +25,66 @@ export class DropDownListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    var selectedItem = this.items.find(x => x.id == this.selectedValue);
-    var selectedText = selectedItem !== undefined ? selectedItem.name : "";
 
-    this.myControl.setValue(selectedText);
+      this.items.pipe(
+        withLatestFrom(this.selectedValue),
+        map(([itemList, value]) => {
+          var selectedItem = itemList.find(x => x.id == value);
+          if((selectedItem !== undefined))
+          this.myControl.setValue(selectedItem.name);
+        })
+      ).subscribe();
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => this._filter(value))
-      );
+      ).pipe(concatAll());
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value: string): Observable<string[]> {
     const filterValue = value.toLowerCase();
 
-    return this.items.map(x => x.name).filter(option => option.toLowerCase().includes(filterValue));
+    return this.items.pipe(
+      map(itemList => {
+        return itemList.map(item => item.name).filter(option => option.toLowerCase().includes(filterValue))
+      })
+    );
   }
 
   selectionchanged(event) {
-    var value = event.target.value !== "" ? this.items.find(x => x.name == event.target.value) : null;
-    this.change.emit(value);
+    var value = event.target.value;
+    if(value == "") this.change.emit(null);
+    else {
+      this.items.pipe(
+        map(itemList => {
+          var val = itemList.find(x => x.name == event.target.value);
+          this.change.emit(val);
+        })
+      ).subscribe();
+    }
+    // var value = event.target.value !== "" ? this.items.find(x => x.name == event.target.value) : null;
+    // this.change.emit(value);
+
   }
 
   optionSelected(eventValue)
   {
-    var value = eventValue !== "" ? this.items.find(x => x.name == eventValue) : null;  
-    this.change.emit(value);
+    debugger;
+    if(eventValue == "") this.change.emit(null);
+    else {
+      this.items.pipe(
+        map(itemList => {
+          var value = itemList.find(x => x.name == eventValue);
+          debugger;
+          this.change.emit(value);
+        })
+      ).subscribe();
+    }
+
+
+    // var value = eventValue !== "" ? this.items.find(x => x.name == eventValue) : null;  
+    // this.change.emit(value);
   }
 }
 

@@ -31,7 +31,8 @@ export class CategoryService {
 
   // Get all Categories
   getAll() : Observable<Category[]> {
-    return this.repository.getAll();
+    var test = this.repository.getAll();
+    return test;
   }
 
   // Search Categories

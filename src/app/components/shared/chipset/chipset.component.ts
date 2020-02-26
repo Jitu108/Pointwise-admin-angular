@@ -19,37 +19,38 @@ export class ChipsetComponent implements OnInit{
   separatorKeysCodes: number[] = [ENTER, COMMA];
   chipCtrl = new FormControl();
   filteredItems: Observable<string[]>;
+  itemsArray: string[];
 
-  @Input("label") label;//: string = "Select Fruit";
-  @Input("selected-items") selectedItems: string[];// = ['Lemon'];
-  @Input("list") items: string[];// = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  @Input("label") label;
+  @Input("selected-items") selectedItems: string[];
+  @Input("list") items: string[];
   @Output("selection-change") change = new EventEmitter();
 
   @ViewChild('chipInput') chipInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor() {
-    
-  }
+  constructor() {}
 
   ngOnInit() {
-    debugger;
-    console.log(this.items);
+    this.itemsArray = Object.assign([], this.items);
 
+    this.items.sort();
     if(this.selectedItems === undefined) this.selectedItems = [];
 
     this.filteredItems = this.chipCtrl.valueChanges.pipe(
       startWith(null),
-      map((item: string | null) => item ? this._filter(item) : this.items.slice()))
+      map((item: string | null) => item ? this._filter(item) : this.items))
   }
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
-    // Add our fruit
+    // Add item
     if ((value || '').trim()) {
-      this.selectedItems.push(value.trim());
+      if(this.itemsArray.indexOf(value) >= 0 ) {
+        this.selectedItems.push(value.trim());
+      }
     }
 
     // Reset the input value
@@ -65,22 +66,28 @@ export class ChipsetComponent implements OnInit{
 
     if (index >= 0) {
       this.selectedItems.splice(index, 1);
+
+        if(this.itemsArray.indexOf(item) >= 0) {
+          this.items.push(item);
+        }
+        this.items.sort();
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    debugger;
-    this.selectedItems.push(event.option.viewValue);
+    var item = event.option.viewValue;
+    this.selectedItems.push(item);
     if(this.chipInput !== undefined)
     this.chipInput.nativeElement.value = '';
     this.chipCtrl.setValue(null);
 
-    const index = this.items.indexOf(event.option.viewValue);
+    const index = this.items.indexOf(item);
 
     if (index >= 0) {
       this.items.splice(index, 1);
     }
 
+    this.items.sort();
 
     this.change.emit(this.selectedItems);
   }

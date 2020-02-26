@@ -14,5 +14,6 @@ export class Article {
         public category?: string,
         public image?: string | ArrayBuffer,
         public imageName?: string,
+        public tags?: string[]
     ) { }
 }
