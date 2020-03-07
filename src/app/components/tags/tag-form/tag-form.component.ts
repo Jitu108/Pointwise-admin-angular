@@ -1,7 +1,9 @@
-import { Tag } from './../../models/tag';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { TagService } from 'src/app/services/tag.service';
+import { Observable } from 'rxjs';
+import { isNumeric } from 'src/app/common/util';
+import { Tag } from 'src/app/models/tag';
 
 @Component({
   selector: 'app-tag-form',
@@ -10,8 +12,8 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class TagFormComponent implements OnInit {
 
-  public tagId: string;
-  public tagDetail = <Tag>{}
+  public tagId: number;
+  public tagDetail$: Observable<Tag>;
   public mode: string;
 
   public Resources = {
@@ -35,30 +37,31 @@ export class TagFormComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       (params: Params) => {
-        console.log(params);
-        this.tagId = params['id'];
+        if(isNumeric(params['id']))
+        {
+          this.tagId = parseInt(params['id']);
+        }
 
         //Edit
         if(this.tagId !== undefined){
-          console.log(this.tagId);
           this.getTagDetailById(this.tagId);
 
           this.mode = "Edit";
         } else { // Add
-          this.tagDetail['id'] = 0;
           this.mode = "Add";
         }
       });
   }
 
-  getTagDetailById(id: string) {
-    this.tagDetail = this.tagService.getTagById(parseInt(id));
+  getTagDetailById(id: number) {
+    this.tagDetail$ = this.tagService.getById(id);
   }
 
   // Submit
   onTagSubmit(form) {
     if(form.valid) {
-      this.tagService.updateTag(this.tagDetail);
+      this.tagId = this.tagId === undefined? 0: this.tagId;
+      this.tagService.save(this.tagId, new Tag(this.tagId, form.value.Name, false));
       this.router.navigate(['/tags']);
     }
   }

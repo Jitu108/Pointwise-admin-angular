@@ -18,11 +18,10 @@ export class CategoryRepository {
     categories$: Observable<Category[]> = this.subject.asObservable();
 
     init() {
-        const http$ = createHttpObservable('/api/Categories');
+        const http$ = createHttpObservable('/api/Categories/All');
 
         http$
             .pipe(
-                tap(() => console.log('HTTP request executed')),
                 map(res => Object.values(res))
             )
             .subscribe(
@@ -31,7 +30,7 @@ export class CategoryRepository {
     }
 
     getById(id: number) {
-        var defaultValue: Category = new Category(0, '');
+        var defaultValue: Category = new Category(0, '', false);
         return this.categories$
             .pipe(
                 map(categories => categories.find(category => category.Id == id)),
@@ -40,32 +39,23 @@ export class CategoryRepository {
             .pipe(defaultIfEmpty(defaultValue));
     }
 
-    getAll() {
+    getCategories() {
+        var defaultValue: Category[] = [];
+        return this.categories$
+            .pipe(
+                map(categories => categories.filter(category => category.IsDeleted == false)),
+                filter(category => !!category)
+            )
+            .pipe(defaultIfEmpty(defaultValue));
+
+    }
+
+    getAllCategories() {
         const categories = this.subject.getValue();
-        console.log(categories);
         return this.categories$;
     }
 
     save(id: number, category: Category) {
-        /*
-        const categories = this.subject.getValue();
-        const categoryIndex = categories
-            .findIndex(category => category.Id == id);
-
-        const newCategories = categories.slice(0);
-
-        newCategories[categoryIndex] = {
-            ...categories[categoryIndex],
-            ...category
-        };
-
-        if(id === 0){
-            newCategories.push(category);
-        }
-
-        this.subject.next(newCategories);
-        */
-
         if(id === 0){
             fromPromise(fetch(`api/Categories`, {
                 method: 'POST',
@@ -89,6 +79,23 @@ export class CategoryRepository {
             });
         }
     }
+
+    softDelete(id: number) {
+        fromPromise(fetch(`/api/Categories/SoftDelete?id=${id}`, {
+            method: 'DELETE'
+        })).subscribe(res =>{
+            this.init();
+        });
+    }
+
+    undoSoftDelete(id: number) {
+        fromPromise(fetch(`/api/Categories/UndoSoftDelete?id=${id}`, {
+            method: 'DELETE'
+        })).subscribe(res =>{
+            this.init();
+        });
+    }
+    
 
     delete(id: number) {
         fromPromise(fetch(`/api/Categories/${id}`, {

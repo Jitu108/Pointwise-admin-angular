@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith, concatAll, withLatestFrom} from 'rxjs/operators';
@@ -8,7 +8,7 @@ import {map, startWith, concatAll, withLatestFrom} from 'rxjs/operators';
   templateUrl: './drop-down-list.component.html',
   styleUrls: ['./drop-down-list.component.scss']
 })
-export class DropDownListComponent implements OnInit {
+export class DropDownListComponent implements OnInit, OnChanges {
 
   myControl = new FormControl();
   filteredOptions: Observable<string[]>;
@@ -26,20 +26,28 @@ export class DropDownListComponent implements OnInit {
 
   ngOnInit() {
 
-      this.items.pipe(
-        withLatestFrom(this.selectedValue),
-        map(([itemList, value]) => {
-          var selectedItem = itemList.find(x => x.id == value);
-          if((selectedItem !== undefined))
-          this.myControl.setValue(selectedItem.name);
-        })
-      ).subscribe();
+      this.items.subscribe();
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => this._filter(value))
       ).pipe(concatAll());
+  }
+
+  ngOnChanges() {
+      if(this.items !== undefined && this.selectedValue !== undefined) {
+    this.items
+      .pipe(
+        withLatestFrom(this.selectedValue),
+        map(([itemList, value]) => {
+          var selectedItem = itemList.find(x => x.id == value);
+          if((selectedItem !== undefined))
+          this.myControl.setValue(selectedItem.name);
+        }),
+      )
+      .subscribe();
+    }
   }
 
   private _filter(value: string): Observable<string[]> {
@@ -63,28 +71,21 @@ export class DropDownListComponent implements OnInit {
         })
       ).subscribe();
     }
-    // var value = event.target.value !== "" ? this.items.find(x => x.name == event.target.value) : null;
-    // this.change.emit(value);
 
   }
 
   optionSelected(eventValue)
   {
-    debugger;
     if(eventValue == "") this.change.emit(null);
     else {
       this.items.pipe(
         map(itemList => {
           var value = itemList.find(x => x.name == eventValue);
-          debugger;
           this.change.emit(value);
         })
       ).subscribe();
     }
 
-
-    // var value = eventValue !== "" ? this.items.find(x => x.name == eventValue) : null;  
-    // this.change.emit(value);
   }
 }
 

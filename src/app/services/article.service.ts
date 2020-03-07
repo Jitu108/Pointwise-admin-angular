@@ -1,4 +1,99 @@
-import { CategoryService } from 'src/app/services/category.service';
+import { map } from 'rxjs/operators';
+import { Article } from 'src/app/models/article';
+import { Observable, BehaviorSubject, ReplaySubject, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { ArticleRepository } from '../repositories/article-repository.service';
+import { getLocalTime } from '../common/util';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ArticleService {
+    private subject = new ReplaySubject<Article>();
+    article$: Observable<Article> = this.subject.asObservable();
+    selectedArticle: Article;
+  
+  constructor(private repository: ArticleRepository) { }
+
+
+  // Save Article
+  save(id: number, article: Article) {
+    return this.repository.save(id, article);
+  }
+
+  // Soft Delete Article
+  softDelete(id: number) {
+    return this.repository.softDelete(id);
+  }
+
+  // Undo Soft Delete Article
+  undoSoftDelete(id: number) {
+    return this.repository.undoSoftDelete(id);
+  }
+
+  // Delete Article
+  delete(id: number) {
+    return this.repository.delete(id);
+  }
+
+  // Get Article By Id
+  getById(id?: number): Observable< boolean> {
+      if(id !== null && id !== undefined && id != 0){
+        return this.repository.getById(id)
+        .pipe(
+            map((x:Article) => {
+                debugger;
+                //x.ArticlePublicationDate = getLocalTime(x.ArticlePublicationDate);
+                this.selectedArticle = x;
+                this.subject.next(this.selectedArticle);
+             return true;
+        }));
+      }
+      else {
+          this.selectedArticle = new Article(0);
+          this.subject.next(this.selectedArticle);
+          return of(true);
+      }
+
+  }
+
+  refreshSelectedArticle(article: Article){
+      console.log(article);
+      this.subject.next(article);
+  }
+
+  // Get all Articles
+  getAllArticles() : Observable<Article[]> {
+    var articles$ = this.repository.getAllArticles();
+    return articles$;
+  }
+
+    // Get all Articles - Non-soft deleted
+    getArticles() : Observable<Article[]> {
+      var articles$ = this.repository.getArticles();
+      return articles$;
+    }
+
+  // Search Articles
+  getAllBySearchString(searchString: string){
+    var articles$ = this.repository.getAllArticles();
+
+    return articles$.pipe(
+      map(articles => 
+        articles.filter(
+            article => 
+                article.ArticleTitle.toLowerCase().includes(searchString.toLowerCase())
+                || article.ArticleSummary.toLowerCase().includes(searchString.toLowerCase())
+                || article.ArticleContent.toLowerCase().includes(searchString.toLowerCase())
+            ))
+    );
+  }
+}
+
+
+
+/*
+import { CategoryService } from 'src/app/services/article.service';
 import { SourceService } from './source.service';
 import { Injectable } from '@angular/core';
 import { Article } from '../models/article';
@@ -14,7 +109,7 @@ export class ArticleService {
   private categoryService: CategoryService;
 
   constructor() { 
-    this.sourceService = new SourceService();
+    //this.sourceService = new SourceService();
     //this.categoryService = new CategoryService();
   }
 
@@ -22,11 +117,11 @@ export class ArticleService {
   addArticle(article: Article) {
     var articleArray = this.getLocalStorage();
     if(articleArray != null) {
-      var maxId = Math.max.apply(Math, articleArray.map((o:Article) => {return o.id}));
-      article.id = maxId + 1;
+      var maxId = Math.max.apply(Math, articleArray.map((o:Article) => {return o.ArticleId}));
+      article.ArticleId = maxId + 1;
     }
     else {
-      article.id = 1;
+      article.ArticleId = 1;
     }
     articleArray.push(article);
     this.setLocalStorage(articleArray);
@@ -34,19 +129,17 @@ export class ArticleService {
 
   // Update Article
   updateArticle(article: Article) {
-    console.log(article);
 
     // if id is 0
-    if(article.id === 0) {
+    if(article.ArticleId === 0) {
       this.addArticle(article);
     }
     else {
-      var articleInStore = this.getArticleById(article.id);
-      console.log(articleInStore);
+      var articleInStore = this.getArticleById(article.ArticleId);
 
       // If article does not exist in the persistance store
       if(articleInStore === null) {
-        article.id = 0;
+        article.ArticleId = 0;
         this.addArticle(article);
       }
       else {
@@ -108,9 +201,9 @@ export class ArticleService {
       //   this.articles[i].category = this.categoryService.getCategoryById(this.articles[i].categoryId).Name;
       // }
       
-      if(this.sourceService.getSourceById(this.articles[i].sourceId) !== undefined) {
-        this.articles[i].source = this.sourceService.getSourceById(this.articles[i].sourceId).name;
-      }
+      // if(this.sourceService.getSougetrceById(this.articles[i].sourceId) !== undefined) {
+      //   this.articles[i].source = this.sourceService.getSourceById(this.articles[i].sourceId).name;
+      // }
     }
     this.setLocalStorage(this.articles);
     return this.articles;
@@ -225,3 +318,4 @@ export class ArticleService {
   
   
 }
+*/

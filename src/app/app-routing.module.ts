@@ -1,14 +1,14 @@
-import { ArticleListComponent } from './components/article-list/article-list.component';
-import { ArticleFormComponent } from './components/article-form/article-form.component';
-import { TagListComponent } from './components/tag-list/tag-list.component';
-import { TagFormComponent } from './components/tag-form/tag-form.component';
-import { SourceListComponent } from './components/source-list/source-list.component';
-import { SourceFormComponent } from './components/source-form/source-form.component';
-import { CategoryListComponent } from './components/category-list/category-list.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CategoryFormComponent } from './components/category-form/category-form.component';
+import { CategoryListComponent } from './components/categories/category-list/category-list.component';
+import { CategoryFormComponent } from './components/categories/category-form/category-form.component';
+import { ArticleListComponent } from './components/articles/article-list/article-list.component';
+import { ArticleFormComponent } from './components/articles/article-form/article-form.component';
+import { SourceListComponent } from './components/sources/source-list/source-list.component';
+import { SourceFormComponent } from './components/sources/source-form/source-form.component';
+import { TagListComponent } from './components/tags/tag-list/tag-list.component';
+import { TagFormComponent } from './components/tags/tag-form/tag-form.component';
 
 
 const routes: Routes = [

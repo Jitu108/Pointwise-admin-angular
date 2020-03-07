@@ -1,7 +1,9 @@
-import { SourceService } from './../../services/source.service';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Source } from 'src/app/models/source';
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import { isNumeric } from 'src/app/common/util';
+import { SourceService } from 'src/app/services/source.service';
 
 @Component({
   selector: 'app-source-form',
@@ -10,8 +12,8 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class SourceFormComponent implements OnInit {
 
-  public sourceId: string;
-  public sourceDetail = <Source>{}
+  public sourceId: number;
+  public sourceDetail$: Observable<Source>
   public mode: string;
 
   public Resources = {
@@ -34,30 +36,32 @@ export class SourceFormComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       (params: Params) => {
-        console.log(params);
-        this.sourceId = params['id'];
+        if(isNumeric(params['id']))
+        {
+          this.sourceId = parseInt(params['id']);
+
+        }
 
         //Edit
         if(this.sourceId !== undefined){
-          console.log(this.sourceId);
           this.getSourceDetailById(this.sourceId);
 
           this.mode = "Edit";
         } else { // Add
-          this.sourceDetail['id'] = 0;
           this.mode = "Add";
         }
       });
   }
 
-  getSourceDetailById(id: string) {
-    this.sourceDetail = this.sourceService.getSourceById(parseInt(id));
+  getSourceDetailById(id: number) {
+    this.sourceDetail$ = this.sourceService.getById(id);
   }
 
   // Submit
   onSourceSubmit(form) {
     if(form.valid) {
-      this.sourceService.updateSource(this.sourceDetail);
+      this.sourceId = this.sourceId === undefined? 0: this.sourceId;
+      this.sourceService.save(this.sourceId,  new Source(this.sourceId, form.value.Name, false));
       this.router.navigate(['/sources']);
     }
   }

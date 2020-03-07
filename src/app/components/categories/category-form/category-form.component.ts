@@ -29,7 +29,6 @@ export class CategoryFormComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    
     private router: Router,
     private categoryService: CategoryService
   ) { }
@@ -61,7 +60,7 @@ export class CategoryFormComponent implements OnInit {
   onCategorySubmit(form) {
     if(form.valid) {
       this.categoryId = this.categoryId === undefined? 0: this.categoryId;
-      this.categoryService.save(this.categoryId, new Category(this.categoryId, form.value.Name));
+      this.categoryService.save(this.categoryId, new Category(this.categoryId, form.value.Name, false));
       this.router.navigate(['/categories']);
     }
   }

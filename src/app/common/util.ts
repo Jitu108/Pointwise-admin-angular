@@ -33,3 +33,10 @@ export function isNumeric(value: string | number): boolean
            (value !== '') &&
            !isNaN(Number(value.toString())));
 }
+
+export function getLocalTime(date:Date): Date {
+    var offset = new Date().getTimezoneOffset();
+    date.setMinutes(date.getMinutes() + offset);
+    console.log(offset);
+    return date;
+}

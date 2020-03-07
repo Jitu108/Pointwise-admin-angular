@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Article } from 'src/app/models/article';
 import { ArticleService } from 'src/app/services/article.service';
@@ -15,6 +16,8 @@ export class ArticleListComponent implements OnInit {
     AddToolTip: "Add Article",
     AddCaption: "Article",
     EditCaption: "Edit",
+    SoftDeleteCaption: "Soft Delete",
+    UndoSoftDeleteCaption: "Undo Soft Delete",
     DeleteCaption: "Delete",
     TableHeaders: {
       SlColumn: "#",
@@ -27,47 +30,52 @@ export class ArticleListComponent implements OnInit {
       SynopsisColumn: "Synopsis",
       SourceColumn: "Source",
       CategoryColumn: "Category",
+      DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
     }
   }
-  public articles: Article[] = [];
+  public articles$: Observable<Article[]>;
   search: string;
   constructor(private router: Router, private articleService: ArticleService) { }
 
   ngOnInit() {
+      //debugger;
     this.getArticles();
   }
 
-// Load all Articles
-getArticles() {
+  // Load all Articles
+  getArticles() {
 
-  //console.log("getArticles Called - Component");
-  this.articles = this.articleService.getArticles();
-  //console.log(this.articles);
-  return this.articles;
-}
+    this.articles$ = this.articleService.getAllArticles();
+    return this.articles$;
+  }
 
-// Add Article
-addArticle() {
-  this.router.navigate(['/articles/detail']);
-  //console.log("Add Article");
-}
+  // Add Article
+  addArticle() {
+    this.router.navigate(['/articles/detail']);
+  }
 
-// Edit Article
-editArticle(id: number) {
-  //console.log("Edit Article : " + id);
-  this.router.navigate(['/articles/detail'], {queryParams: {id: id}});
-}
+  // Edit Article
+  editArticle(id: number) {
+    this.router.navigate(['/articles/detail'], {queryParams: {id: id}});
+  }
 
-// Delete Article
-deleteArticle(id: number) {
-  this.articleService.deleteArticle(id);
-  this.getArticles();
-}
+  // Soft Delete Article
+  softDeleteArticle(id: number) {
+    this.articleService.softDelete(id);
+  }
 
-searchArticle(searchString: string) {
-  this.articles = this.articleService.getArticlesBySearchString(searchString);
-  //console.log(searchString);
-}
+  // Undo Soft Delete Article
+  undoSoftDeleteArticle(id: number) {
+    this.articleService.undoSoftDelete(id);
+  }
 
+  // Delete Article
+  deleteArticle(id: number) {
+    this.articleService.delete(id);
+  }
+
+  searchArticle(searchString: string) {
+    this.articles$ = this.articleService.getAllBySearchString(searchString);
+  }
 }

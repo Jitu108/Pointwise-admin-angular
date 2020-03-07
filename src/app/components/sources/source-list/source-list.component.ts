@@ -1,7 +1,8 @@
-import { SourceService } from './../../services/source.service';
 import { Component, OnInit } from '@angular/core';
 import { Source } from 'src/app/models/source';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { SourceService } from 'src/app/services/source.service';
 
 @Component({
   selector: 'app-source-list',
@@ -15,15 +16,18 @@ export class SourceListComponent implements OnInit {
     AddToolTip: "Add Source",
     AddCaption: "Source",
     EditCaption: "Edit",
+    SoftDeleteCaption: "Soft Delete",
+    UndoSoftDeleteCaption: "Undo Soft Delete",
     DeleteCaption: "Delete",
     TableHeaders: {
       SlColumn: "#",
       NameColumn: "Name",
+      DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
     }
   }
 
-  public sources: Source[] = [];
+  public sources$: Observable<Source[]>;
   search: string;
   constructor(private router: Router, private sourceService: SourceService) { }
 
@@ -33,33 +37,37 @@ export class SourceListComponent implements OnInit {
 
   // Load all Sources
   getSources() {
-    console.log("getSources Called - Component");
-    this.sources = this.sourceService.getSources();
-    console.log(this.sources);
-    return this.sources;
+    this.sources$ = this.sourceService.getAllSources();
+    return this.sources$;
   }
 
   // Add Source
   addSource() {
     this.router.navigate(['/sources/detail']);
-    console.log("Add Source");
   }
 
   // Edit Source
   editSource(id: number) {
-    console.log("Edit Source : " + id);
     this.router.navigate(['/sources/detail'], {queryParams: {id: id}});
+  }
+
+  // Soft Delete Source
+  softDeleteSource(id: number) {
+    this.sourceService.softDelete(id);
+  }
+
+  // Undo Soft Delete Source
+  undoSoftDeleteSource(id: number) {
+    this.sourceService.undoSoftDelete(id);
   }
 
   // Delete Source
   deleteSource(id: number) {
-    this.sourceService.deleteSource(id);
-    this.getSources();
+    this.sourceService.delete(id);
   }
 
   searchSource(searchString: string) {
-    this.sources = this.sourceService.getSourcesBySearchString(searchString);
-    console.log(searchString);
+    this.sources$ = this.sourceService.getAllBySearchString(searchString);
   }
 
 }

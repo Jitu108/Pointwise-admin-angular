@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs';
-import { CategoryService } from './../../services/category.service';
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-category-list',
@@ -17,15 +16,18 @@ export class CategoryListComponent implements OnInit {
     AddToolTip: "Add Category",
     AddCaption: "Category",
     EditCaption: "Edit",
+    SoftDeleteCaption: "Soft Delete",
+    UndoSoftDeleteCaption: "Undo Soft Delete",
     DeleteCaption: "Delete",
     TableHeaders: {
       SlColumn: "#",
       NameColumn: "Name",
+      DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
     }
   }
 
-  public categories: Observable<Category[]>;
+  public categories$: Observable<Category[]>;
   search: string;
   constructor(
     private router: Router, 
@@ -37,34 +39,36 @@ export class CategoryListComponent implements OnInit {
 
   // Load all Categories
   getCategories() {
-    //console.log("getCategories Called - Component");
-    this.categories = this.categoryService.getAll();
-    //console.log(this.categories);
-    return this.categories;
+    this.categories$ = this.categoryService.getAllCategories();
+    return this.categories$;
   }
 
   // Add Category
   addCategory() {
     this.router.navigate(['/categories/detail']);
-    //console.log("Add Category");
   }
 
   // Edit Category
   editCategory(id: number) {
-    //console.log("Edit Category : " + id);
     this.router.navigate(['/categories/detail'], {queryParams: {id: id}});
+  }
+
+  // Soft Delete Category
+  softDeleteCategory(id: number) {
+    this.categoryService.softDelete(id);
+  }
+
+  // Undo Soft Delete Category
+  undoSoftDeleteCategory(id: number) {
+    this.categoryService.undoSoftDelete(id);
   }
 
   // Delete Category
   deleteCategory(id: number) {
     this.categoryService.delete(id);
-    //this.categoryService.deleteCategory(id);
-    //this.getCategories();
   }
 
   searchCategory(searchString: string) {
-    //this.categories = this.categoryService.getCategoriesBySearchString(searchString);
-    console.log(searchString);
+    this.categories$ = this.categoryService.getAllBySearchString(searchString);
   }
-
 }

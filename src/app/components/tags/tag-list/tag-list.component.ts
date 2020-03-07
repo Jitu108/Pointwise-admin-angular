@@ -1,7 +1,8 @@
-import { Tag } from './../../models/tag';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TagService } from 'src/app/services/tag.service';
+import { Tag } from 'src/app/models/tag';
 
 @Component({
   selector: 'app-tag-list',
@@ -15,15 +16,18 @@ export class TagListComponent implements OnInit {
     AddToolTip: "Add Tag",
     AddCaption: "Tag",
     EditCaption: "Edit",
+    SoftDeleteCaption: "Soft Delete",
+    UndoSoftDeleteCaption: "Undo Soft Delete",
     DeleteCaption: "Delete",
     TableHeaders: {
       SlColumn: "#",
       NameColumn: "Name",
+      DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
     }
   }
 
-  public tags: Tag[] = [];
+  public tags$: Observable<Tag[]>;
   search: string;
   constructor(private router: Router, private tagService: TagService) { }
 
@@ -33,33 +37,37 @@ export class TagListComponent implements OnInit {
 
   // Load all Tags
   getTags() {
-    console.log("getTags Called - Component");
-    this.tags = this.tagService.getTags();
-    console.log(this.tags);
-    return this.tags;
+    this.tags$ = this.tagService.getAllTags();
+    return this.tags$;
   }
 
   // Add Tag
   addTag() {
     this.router.navigate(['/tags/detail']);
-    console.log("Add Tag");
   }
 
   // Edit Tag
   editTag(id: number) {
-    console.log("Edit Tag : " + id);
     this.router.navigate(['/tags/detail'], {queryParams: {id: id}});
+  }
+
+  // Soft Delete Tag
+  softDeleteTag(id: number) {
+    this.tagService.softDelete(id);
+  }
+
+  // Undo Soft Delete Tag
+  undoSoftDeleteTag(id: number) {
+    this.tagService.undoSoftDelete(id);
   }
 
   // Delete Tag
   deleteTag(id: number) {
-    this.tagService.deleteTag(id);
-    this.getTags();
+    this.tagService.delete(id);
   }
 
   searchTag(searchString: string) {
-    this.tags = this.tagService.getTagsBySearchString(searchString);
-    console.log(searchString);
+    this.tags$ = this.tagService.getAllBySearchString(searchString);
   }
 
 }

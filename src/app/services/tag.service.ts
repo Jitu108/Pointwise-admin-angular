@@ -1,6 +1,8 @@
+import { TagRepository } from './../repositories/tag-repository.service';
 import { Tag } from './../models/tag';
-import { Injectable } from '@angular/core';
-import { LocalStorageTable } from '../enums/local-storage-table.enum';
+import { Injectable } from '@angular/core'
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,119 +11,52 @@ export class TagService {
 
   public tags: Tag[] = [];
 
-  constructor() { }
+  constructor(private repository: TagRepository) { }
 
-  // Add Tag
-  addTag(tag: Tag) {
-    var tagArray = this.getLocalStorage();
-    if(tagArray != null) {
-      var maxId = Math.max.apply(Math, tagArray.map((o:Tag) => {return o.id}));
-      tag.id = maxId + 1;
-    }
-    else {
-      tag.id = 1;
-    }
-    tagArray.push(tag);
-    this.setLocalStorage(tagArray);
+  // Save Tag
+  save(id: number, source: Tag) {
+    return this.repository.save(id, source);
   }
 
-  // Update Tag
-  updateTag(tag: Tag) {
-    console.log(tag);
-    if(tag.id === 0) {
-      this.addTag(tag);
-    }
-    else {
-      var tagInStore = this.getTagById(tag.id);
-      console.log(tagInStore);
-      if(tagInStore === null) {
-        tag.id = 0;
-        this.addTag(tag);
-      }
-      else {
-        tagInStore.name = tag.name;
-        var tagArray = this.getLocalStorage();
-        for(var i in tagArray) {
-          if(tagArray[i].id == tag.id){
-            tagArray[i].name = tag.name;
-          }
-        }
-        this.setLocalStorage(tagArray);
-      }
-    }
+  // Soft Delete Tag
+  softDelete(id: number) {
+    return this.repository.softDelete(id);
+  }
+
+  // Undo Soft Delete Tag
+  undoSoftDelete(id: number) {
+    return this.repository.undoSoftDelete(id);
   }
 
   // Delete Tag
-  deleteTag(id: number) {
-    var tagArray = this.getLocalStorage();
-    for(var i in tagArray) {
-      if(tagArray[i].id === id) {
-        tagArray.splice(+i, 1);
-        this.setLocalStorage(tagArray);
-      }
-    }
+  delete(id: number) {
+    return this.repository.delete(id);
   }
 
-  // Get Tag by Id
-  getTagById(id: number): Tag {
-    var tagArray = this.getLocalStorage();
-    var tag = tagArray.filter(tag => tag.id === id).pop();
-    return tag;
+  // Get Tag By Id
+  getById(id: number) : Observable<Tag> {
+    return this.repository.getById(id);
   }
 
   // Get all Tags
-  getTags(): Tag[] {
-    this.tags = this.getLocalStorage();
-
-    if(this.tags === null || this.tags.length === 0){
-      var dummyTags = this.getDummyTags();
-      this.tags = dummyTags;
-      this.setLocalStorage(dummyTags);
-    }
-    return this.tags;
+  getAllTags() : Observable<Tag[]> {
+    var tags$ = this.repository.getAllTags();
+    return tags$;
   }
+
+    // Get all Tags - Non-soft deleted
+    getTags() : Observable<Tag[]> {
+      var tags$ = this.repository.getTags();
+      return tags$;
+    }
 
   // Search Tags
-  getTagsBySearchString(searchString: string) {
-    if(searchString === "") {
-      return this.getTags();
-    }
-    var categories = this.getLocalStorage();
-    var result: Tag[] = new Array();
+  getAllBySearchString(searchString: string){
+    var tags$ = this.repository.getAllTags();
 
-    for(var index = 0; index <categories.length; index++) {
-      var entry = categories[index];
-      if(entry && entry.name && entry.name.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
-        result.push(entry);
-      }
-    }
-    this.tags = result;
-    return this.tags;
+    return tags$.pipe(
+      map(tags => tags.filter(source => source.Name.toLowerCase().includes(searchString.toLowerCase())))
+    );
   }
-
-  // Save dummy Tags
-  getDummyTags(): Tag[] {
-    var dummyTags = [
-      new Tag(1, 'WHO'),
-      new Tag(2, 'Virus'),
-      new Tag(3, 'Disease'),
-      new Tag(4, 'Vaccination'),
-      new Tag(5, 'Epidemic'),
-      new Tag(6, 'Outbreak')
-
-    ];
-
-    return dummyTags;
-  }
-
-    // Get Local Storage
-    getLocalStorage(): Tag[] {
-      return JSON.parse(localStorage.getItem(LocalStorageTable.Tag));
-    }
-  
-    // Reset Local Storage
-    setLocalStorage(tagArray: Tag[]) {
-      localStorage.setItem(LocalStorageTable.Tag, JSON.stringify(tagArray));
-    }
   
 }

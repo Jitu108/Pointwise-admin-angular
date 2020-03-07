@@ -1,6 +1,7 @@
 export class Category {
     constructor(
         public Id: number,
-        public Name: string
+        public Name: string,
+        public IsDeleted: boolean
     ) { }
 }

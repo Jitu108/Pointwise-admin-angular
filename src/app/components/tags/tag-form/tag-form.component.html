@@ -1,24 +1,24 @@
 <div class="d-flex justify-content-center vw-100 mt-5">
     <div class="w-50">
-        <form id="sourceForm" #sourceForm="ngForm" (ngSubmit)="onSourceSubmit(sourceForm)">
+        <form id="tagForm" #tagForm="ngForm" (ngSubmit)="onTagSubmit(tagForm)">
             <mat-card>
-                <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
-            
+             <legend class="scheduler-border">{{ mode }} {{Resources.Header}}</legend>
                 <div class="m-3">
                     <mat-form-field class="w-100">
+
                         <mat-label>{{Resources.NameCaption}}</mat-label>
 
                         <input type="text"
-                            matInput
-                            #name="ngModel" name="name" [(ngModel)]="sourceDetail.name" 
-                            placeholder="{{Resources.NamePlaceholder}}" required
+                            matInput 
+                            #Name="ngModel" name="Name" [ngModel]="(tagDetail$ | async)?.Name"
+                            placeholder="{{Resources.NamePlaceholder}}"
+                            required
                         >
 
-                        <mat-error *ngIf="!(name.valid || (name.pristine && !sourceForm.submitted))">
+                        <mat-error *ngIf="!(Name.valid || (Name.pristine && !tagForm.submitted))">
                             {{Resources.Validation.RequiredMessage}}
                         </mat-error>
-
-                    </mat-form-field>
+                      </mat-form-field>
                 </div>
     
                 <div class="row">
