@@ -1,6 +1,6 @@
 <div class="col-sm-12 body-header">
    <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
     <form id="articleForm" #articleForm="ngForm" (ngSubmit)="onArticleSubmit(articleForm)" autocomplete="off">
         <mat-card>
             <legend class="scheduler-border mb-3">{{ mode }} {{Resources.Header}}</legend>
@@ -16,7 +16,7 @@
                 <mat-form-field  class="col-md-12">
                     <mat-label>{{Resources.AuthorCaption}}</mat-label>
                     <input type="text" matInput
-                        #author="ngModel" name="author" [ngModel]="(articleDetail$ | async)?.ArticleAuthor" 
+                        #author="ngModel" name="author" [ngModel]="(articleDetail$ | async)?.articleAuthor" 
                         placeholder="{{Resources.AuthorPlaceholder}}"
                         (change)="onAuthorChange($event)">
 
@@ -63,7 +63,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.UrlCaption}}</mat-label>
                     <input type="text" matInput
-                        #url="ngModel" name="url" [ngModel]="(articleDetail$ | async)?.ArticleUrl" 
+                        #url="ngModel" name="url" [ngModel]="(articleDetail$ | async)?.articleUrl" 
                         placeholder="{{Resources.UrlPlaceholder}}"
                         (change)="onUrlChange($event)">
                     <mat-error *ngIf="!(url.valid || (url.pristine && !articleForm.submitted))">
@@ -76,7 +76,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.PublicationDateCaption}}</mat-label>
                     <input matInput [matDatepicker]="picker"
-                        #pubdate="ngModel" name="pubdate" [ngModel]="(articleDetail$ | async)?.ArticlePublicationDate"
+                        #pubdate="ngModel" name="pubdate" [ngModel]="(articleDetail$ | async)?.articlePublicationDate"
                         (dateChange)="onPublicationDateChange($event)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -96,7 +96,7 @@
                       <div class="custom-file">
                         <input type="file" class="custom-file-input"
                             (change)="onFileSelected($event)">
-                        <label class="custom-file-label">{{ (articleDetail$ | async)?.ImageName }}</label>
+                        <label class="custom-file-label">{{ (articleDetail$ | async)?.imageName }}</label>
                       </div>
                 </div>  
             </mat-expansion-panel>
@@ -110,7 +110,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.TitleCaption}}</mat-label>
                     <input type="text" matInput
-                        #title="ngModel" name="title" [ngModel]="(articleDetail$ | async)?.ArticleTitle" 
+                        #title="ngModel" name="title" [ngModel]="(articleDetail$ | async)?.articleTitle" 
                         placeholder="{{Resources.TitlePlaceholder}}"
                         (change)="onTitleChange($event)">
                     <mat-error *ngIf="!title.valid || !(title.pristine && !articleForm.submitted)">
@@ -123,7 +123,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.SummaryCaption}}</mat-label>
                     <textarea matInput
-                        #summary="ngModel" name="summary" [ngModel]="(articleDetail$ | async)?.ArticleSummary" 
+                        #summary="ngModel" name="summary" [ngModel]="(articleDetail$ | async)?.articleSummary" 
                         placeholder="{{Resources.SummaryPlaceholder}}"
                         (change)="onSummaryChange($event)"></textarea>
                     <mat-error *ngIf="!summary.valid || !(summary.pristine && !articleForm.submitted)">
@@ -138,7 +138,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.ContentCaption}}</mat-label>
                     <textarea matInput
-                        #content="ngModel" name="content" [ngModel]="(articleDetail$ | async)?.ArticleContent" 
+                        #content="ngModel" name="content" [ngModel]="(articleDetail$ | async)?.articleContent" 
                         placeholder="{{Resources.ContentPlaceholder}}"
                         (change)="onContentChange($event)">
                     </textarea>
@@ -152,7 +152,7 @@
                 <mat-form-field class="col-md-12">
                     <mat-label>{{Resources.SynopsisCaption}}</mat-label>
                     <textarea matInput matTextareaAutosize
-                        #synopsis="ngModel" name="synopsis" [ngModel]="(articleDetail$ | async)?.ArticleSynopsis" 
+                        #synopsis="ngModel" name="synopsis" [ngModel]="(articleDetail$ | async)?.articleSynopsis" 
                         placeholder="{{Resources.SynopsisPlaceholder}}"
                         (change)="onSynopsisChange($event)">
                     </textarea>
@@ -173,41 +173,10 @@
     </form>
      </div>
         
-        <div class="col-md-6 row">
-            <div class="col-md-2"></div>
-            <article class="col-md-8 article">
-                <mat-card class="mat-card-custom" [ngClass]="{deleted: (articleDetail$ | async)?.ArticleIsDeleted === true}">
-                <figure>
-                    <div class="image-container">
-                        <img alt="Article Image" [src]="(articleDetail$ | async)?.ImageData" class="image">
-                    </div>
-                    <figcaption class="caption">Representative Image</figcaption>
-                </figure>
-                <section class="main">
-                    <header>
-                        <h2>
-                            <a target="_blank" href="{{ (articleDetail$ | async)?.ArticleUrl }}">
-                                {{ (articleDetail$ | async)?.ArticleTitle }}
-                            </a>
-                        </h2>
-                        <h6>{{ (articleDetail$ | async)?.ArticleSummary | summary:100 }}</h6>
-                    </header>
-                    <div class="articlebody">                    
-                        <synopsis [synopsis-text]="(articleDetail$ | async)?.ArticleSynopsis"></synopsis>
-                    </div>   
-                </section>             
-                <section class="footer clearfix">
-                    <div class="author">{{ (articleDetail$ | async)?.ArticleSource }} | <code>{{ (articleDetail$ | async)?.ArticleCategory }}</code></div>
-                    <div class="publish-at">
-                    <span>Published At: </span>
-                    <span>{{ (articleDetail$ | async)?.ArticlePublicationDate | date }}</span></div>
-                </section>
-                
-                <section class="tags">
-                    <span *ngIf="(articleDetail$ | async)?.ArticleTags?.length > 0">Tags:</span>
-                    <a *ngFor="let tag of (articleDetail$ | async)?.ArticleTags">{{ tag }} </a>
-                </section>
-            </mat-card>
-            </article>
+    <div class="col-md-4 row">
+        <article class="col-md-12 article">
+            <article-card
+            [article-data]="articleDetail$"></article-card>
+        </article>
    </div>
 </div>

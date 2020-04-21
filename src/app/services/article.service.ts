@@ -12,6 +12,7 @@ export class ArticleService {
     private subject = new ReplaySubject<Article>();
     article$: Observable<Article> = this.subject.asObservable();
     selectedArticle: Article;
+    ArticleObject: Article;
   
   constructor(private repository: ArticleRepository) { }
 
@@ -22,17 +23,17 @@ export class ArticleService {
   }
 
   // Soft Delete Article
-  softDelete(id: number) {
+  softDelete(id: number): Observable<boolean> {
     return this.repository.softDelete(id);
   }
 
   // Undo Soft Delete Article
-  undoSoftDelete(id: number) {
+  undoSoftDelete(id: number): Observable<boolean> {
     return this.repository.undoSoftDelete(id);
   }
 
   // Delete Article
-  delete(id: number) {
+  delete(id: number): Observable<boolean> {
     return this.repository.delete(id);
   }
 
@@ -42,7 +43,6 @@ export class ArticleService {
         return this.repository.getById(id)
         .pipe(
             map((x:Article) => {
-                debugger;
                 //x.ArticlePublicationDate = getLocalTime(x.ArticlePublicationDate);
                 this.selectedArticle = x;
                 this.subject.next(this.selectedArticle);
@@ -54,7 +54,6 @@ export class ArticleService {
           this.subject.next(this.selectedArticle);
           return of(true);
       }
-
   }
 
   refreshSelectedArticle(article: Article){
@@ -82,9 +81,9 @@ export class ArticleService {
       map(articles => 
         articles.filter(
             article => 
-                article.ArticleTitle.toLowerCase().includes(searchString.toLowerCase())
-                || article.ArticleSummary.toLowerCase().includes(searchString.toLowerCase())
-                || article.ArticleContent.toLowerCase().includes(searchString.toLowerCase())
+                article.articleTitle.toLowerCase().includes(searchString.toLowerCase())
+                || article.articleSummary.toLowerCase().includes(searchString.toLowerCase())
+                || article.articleContent.toLowerCase().includes(searchString.toLowerCase())
             ))
     );
   }

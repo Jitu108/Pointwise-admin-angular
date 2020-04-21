@@ -1,5 +1,6 @@
+import { ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Category } from 'src/app/models/category';
@@ -15,6 +16,8 @@ export class CategoryFormComponent implements OnInit {
   public categoryId: number;
   public categoryDetail$: Observable<Category>;
   public mode: string;
+
+  @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
 
   public Resources = {
     Header: "Category",
@@ -60,7 +63,7 @@ export class CategoryFormComponent implements OnInit {
   onCategorySubmit(form) {
     if(form.valid) {
       this.categoryId = this.categoryId === undefined? 0: this.categoryId;
-      this.categoryService.save(this.categoryId, new Category(this.categoryId, form.value.Name, false));
+      this.categoryService.save(this.categoryId, new Category(this.categoryId, this.nameInput.nativeElement.value, false));
       this.router.navigate(['/categories']);
     }
   }

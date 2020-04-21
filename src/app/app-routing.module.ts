@@ -1,3 +1,4 @@
+import { UserRegistrationComponent } from './components/users/user-registration/user-registration.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -9,6 +10,7 @@ import { SourceListComponent } from './components/sources/source-list/source-lis
 import { SourceFormComponent } from './components/sources/source-form/source-form.component';
 import { TagListComponent } from './components/tags/tag-list/tag-list.component';
 import { TagFormComponent } from './components/tags/tag-form/tag-form.component';
+import { UserLoginComponent } from './components/users/user-login/user-login.component';
 
 
 const routes: Routes = [
@@ -44,6 +46,14 @@ const routes: Routes = [
   {
     path: 'tags/detail',
     component: TagFormComponent
+  },
+  {
+    path: 'login',
+    component: UserLoginComponent
+  },
+  {
+    path: 'register',
+    component: UserRegistrationComponent
   },
   {
     path: '',

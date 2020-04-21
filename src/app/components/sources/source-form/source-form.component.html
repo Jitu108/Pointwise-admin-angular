@@ -10,12 +10,12 @@
 
                         <input type="text"
                             matInput
-                            #Name="ngModel" name="Name" [ngModel]="(sourceDetail$ | async)?.Name" 
+                            #nameInput="ngModel" name="name" [ngModel]="(sourceDetail$ | async)?.name" 
                             placeholder="{{Resources.NamePlaceholder}}" 
                             required
                         >
 
-                        <mat-error *ngIf="!(Name.valid || (Name.pristine && !sourceForm.submitted))">
+                        <mat-error *ngIf="!(nameInput.valid || (nameInput.pristine && !sourceForm.submitted))">
                             {{Resources.Validation.RequiredMessage}}
                         </mat-error>
 

@@ -35,6 +35,7 @@ export class ChipsetComponent implements OnInit, OnChanges {
     this.tempItems$ = this.items$.pipe(map(items => items.sort()));
 
     this.tempItems$.subscribe(items => {
+        console.log(items);
       items.sort();
       this.itemsArray = Object.assign([], items);
     });

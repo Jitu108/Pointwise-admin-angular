@@ -31,21 +31,21 @@
             <tbody>
                 <tr *ngFor="let source of sources$ | async; let i = index">
                     <td width="100" class="text-center">{{ i+1 }}</td>
-                    <td>{{ source.Name }}</td>
-                    <td><span *ngIf="source.IsDeleted">Deleted</span></td>
+                    <td>{{ source.name }}</td>
+                    <td><span *ngIf="source.isDeleted">Deleted</span></td>
                     <td width="350" class="text-center">
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
-                            <mat-icon (click)="editSource(source.Id)">create</mat-icon>
+                            <mat-icon (click)="editSource(source.id)">create</mat-icon>
                         </button>
                 
                         <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="softDeleteSource(source.Id)">delete</mat-icon>
+                            <mat-icon (click)="softDeleteSource(source.id)">delete</mat-icon>
                         </button>
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="undoSoftDeleteSource(source.Id)">delete_sweep</mat-icon>
+                            <mat-icon (click)="undoSoftDeleteSource(source.id)">delete_sweep</mat-icon>
                         </button>
                         <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
-                            <mat-icon class="add-course-btn" (click)="deleteSource(source.Id)">delete_forever</mat-icon>
+                            <mat-icon (click)="deleteSource(source.id)">delete_forever</mat-icon>
                         </button>
                         <!-- <button mat-button color="primary" (click)="editSource(source.Id)">{{Resources.EditCaption}}</button>
                         <button mat-button (click)="deleteSource(source.Id)">{{Resources.DeleteCaption}}</button> -->

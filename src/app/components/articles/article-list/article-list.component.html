@@ -1,72 +1,72 @@
-<div class="col-sm-12 pt-5 row body-header">
-    <div class="col-sm-6 col-lg-8">
-        <div class="col-sm-12">
-            <h2 class="header">{{Resources.Header}}
-                <button
-                    class="btn-add-item"
-                    mat-mini-fab color="primary"
-                    matTooltip="{{ Resources.AddToolTip }}"
-                    (click)="addArticle()">
-                        <mat-icon>add</mat-icon>
-                </button>
-            </h2>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-4">
-        <input #search (keyup)="searchArticle(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
-    </div>
-</div>
+
 
 <div class="col-sm-12 pt-3">
-<div class="col-md-12">
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="table-primary">
-            <tr>
-                <th scope="col" class="text-center">{{Resources.TableHeaders.SlColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.AuthorColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.TitleColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.SummaryColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.UrlColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.PublicationDateColumn}}</th>
-                <!-- <th scope="col">{{Resources.TableHeaders.ContentColumn}}</th> -->
-                <!-- <th scope="col">{{Resources.TableHeaders.SynopsisColumn}}</th> -->
-                <th scope="col">{{Resources.TableHeaders.SourceColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.CategoryColumn}}</th>
-                <th scope="col">{{Resources.TableHeaders.DeletedColumn}}</th>
-                <th class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let article of articles$ | async; let i = index">
-                <td width="100" class="text-center">{{ i+1 }}</td>
-                <td data-toggle="tooltip" title="{{article.author}}">{{ article.ArticleAuthor | summary:20 }}</td>
-                <td data-toggle="tooltip" title="{{article.title}}">{{ article.ArticleTitle | summary:20 }}</td>
-                <td data-toggle="tooltip" title="{{article.summary}}">{{ article.ArticleSummary | summary:20 }}</td>
-                <td data-toggle="tooltip" title="{{article.url}}"><a href="{{article.ArticleUrl}}" target="_blank">Link</a></td>
-                <td>{{ article.ArticlePublicationDate.toString() | date :'fullDate' }}</td>
-                <!-- <td data-toggle="tooltip" title="{{article.content}}">{{ article.content | summary:20 }}</td>
-                <td data-toggle="tooltip" title="{{article.synopsis}}"><synopsis [synopsis-text]="article.synopsis" ></synopsis></td> -->
-                <td>{{ article.ArticleSource }}</td>
-                <td>{{ article.ArticleCategory }}</td>
-                <td><span *ngIf="article.ArticleIsDeleted">Deleted</span></td>
-                <td width="350" class="text-center">
-                    <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
-                        <mat-icon (click)="editArticle(article.ArticleId)">create</mat-icon>
-                    </button>
-                    <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
-                        <mat-icon class="add-course-btn" (click)="softDeleteArticle(article.ArticleId)">delete</mat-icon>
-                    </button>
-                    <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
-                        <mat-icon class="add-course-btn" (click)="undoSoftDeleteArticle(article.ArticleId)">delete_sweep</mat-icon>
-                    </button>
-                    <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
-                        <mat-icon class="add-course-btn" (click)="deleteArticle(article.ArticleId)">delete_forever</mat-icon>
-                    </button>
-                    <!-- <button mat-button color="primary" (click)="editArticle(article.id)">{{Resources.EditCaption}}</button>
-                    <button mat-button (click)="deleteArticle(article.id)">{{Resources.DeleteCaption}}</button> -->
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="row">
+        <div [ngClass]="{'col-md-12': loadedArticleId === undefined, 'col-md-8': loadedArticleId !== undefined}">
+            <div class="col-sm-12 row body-header">
+                <div class="col-sm-6 col-lg-6">
+                    <div class="col-sm-12">
+                        <h2 class="header">{{Resources.Header}}
+                            <button
+                                class="btn-add-item"
+                                mat-mini-fab color="primary"
+                                matTooltip="{{ Resources.AddToolTip }}"
+                                (click)="addArticle()">
+                                    <mat-icon>add</mat-icon>
+                            </button>
+                        </h2>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 pr-0">
+                    <input #search (keyup)="searchArticle(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
+                </div>
+            </div>
+            <div class="col-sm-12 row body-header">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col" class="text-center">{{Resources.TableHeaders.SlColumn}}</th>
+                        <th scope="col">{{Resources.TableHeaders.TitleColumn}}</th>
+                        <th scope="col">{{Resources.TableHeaders.PublicationDateColumn}}</th>
+                        <th scope="col">{{Resources.TableHeaders.SourceColumn}}</th>
+                        <th scope="col">{{Resources.TableHeaders.CategoryColumn}}</th>
+                        <th class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let article of articles$ | async; let i = index" class="pointer"
+                        [ngClass]="{deleted: article.articleIsDeleted === true}" 
+                        (click)="loadArticle(article.articleId)">
+
+                        <td width="50" class="text-center">{{ i+1 }}</td>
+                        <td data-toggle="tooltip" title="{{article.title}}">{{ article.articleTitle | summary:50 }}</td>
+                        <td> {{ article.articlePublicationDate.toString() | date :'mediumDate' }}</td>
+                        <td>{{ article.articleSource }}</td>
+                        <td>{{ article.articleCategory }}</td>
+                        <td width="250" class="text-center">
+                            <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
+                                <mat-icon (click)="editArticle(article.articleId)">create</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
+                                <mat-icon (click)="softDeleteArticle(article.articleId)">delete</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
+                                <mat-icon (click)="undoSoftDeleteArticle(article.articleId)">delete_sweep</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
+                                <mat-icon (click)="deleteArticle(article.articleId)">delete_forever</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="col-md-4 row body-header" [hidden]="loadedArticleId === undefined">
+            <article class="col-md-12 article">
+                <article-card
+                [article-data]="articleDetail$"></article-card>
+            </article>
+       </div>
+    </div>
 </div>

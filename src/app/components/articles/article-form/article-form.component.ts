@@ -35,6 +35,7 @@ export class ArticleFormComponent implements OnInit {
   public tagList$: Observable<Tag[]>;
   public tags$: Observable<string[]>;
   public selectedTags$: Observable<string[]>;
+  base64Image;
     
   public Resources = {
     Header: "Article",
@@ -82,8 +83,6 @@ export class ArticleFormComponent implements OnInit {
     private tagService: TagService
   ) {  }
 
-  base64Image;
-
   ngOnInit() {
     this.loadData();
   }
@@ -115,7 +114,7 @@ export class ArticleFormComponent implements OnInit {
     .pipe(
         map(items =>
             items.map(item => {
-            return {id: item.Id.toString(), name: item.Name}
+            return {id: item.id.toString(), name: item.name}
             })
         )
     );
@@ -128,7 +127,7 @@ export class ArticleFormComponent implements OnInit {
       .pipe(
         map(items => 
           items.map(item => {
-            return {id:item.Id.toString(),  name:item.Name}
+            return {id:item.id.toString(),  name:item.name}
           })
         )
       );
@@ -144,7 +143,7 @@ export class ArticleFormComponent implements OnInit {
             {
                 return items.map(
                     item => {
-                        return item.Name;
+                        return item.name;
                     }
                 )
             }
@@ -155,24 +154,23 @@ export class ArticleFormComponent implements OnInit {
   getArticleDetailById(id?: number) {
     this.articleService.getById(id)
     .subscribe(x => {
-        debugger;
         this.articleDetail$ = this.articleService.article$;
         this.objArticleDetail = this.articleService.selectedArticle;
 
         this.selectedCategory$ = this.articleDetail$.pipe(
-            map(x => x.ArticleCategoryId.toString())
+            map(x => x.articleCategoryId.toString())
         );
         
         this.selectedSource$ = this.articleDetail$.pipe(
             map(x => {
-                return x.ArticleSourceId.toString();
+                return x.articleSourceId.toString();
             })
         );
 
         this.selectedTags$ = this.articleDetail$.pipe(
             map(x => {
-                if(x.ArticleTags !== undefined) {
-                    return x.ArticleTags;
+                if(x.articleTags !== undefined) {
+                    return x.articleTags;
                 }
                 else {
                     return [];
@@ -196,58 +194,58 @@ export class ArticleFormComponent implements OnInit {
   }
 
   onAuthorChange(event) {
-      this.objArticleDetail.ArticleAuthor = event.target.value;
+      this.objArticleDetail.articleAuthor = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onUrlChange(event) {
-    this.objArticleDetail.ArticleUrl = event.target.value;
+    this.objArticleDetail.articleUrl = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onPublicationDateChange(event) {
-    this.objArticleDetail.ArticlePublicationDate = event.target.value;
+    this.objArticleDetail.articlePublicationDate = event.target.value;
     console.log(event.target.value);
     this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onTitleChange(event) {
-    this.objArticleDetail.ArticleTitle = event.target.value;
+    this.objArticleDetail.articleTitle = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onSummaryChange(event) {
-    this.objArticleDetail.ArticleSummary = event.target.value;
+    this.objArticleDetail.articleSummary = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onContentChange(event) {
-    this.objArticleDetail.ArticleContent = event.target.value;
+    this.objArticleDetail.articleContent = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onSynopsisChange(event) {
-    this.objArticleDetail.ArticleSynopsis = event.target.value;
+    this.objArticleDetail.articleSynopsis = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onSourceSelectionChange(selectedSource: DropDownModel) {
-      this.objArticleDetail.ArticleSourceId = selectedSource === null ? 0 : parseInt(selectedSource.id);
-      this.objArticleDetail.ArticleSource = selectedSource === null ? "" : selectedSource.name;
+      this.objArticleDetail.articleSourceId = selectedSource === null ? 0 : parseInt(selectedSource.id);
+      this.objArticleDetail.articleSource = selectedSource === null ? "" : selectedSource.name;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
 
   }
 
   onCategorySelectionChange(selectedCategory: DropDownModel) { 
-      this.objArticleDetail.ArticleCategoryId = selectedCategory === null ? 0 : parseInt(selectedCategory.id);
-      this.objArticleDetail.ArticleCategory = selectedCategory === null ? "" : selectedCategory.name;
+      this.objArticleDetail.articleCategoryId = selectedCategory === null ? 0 : parseInt(selectedCategory.id);
+      this.objArticleDetail.articleCategory = selectedCategory === null ? "" : selectedCategory.name;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
 
   }
 
   onTagSelectionChange(selectedTags: string[]) {
-    if(this.objArticleDetail.ArticleTags != selectedTags) {
-      this.objArticleDetail.ArticleTags = selectedTags === null? selectedTags = [] : selectedTags;
+    if(this.objArticleDetail.articleTags != selectedTags) {
+      this.objArticleDetail.articleTags = selectedTags === null? selectedTags = [] : selectedTags;
         this.articleService.refreshSelectedArticle(this.objArticleDetail);
     }
 
@@ -260,9 +258,9 @@ export class ArticleFormComponent implements OnInit {
       reader.readAsDataURL(event.target.files[0]); // read file as data url
 
       reader.onload = (evnt) => { // called once readAsDataURL is completed
-        this.objArticleDetail.ImageData = evnt.target.result;
+        this.objArticleDetail.imageData = evnt.target.result;
         console.log(evnt.target.result);
-        this.objArticleDetail.ImageName = event.target.files[0].name;
+        this.objArticleDetail.imageName = event.target.files[0].name;
         this.articleService.refreshSelectedArticle(this.objArticleDetail);
 
       }

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Source } from 'src/app/models/source';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { isNumeric } from 'src/app/common/util';
@@ -15,6 +15,8 @@ export class SourceFormComponent implements OnInit {
   public sourceId: number;
   public sourceDetail$: Observable<Source>
   public mode: string;
+
+  @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
 
   public Resources = {
     Header: "Source",
@@ -61,7 +63,7 @@ export class SourceFormComponent implements OnInit {
   onSourceSubmit(form) {
     if(form.valid) {
       this.sourceId = this.sourceId === undefined? 0: this.sourceId;
-      this.sourceService.save(this.sourceId,  new Source(this.sourceId, form.value.Name, false));
+      this.sourceService.save(this.sourceId,  new Source(this.sourceId, this.nameInput.nativeElement.value, false));
       this.router.navigate(['/sources']);
     }
   }

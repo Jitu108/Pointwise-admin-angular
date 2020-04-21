@@ -1,0 +1,12 @@
+div {
+  top: 40%;
+  left: 50%;
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 60px;
+  text-transform: uppercase;
+  border: 5px solid;
+  padding: 15px;
+}
+/*# sourceMappingURL=page-not-found.component.css.map */

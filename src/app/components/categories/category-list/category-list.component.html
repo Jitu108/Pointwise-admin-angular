@@ -31,20 +31,20 @@
             <tbody>
                 <tr *ngFor="let category of categories$ | async; let i = index">
                     <td width="200" class="text-center">{{ i+1 }}</td>
-                    <td>{{ category.Name }}</td>
-                    <td><span *ngIf="category.IsDeleted">Deleted</span></td>
+                    <td>{{ category.name }}</td>
+                    <td><span *ngIf="category.isDeleted">Deleted</span></td>
                     <td width="350" class="text-center">
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
-                            <mat-icon (click)="editCategory(category.Id)">create</mat-icon>
+                            <mat-icon (click)="editCategory(category.id)">create</mat-icon>
                         </button>
                         <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="softDeleteCategory(category.Id)">delete</mat-icon>
+                            <mat-icon (click)="softDeleteCategory(category.id)">delete</mat-icon>
                         </button>
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="undoSoftDeleteCategory(category.Id)">delete_sweep</mat-icon>
+                            <mat-icon (click)="undoSoftDeleteCategory(category.id)">delete_sweep</mat-icon>
                         </button>
                         <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
-                            <mat-icon class="add-course-btn" (click)="deleteCategory(category.Id)">delete_forever</mat-icon>
+                            <mat-icon (click)="deleteCategory(category.id)">delete_forever</mat-icon>
                         </button>
                     </td>
                 </tr>

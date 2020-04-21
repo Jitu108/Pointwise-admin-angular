@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { TagService } from 'src/app/services/tag.service';
 import { Observable } from 'rxjs';
@@ -15,6 +16,8 @@ export class TagFormComponent implements OnInit {
   public tagId: number;
   public tagDetail$: Observable<Tag>;
   public mode: string;
+
+  @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
 
   public Resources = {
     Header: "Tag",
@@ -61,7 +64,7 @@ export class TagFormComponent implements OnInit {
   onTagSubmit(form) {
     if(form.valid) {
       this.tagId = this.tagId === undefined? 0: this.tagId;
-      this.tagService.save(this.tagId, new Tag(this.tagId, form.value.Name, false));
+      this.tagService.save(this.tagId, new Tag(this.tagId, this.nameInput.nativeElement.value, false));
       this.router.navigate(['/tags']);
     }
   }

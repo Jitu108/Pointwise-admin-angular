@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,QAAQ,CAAC;EACL,gBAAgB,EAAE,eAAe;CACpC;;AAED,AAAA,QAAQ,CAAC;EACJ,MAAM,EAAE,OAAO;CACnB",
+    "sources": [
+        "article-list.component.scss"
+    ],
+    "names": [],
+    "file": "article-list.component.css"
+}

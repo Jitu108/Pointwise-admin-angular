@@ -54,7 +54,7 @@ export class SourceService {
     var sources$ = this.repository.getAllSources();
 
     return sources$.pipe(
-      map(sources => sources.filter(source => source.Name.toLowerCase().includes(searchString.toLowerCase())))
+      map(sources => sources.filter(source => source.name.toLowerCase().includes(searchString.toLowerCase())))
     );
   }
 

@@ -54,7 +54,7 @@ export class CategoryService {
     var categories$ = this.repository.getAllCategories();
 
     return categories$.pipe(
-      map(categories => categories.filter(category => category.Name.toLowerCase().includes(searchString.toLowerCase())))
+      map(categories => categories.filter(category => category.name.toLowerCase().includes(searchString.toLowerCase())))
     );
   }
 }

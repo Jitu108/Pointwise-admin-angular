@@ -18,7 +18,7 @@ export class ArticleRepository {
     articles$: Observable<Article[]> = this.subject.asObservable();
 
     init() {
-        const http$ = createHttpObservable('/api/Articles');
+        const http$ = createHttpObservable('/api/articles');
 
         http$
             .pipe(
@@ -30,7 +30,7 @@ export class ArticleRepository {
     }
 
     getById(id: number) : Observable<Article> {
-        return createHttpObservable(`/api/Articles/${id}`);
+        return createHttpObservable(`/api/articles/${id}`);
         
         // var defaultValue: Article = new Article(0);
         // return this.articles$
@@ -45,7 +45,7 @@ export class ArticleRepository {
         var defaultValue: Article[] = [];
         return this.articles$
             .pipe(
-                map(articles => articles.filter(article => article.ArticleIsDeleted == false)),
+                map(articles => articles.filter(article => article.articleIsDeleted == false)),
                 filter(article => !!article)
             )
             .pipe(defaultIfEmpty(defaultValue));
@@ -61,7 +61,7 @@ export class ArticleRepository {
     save(id: number, article: Article) {
         console.log(JSON.stringify(article));
         if(id === 0){
-            fromPromise(fetch(`api/Articles`, {
+            fromPromise(fetch(`api/articles`, {
                 method: 'POST',
                 body: JSON.stringify(article),
                 headers: {
@@ -72,7 +72,7 @@ export class ArticleRepository {
             });
         }
         else {
-            fromPromise(fetch(`/api/Articles/${id}`, {
+            fromPromise(fetch(`/api/articles/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(article),
                 headers: {
@@ -84,28 +84,43 @@ export class ArticleRepository {
         }
     }
 
-    softDelete(id: number) {
-        fromPromise(fetch(`/api/Articles/SoftDelete?id=${id}`, {
+    softDelete(id: number): Observable<boolean> {
+        const isDeleted$ = fromPromise(fetch(`/api/articles/softdelete/${id}`, {
             method: 'DELETE'
-        })).subscribe(res =>{
+        }))
+        .pipe(map(res => res.ok));
+
+        isDeleted$.subscribe(res =>{
             this.init();
         });
+
+        return isDeleted$;
     }
 
-    undoSoftDelete(id: number) {
-        fromPromise(fetch(`/api/Articles/UndoSoftDelete?id=${id}`, {
-            method: 'DELETE'
-        })).subscribe(res =>{
+    undoSoftDelete(id: number): Observable<boolean> {
+        const isUndoDeleted$ = fromPromise(fetch(`/api/articles/undosoftdelete/${id}`, {
+            method: 'PATCH'
+        }))
+        .pipe(map(res => res.ok));
+
+        isUndoDeleted$.subscribe(res =>{
             this.init();
         });
+
+        return isUndoDeleted$;
     }
     
 
-    delete(id: number) {
-        fromPromise(fetch(`/api/Articles/${id}`, {
+    delete(id: number): Observable<boolean> {
+        const isDeleted$ = fromPromise(fetch(`/api/articles/${id}`, {
             method: 'DELETE'
-        })).subscribe(res =>{
+        }))
+        .pipe(map(res => res.ok));
+        
+        isDeleted$.subscribe(res =>{
             this.init();
         });
+
+        return isDeleted$;
     }
 }

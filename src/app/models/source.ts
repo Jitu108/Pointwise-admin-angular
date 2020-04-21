@@ -1,7 +1,7 @@
 export class Source {
     constructor(
-        public Id: number,
-        public Name: string,
-        public IsDeleted: boolean
+        public id: number,
+        public name: string,
+        public isDeleted: boolean
     ) { }
 }

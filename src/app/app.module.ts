@@ -22,6 +22,11 @@ import { SourceListComponent } from './components/sources/source-list/source-lis
 import { SourceFormComponent } from './components/sources/source-form/source-form.component';
 import { TagListComponent } from './components/tags/tag-list/tag-list.component';
 import { TagFormComponent } from './components/tags/tag-form/tag-form.component';
+import { ArticleCardComponent } from './components/shared/article-card/article-card.component';
+import { UserLoginComponent } from './components/users/user-login/user-login.component';
+import { UserRegistrationComponent } from './components/users/user-registration/user-registration.component';
+import { UserManagementComponent } from './components/users/user-management/user-management.component';
+import { DropdownDirective } from './components/shared/dropdown-directive/dropdown.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +43,12 @@ import { TagFormComponent } from './components/tags/tag-form/tag-form.component'
     TagFormComponent,
     SynopsisComponent,
     DropDownListComponent,
-    ChipsetComponent
+    ChipsetComponent,
+    ArticleCardComponent,
+    UserLoginComponent,
+    UserRegistrationComponent,
+    UserManagementComponent,
+    DropdownDirective
   ],
   imports: [
     BrowserModule,

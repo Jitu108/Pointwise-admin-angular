@@ -1,0 +1,32 @@
+<mat-card class="mat-card-custom disable-text-selection" [ngClass]="{deleted: (articleDetail$ | async)?.articleIsDeleted === true}">
+    <figure *ngIf="(articleDetail$ | async)?.imageData !== null">
+        <div class="image-container">
+            <img alt="Article Image" [src]="(articleDetail$ | async)?.imageData" class="image">
+        </div>
+        <figcaption class="caption">Representative Image</figcaption>
+    </figure>
+    <section class="main">
+        <header>
+            <h2>
+                <a target="_blank" href="{{ (articleDetail$ | async)?.articleUrl }}">
+                    {{ (articleDetail$ | async)?.articleTitle }}
+                </a>
+            </h2>
+            <h6>{{ (articleDetail$ | async)?.articleSummary | summary:100 }}</h6>
+        </header>
+        <div class="articlebody">                    
+            <synopsis [synopsis-text]="(articleDetail$ | async)?.articleSynopsis"></synopsis>
+        </div>   
+    </section>             
+    <section class="footer clearfix">
+        <div class="author">{{ (articleDetail$ | async)?.articleSource }} | <code>{{ (articleDetail$ | async)?.articleCategory }}</code></div>
+        <div class="publish-at">
+        <span>Published At: </span>
+        <span>{{ (articleDetail$ | async)?.articlePublicationDate | date }}</span></div>
+    </section>
+    
+    <section class="tags">
+        <span *ngIf="(articleDetail$ | async)?.articleTags?.length > 0">Tags:</span>
+        <a *ngFor="let tag of (articleDetail$ | async)?.articleTags">{{ tag }} </a>
+    </section>
+</mat-card>

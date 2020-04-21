@@ -1,28 +1,28 @@
 export class Article {
     constructor(
-        public ArticleId: number,
-        public ArticleAuthor?: string,
-        public ArticleTitle?: string,
-        public ArticleSummary?: string,
-        public ArticleUrl?: string,
-        public ArticlePublicationDate?: Date,
-        public ArticleContent?: string,
-        public ArticleSynopsis?: string,
-        public ArticleSourceId?: number,
-        public ArticleCategoryId?: number,
-        public ArticleSource?: string,
-        public ArticleCategory?: string,
-        public ArticleAssetType?: string,
-        public ArticleTags?: string[],
+        public articleId: number,
+        public articleAuthor?: string,
+        public articleTitle?: string,
+        public articleSummary?: string,
+        public articleUrl?: string,
+        public articlePublicationDate?: Date,
+        public articleContent?: string,
+        public articleSynopsis?: string,
+        public articleSourceId?: number,
+        public articleCategoryId?: number,
+        public articleSource?: string,
+        public articleCategory?: string,
+        public articleAssetType?: string,
+        public articleTags?: string[],
 
-        public ImageId?: number,
-        public ImageName?: string,
-        public ImagePath?: string,
-        public ImageContentType?: string,
-        public ImageData?: string | ArrayBuffer,
-        public ImageExtension?: string,
+        public imageId?: number,
+        public imageName?: string,
+        public imagePath?: string,
+        public imageContentType?: string,
+        public imageData?: string | ArrayBuffer,
+        public imageExtension?: string,
 
-        public ArticleIsDeleted?: boolean
+        public articleIsDeleted?: boolean
         
     ) { }
 }

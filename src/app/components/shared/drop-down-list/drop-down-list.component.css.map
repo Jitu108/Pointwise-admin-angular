@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "drop-down-list.component.scss"
+    ],
+    "names": [],
+    "file": "drop-down-list.component.css"
+}

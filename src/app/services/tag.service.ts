@@ -55,7 +55,7 @@ export class TagService {
     var tags$ = this.repository.getAllTags();
 
     return tags$.pipe(
-      map(tags => tags.filter(source => source.Name.toLowerCase().includes(searchString.toLowerCase())))
+      map(tags => tags.filter(source => source.name.toLowerCase().includes(searchString.toLowerCase())))
     );
   }
   

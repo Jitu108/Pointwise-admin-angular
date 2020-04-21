@@ -1,0 +1,87 @@
+<div class="d-flex justify-content-center vw-100 mt-5">
+    <div class="w-50">
+        <form id="registerForm" #registerForm="ngForm" (ngSubmit)="onRegisterClick(registerForm)">
+            <mat-card>
+             <legend class="scheduler-border">{{Resources.Header}}</legend>
+                <div class="m-3">
+                    <mat-form-field class="w-100">
+                        <mat-label>{{Resources.FirstNameCaption}}</mat-label>
+                        <input type="text"
+                            matInput 
+                            #firstNameInput="ngModel" name="firstName" [ngModel]="(user$ | async)?.firstName"
+                            placeholder="{{Resources.FirstNamePlaceholder}}"
+                            required
+                        >
+                        <mat-error *ngIf="!(firstNameInput.valid || (firstNameInput.pristine && !registerForm.submitted))">
+                            {{Resources.Validation.FirstNameRequiredMessage}}
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-100">
+                        <mat-label>{{Resources.MiddleNameCaption}}</mat-label>
+                        <input type="text"
+                            matInput 
+                            #middleNameInput="ngModel" name="middleName" [ngModel]="(user$ | async)?.middleName"
+                            placeholder="{{Resources.FirstNamePlaceholder}}"
+                        >
+                      </mat-form-field>
+                      <mat-form-field class="w-100">
+                        <mat-label>{{Resources.LastNameCaption}}</mat-label>
+                        <input type="text"
+                            matInput 
+                            #lastNameInput="ngModel" name="lastName" [ngModel]="(user$ | async)?.lastName"
+                            placeholder="{{Resources.LastNamePlaceholder}}"
+                        >
+                      </mat-form-field>
+                      <mat-form-field class="w-100">
+                        <mat-label>{{Resources.EmailAddressCaption}}</mat-label>
+                        <input type="text"
+                            matInput 
+                            #emailAddressInput="ngModel" name="emailAddress" [ngModel]="(user$ | async)?.emailAddress"
+                            placeholder="{{Resources.EmailAddressPlaceholder}}"
+                            required
+                        >
+                        <mat-error *ngIf="!(emailAddressInput.valid || (emailAddressInput.pristine && !registerForm.submitted))">
+                            {{Resources.Validation.EmailAddressRequiredMessage}}
+                        </mat-error>
+                      </mat-form-field>
+                    <mat-form-field class="w-100">
+                        <mat-label>{{Resources.UserNameCaption}}</mat-label>
+                        <input type="text"
+                            matInput 
+                            #userName="ngModel" name="userName" [ngModel]="(user$ | async)?.userName"
+                            placeholder="{{Resources.UserNamePlaceholder}}"
+                            autocomplete="off"
+                            required
+                        >
+                        <mat-error *ngIf="!(userName.valid || (userName.pristine && !registerForm.submitted))">
+                            {{Resources.Validation.UsernameRequiredMessage}}
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="w-100">
+
+                        <mat-label>{{Resources.PasswordCaption}}</mat-label>
+
+                        <input type="password"
+                            matInput 
+                            #passwordInput="ngModel" name="password" [ngModel]="(user$ | async)?.password"
+                            placeholder="{{Resources.PasswordPlaceholder}}"
+                            autocomplete="off"
+                            required
+                        >
+                        <mat-error *ngIf="!(passwordInput.valid || (passwordInput.pristine && !registerForm.submitted))">
+                            {{Resources.Validation.PasswordRequiredMessage}}
+                        </mat-error>
+                      </mat-form-field>
+                </div>
+    
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button mat-raised-button color="primary" class="mr-2">{{Resources.RegisterCaption}}</button>
+                        <button mat-raised-button (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                    </div>
+
+                </div>
+            </mat-card>
+        </form>
+    </div>
+</div>

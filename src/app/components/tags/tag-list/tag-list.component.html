@@ -31,21 +31,21 @@
             <tbody>
                 <tr *ngFor="let tag of tags$ | async; let i = index">
                     <td width="100" class="text-center">{{ i+1 }}</td>
-                    <td>{{ tag.Name }}</td>
-                    <td><span *ngIf="tag.IsDeleted">Deleted</span></td>
+                    <td>{{ tag.name }}</td>
+                    <td><span *ngIf="tag.isDeleted">Deleted</span></td>
                     <td width="350" class="text-center">
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
-                            <mat-icon (click)="editTag(tag.Id)">create</mat-icon>
+                            <mat-icon (click)="editTag(tag.id)">create</mat-icon>
                         </button>
                 
                         <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="softDeleteTag(tag.Id)">delete</mat-icon>
+                            <mat-icon (click)="softDeleteTag(tag.id)">delete</mat-icon>
                         </button>
                         <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
-                            <mat-icon class="add-course-btn" (click)="undoSoftDeleteTag(tag.Id)">delete_sweep</mat-icon>
+                            <mat-icon (click)="undoSoftDeleteTag(tag.id)">delete_sweep</mat-icon>
                         </button>
                         <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
-                            <mat-icon class="add-course-btn" (click)="deleteTag(tag.Id)">delete_forever</mat-icon>
+                            <mat-icon (click)="deleteTag(tag.id)">delete_forever</mat-icon>
                         </button>
                         <!-- <button mat-button color="primary" (click)="editTag(tag.id)">{{Resources.EditCaption}}</button>
                         <button mat-button (click)="deleteTag(tag.id)">{{Resources.DeleteCaption}}</button> -->

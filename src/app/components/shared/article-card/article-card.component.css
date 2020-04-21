@@ -1,0 +1,157 @@
+.clearfix {
+  zoom: 1;
+}
+
+.clearfix:after {
+  content: '.';
+  clear: both;
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+.article {
+  padding: 0 !important;
+}
+
+.mat-card-custom {
+  padding: 0 !important;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.image-container {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.image {
+  opacity: 0.8;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+  transition: opacity 0.5s, -webkit-transform 0.5s;
+  transition: transform 0.5s, opacity 0.5s;
+  transition: transform 0.5s, opacity 0.5s, -webkit-transform 0.5s;
+}
+
+.image:hover {
+  -webkit-transform: scale(1.03);
+          transform: scale(1.03);
+  opacity: 1;
+}
+
+figcaption.caption {
+  font-size: 60%;
+  color: #999;
+}
+
+.main {
+  margin: 10px;
+}
+
+h2 {
+  font-size: 100%;
+  font-weight: 700;
+  margin: 10px 0;
+  text-align: justify;
+}
+
+h2 a:link,
+h2 a:visited {
+  text-decoration: none;
+  color: #555;
+}
+
+h6 {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: justify;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.articlebody {
+  font-size: 90%;
+  margin-bottom: 10px;
+  font-weight: 400;
+  text-align: justify;
+  line-height: 150%;
+}
+
+.articlebody li {
+  margin: 20px 20px 0 20px;
+}
+
+.footer {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.footer:before {
+  display: block;
+  height: 1px;
+  background-color: #bbb;
+  content: "";
+  margin: 0 auto;
+  margin-bottom: 5px;
+}
+
+.author {
+  margin-left: 10px;
+  font-size: 70%;
+  float: left;
+  font-weight: 400;
+}
+
+.publish-at {
+  margin-right: 10px;
+  font-size: 60%;
+  float: right;
+}
+
+section.tags {
+  margin: 0 10px 10px 10px;
+  font-size: 70%;
+}
+
+section.tags a {
+  font-size: 70%;
+  border: 1px solid #bbb;
+  padding: 1px 2px;
+  margin-left: 5px;
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.image-label {
+  color: rgba(0, 0, 0, 0.44);
+  font-size: 11px;
+  -webkit-filter: blur(0.4px);
+          filter: blur(0.4px);
+}
+
+.image-div {
+  margin: 0 13px 13px;
+}
+
+.deleted {
+  opacity: 0.6;
+}
+
+.disable-text-selection {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/*# sourceMappingURL=article-card.component.css.map */

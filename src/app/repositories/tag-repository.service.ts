@@ -1,6 +1,7 @@
+import { Endpoints } from './../endpoints/endpoints';
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap, map, filter, defaultIfEmpty } from 'rxjs/operators';
+import { map, filter, defaultIfEmpty } from 'rxjs/operators';
 import { createHttpObservable } from '../common/util';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import { Tag } from '../models/tag';
@@ -17,7 +18,7 @@ export class TagRepository {
     tags$: Observable<Tag[]> = this.subject.asObservable();
 
     init() {
-        const http$ = createHttpObservable('/api/Tags/All');
+        const http$ = createHttpObservable(Endpoints.tag.getall.endpoint);
 
         http$
             .pipe(
@@ -32,7 +33,7 @@ export class TagRepository {
         var defaultValue: Tag = new Tag(0, '', false);
         return this.tags$
             .pipe(
-                map(tags => tags.find(tag => tag.Id == id)),
+                map(tags => tags.find(tag => tag.id == id)),
                 filter(tag => !!tag)
             )
             .pipe(defaultIfEmpty(defaultValue));
@@ -42,7 +43,7 @@ export class TagRepository {
         var defaultValue: Tag[] = [];
         return this.tags$
             .pipe(
-                map(tags => tags.filter(tag => tag.IsDeleted == false)),
+                map(tags => tags.filter(tag => tag.isDeleted == false)),
                 filter(tag => !!tag)
             )
             .pipe(defaultIfEmpty(defaultValue));
@@ -56,23 +57,19 @@ export class TagRepository {
 
     save(id: number, tag: Tag) {
         if(id === 0){
-            fromPromise(fetch(`api/Tags`, {
-                method: 'POST',
+            fromPromise(fetch(Endpoints.tag.create.endpoint, {
+                method: Endpoints.tag.create.method,
                 body: JSON.stringify(tag),
-                headers: {
-                    'content-type': 'application/json'
-                }
+                headers: Endpoints.tag.create.headers
             })).subscribe(res =>{
                 this.init();
             });
         }
         else {
-            fromPromise(fetch(`/api/Tags/${id}`, {
-                method: 'PUT',
+            fromPromise(fetch(Endpoints.tag.update.endpoint + id, {
+                method: Endpoints.tag.update.method,
                 body: JSON.stringify(tag),
-                headers: {
-                    'content-type': 'application/json'
-                }
+                headers: Endpoints.tag.update.headers
             })).subscribe(res =>{
                 this.init();
             });
@@ -80,16 +77,16 @@ export class TagRepository {
     }
 
     softDelete(id: number) {
-        fromPromise(fetch(`/api/Tags/SoftDelete?id=${id}`, {
-            method: 'DELETE'
+        fromPromise(fetch(Endpoints.tag.softdelete.endpoint + id, {
+            method: Endpoints.tag.softdelete.method
         })).subscribe(res =>{
             this.init();
         });
     }
 
     undoSoftDelete(id: number) {
-        fromPromise(fetch(`/api/Tags/UndoSoftDelete?id=${id}`, {
-            method: 'DELETE'
+        fromPromise(fetch(Endpoints.tag.undosoftdelete.endpoint + id, {
+            method: Endpoints.tag.undosoftdelete.method
         })).subscribe(res =>{
             this.init();
         });
@@ -97,8 +94,8 @@ export class TagRepository {
     
 
     delete(id: number) {
-        fromPromise(fetch(`/api/Tags/${id}`, {
-            method: 'DELETE'
+        fromPromise(fetch(Endpoints.tag.delete.endpoint + id, {
+            method: Endpoints.tag.delete.method
         })).subscribe(res =>{
             this.init();
         });
