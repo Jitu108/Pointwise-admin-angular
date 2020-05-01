@@ -1,12 +1,9 @@
 import { Endpoints } from 'src/app/endpoints/endpoints';
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
-import { map, filter, defaultIfEmpty } from 'rxjs/operators';
-import { createHttpObservable } from '../common/util';
-import {fromPromise} from 'rxjs/internal-compatibility';
-
-
+import { httpGet, httpPost, httpPut, httpDelete, httpPatch } from '../common/util';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -14,96 +11,43 @@ import {fromPromise} from 'rxjs/internal-compatibility';
 
 export class CategoryRepository {
 
-    private subject = new BehaviorSubject<Category[]>([]);
+    constructor(private http: HttpClient) {}
 
-    categories$: Observable<Category[]> = this.subject.asObservable();
-
-    init() {
-        //const http$ = createHttpObservable('/api/categories/all');
-        const http$ = createHttpObservable(Endpoints.category.getall.endpoint);
-
-        http$
-            .pipe(
-                map(res => Object.values(res))
-            )
-            .subscribe(
-                
-                categories => {
-                    console.log(categories);
-                    this.subject.next(categories);
-                }
-            );
+    getCategories() : Observable<Category[]> {
+        const url = Endpoints.category.get.endpoint;
+        return httpGet<Category[]>(this.http, url);
     }
 
-    getById(id: number) {
-        var defaultValue: Category = new Category(0, '', false);
-        return this.categories$
-            .pipe(
-                map(categories => categories.find(category => category.id == id)),
-                filter(category => !!category)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-    }
+    getById(id: number) : Observable<Category> {
+        const url = Endpoints.category.getbyid.endpoint + id;
+        return httpGet<Category>(this.http, url);
+    }   
 
-    getCategories() {
-        var defaultValue: Category[] = [];
-        return this.categories$
-            .pipe(
-                map(categories => categories.filter(category => category.isDeleted == false)),
-                filter(category => !!category)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-
-    }
-
-    getAllCategories() {
-        const categories = this.subject.getValue();
-        return this.categories$;
-    }
-
-    save(id: number, category: Category) {
+    save(id: number, category: Category) : Observable<Category> {
+        const body = category;
         if(id === 0){
-            fromPromise(fetch(Endpoints.category.create.endpoint, {
-                method: Endpoints.category.create.method,
-                body: JSON.stringify(category),
-                headers: Endpoints.category.create.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.category.create.endpoint;
+            return httpPost<Category>(this.http, url, body);
         }
         else {
-            fromPromise(fetch( Endpoints.category.update.endpoint + id, {
-                method: Endpoints.category.update.method,
-                body: JSON.stringify(category),
-                headers: Endpoints.category.update.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.category.update.endpoint + id;
+            return httpPut<Category>(this.http, url, body);
         }
     }
 
-    softDelete(id: number) {
-        fromPromise(fetch(Endpoints.category.softdelete.endpoint + id, {
-            method: Endpoints.category.softdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    softDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.category.softdelete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 
-    undoSoftDelete(id: number) {
-        fromPromise(fetch(Endpoints.category.undosoftdelete.endpoint + id, {
-            method: Endpoints.category.undosoftdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    undoSoftDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.category.undosoftdelete.endpoint + id;
+        return httpPatch<boolean>(this.http, url, null);
     }
     
 
-    delete(id: number) {
-        fromPromise(fetch(Endpoints.category.delete.endpoint + id, {
-            method: Endpoints.category.delete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    delete(id: number) : Observable<boolean> {
+        const url = Endpoints.category.delete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 }

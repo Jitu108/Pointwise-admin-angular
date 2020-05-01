@@ -2,8 +2,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserLogin } from 'src/app/models/user-login';
-import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'user-login',
@@ -14,6 +14,8 @@ export class UserLoginComponent implements OnInit {
 
     public userId: number;
     public user$: Observable<User>;
+    public isLoading: boolean = false;
+    public error: {hasError: boolean, message: string} = {hasError: false, message:""};
 
     @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
 
@@ -31,27 +33,34 @@ export class UserLoginComponent implements OnInit {
     }
   }
 
-  constructor(private service: UserService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+      this.error.hasError = false;
   }
 
   // Submit
   onLoginClick(form) {
-      debugger;
     if(form.valid) {
-        console.log(form);
-        this.service.login(new UserLogin(form.value.userName, form.value.password))
+        this.isLoading = true;
+        this.error.hasError = false;
+        this.authService.login(new UserLogin(form.value.userName, form.value.password))
         .subscribe(res => {
-            debugger;
-            console.log(res);
-            this.router.navigate(['/sources']);
+            //console.log(this.authService.loggedInuser);
+            //console.log(this.authService.loggedInuser.token);
+            this.isLoading = false;
+            this.router.navigate(['/articles']);
+        }, error => {
+            this.error = {hasError: true, message: error.message};
+            this.isLoading = false;
         });
     }
   }
   
   // Cancel
   onCancelClick() {
+      debugger;
+    this.error = {hasError: false, message: ""};
   }
 
 }

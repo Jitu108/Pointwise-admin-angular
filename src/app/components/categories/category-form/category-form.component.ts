@@ -63,8 +63,10 @@ export class CategoryFormComponent implements OnInit {
   onCategorySubmit(form) {
     if(form.valid) {
       this.categoryId = this.categoryId === undefined? 0: this.categoryId;
-      this.categoryService.save(this.categoryId, new Category(this.categoryId, this.nameInput.nativeElement.value, false));
-      this.router.navigate(['/categories']);
+      this.categoryService.save(this.categoryId, new Category(this.categoryId, this.nameInput.nativeElement.value, false))
+        .subscribe(x=> {
+            this.router.navigate(['/categories']);
+        });
     }
   }
   

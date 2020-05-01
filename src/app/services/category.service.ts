@@ -1,6 +1,6 @@
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CategoryRepository } from '../repositories/category-repository.service';
 
@@ -9,51 +9,72 @@ import { CategoryRepository } from '../repositories/category-repository.service'
 })
 export class CategoryService {
   
+    private categoryListSubject = new BehaviorSubject<Category[]>([]);
+    categoryList$: Observable<Category[]> = this.categoryListSubject.asObservable();
+
   constructor(private repository: CategoryRepository) { }
 
+  init() {
+    this.repository.getCategories()
+    .subscribe(
+        items => this.categoryListSubject.next(items)
+    );
+  }
 
+  // Get all Categories
+  getCategories() : Observable<Category[]> {
+      this.init();
+    const items = this.categoryListSubject.getValue();
+    return this.categoryList$;
+  }  
   // Save Category
-  save(id: number, category: Category) {
-    return this.repository.save(id, category);
+  save(id: number, category: Category) : Observable<Category>{
+    return this.repository.save(id, category)
+    .pipe(tap(res => {
+        this.init();
+    }));
   }
 
   // Soft Delete Category
-  softDelete(id: number) {
-    return this.repository.softDelete(id);
+  softDelete(id: number) : Observable<boolean>{
+    return this.repository.softDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Undo Soft Delete Category
-  undoSoftDelete(id: number) {
-    return this.repository.undoSoftDelete(id);
+  undoSoftDelete(id: number) : Observable<boolean> {
+    return this.repository.undoSoftDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Delete Category
-  delete(id: number) {
-    return this.repository.delete(id);
+  delete(id: number) : Observable<boolean>{
+    return this.repository.delete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Get Category By Id
   getById(id: number) : Observable<Category> {
-    return this.repository.getById(id);
+    return this.repository.getById(id)
+    .pipe(tap(x => {
+        this.init();
+    }));
   }
-
-  // Get all Categories
-  getAllCategories() : Observable<Category[]> {
-    var categories$ = this.repository.getAllCategories();
-    return categories$;
-  }
-
-    // Get all Categories - Non-soft deleted
-    getCategories() : Observable<Category[]> {
-      var categories$ = this.repository.getCategories();
-      return categories$;
-    }
 
   // Search Categories
   getAllBySearchString(searchString: string){
-    var categories$ = this.repository.getAllCategories();
+    this.init();
 
-    return categories$.pipe(
+    return this.categoryList$.pipe(
       map(categories => categories.filter(category => category.name.toLowerCase().includes(searchString.toLowerCase())))
     );
   }

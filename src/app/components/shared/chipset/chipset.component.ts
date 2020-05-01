@@ -35,7 +35,7 @@ export class ChipsetComponent implements OnInit, OnChanges {
     this.tempItems$ = this.items$.pipe(map(items => items.sort()));
 
     this.tempItems$.subscribe(items => {
-        console.log(items);
+        //console.log(items);
       items.sort();
       this.itemsArray = Object.assign([], items);
     });
@@ -64,7 +64,6 @@ export class ChipsetComponent implements OnInit, OnChanges {
        if(this.selectedItems$ !== undefined) {
        this.selectedItems$.subscribe
        (items => {
-           debugger;
                // Remove item from filteredItems$
                 this.filteredItems$ = this.filteredItems$.pipe(
                     map(arrItems => {

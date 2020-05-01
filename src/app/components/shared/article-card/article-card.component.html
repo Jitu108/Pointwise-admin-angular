@@ -3,7 +3,7 @@
         <div class="image-container">
             <img alt="Article Image" [src]="(articleDetail$ | async)?.imageData" class="image">
         </div>
-        <figcaption class="caption">Representative Image</figcaption>
+        <figcaption class="caption">{{ (articleDetail$ | async)?.imageCaption }}</figcaption>
     </figure>
     <section class="main">
         <header>
@@ -12,10 +12,10 @@
                     {{ (articleDetail$ | async)?.articleTitle }}
                 </a>
             </h2>
-            <h6>{{ (articleDetail$ | async)?.articleSummary | summary:100 }}</h6>
+            <h6>{{ (articleDetail$ | async)?.articleSubTitle | summary:100 }}</h6>
         </header>
         <div class="articlebody">                    
-            <synopsis [synopsis-text]="(articleDetail$ | async)?.articleSynopsis"></synopsis>
+            <synopsis [synopsis-text]="(articleDetail$ | async)?.articleSummary"></synopsis>
         </div>   
     </section>             
     <section class="footer clearfix">

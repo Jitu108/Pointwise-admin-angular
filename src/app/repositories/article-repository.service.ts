@@ -1,11 +1,9 @@
+import { Article } from './../models/article';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Article } from 'src/app/models/article';
-import { tap, map, filter, defaultIfEmpty } from 'rxjs/operators';
-import { createHttpObservable } from '../common/util';
-import {fromPromise} from 'rxjs/internal-compatibility';
-
-
+import { Observable } from 'rxjs';
+import { Endpoints } from '../endpoints/endpoints';
+import { httpGet, httpPost, httpPut, httpDelete, httpPatch } from '../common/util';
 
 @Injectable({
     providedIn: 'root'
@@ -13,114 +11,43 @@ import {fromPromise} from 'rxjs/internal-compatibility';
 
 export class ArticleRepository {
 
-    private subject = new BehaviorSubject<Article[]>([]);
+    constructor(private http: HttpClient) {}
 
-    articles$: Observable<Article[]> = this.subject.asObservable();
-
-    init() {
-        const http$ = createHttpObservable('/api/articles');
-
-        http$
-            .pipe(
-                map(res => Object.values(res))
-            )
-            .subscribe(
-                articles => this.subject.next(articles)
-            );
+    getArticles() : Observable<Article[]> {
+        const url = Endpoints.article.get.endpoint;
+        return httpGet<Article[]>(this.http, url);
     }
 
     getById(id: number) : Observable<Article> {
-        return createHttpObservable(`/api/articles/${id}`);
-        
-        // var defaultValue: Article = new Article(0);
-        // return this.articles$
-        //     .pipe(
-        //         map(articles => articles.find(article => article.ArticleId == id)),
-        //         filter(article => !!article)
-        //     )
-        //     .pipe(defaultIfEmpty(defaultValue));
+        const url = Endpoints.article.getbyid.endpoint + id;
+        return httpGet<Article>(this.http, url);
     }
 
-    getArticles() {
-        var defaultValue: Article[] = [];
-        return this.articles$
-            .pipe(
-                map(articles => articles.filter(article => article.articleIsDeleted == false)),
-                filter(article => !!article)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
+    save(id: number, article: Article): Observable<Article> {
+        const body = article;
 
-    }
-
-    getAllArticles() {
-        const articles = this.subject.getValue();
-
-        return this.articles$;
-    }
-
-    save(id: number, article: Article) {
-        console.log(JSON.stringify(article));
-        if(id === 0){
-            fromPromise(fetch(`api/articles`, {
-                method: 'POST',
-                body: JSON.stringify(article),
-                headers: {
-                    'content-type': 'application/json'
-                }
-            })).subscribe(res =>{
-                this.init();
-            });
+        if(id == 0) {
+            const url = Endpoints.article.create.endpoint;
+            return httpPost<Article>(this.http, url, body);
         }
         else {
-            fromPromise(fetch(`/api/articles/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(article),
-                headers: {
-                    'content-type': 'application/json'
-                }
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.article.update.endpoint + id;
+            return httpPut<Article>(this.http, url, body);
         }
     }
 
     softDelete(id: number): Observable<boolean> {
-        const isDeleted$ = fromPromise(fetch(`/api/articles/softdelete/${id}`, {
-            method: 'DELETE'
-        }))
-        .pipe(map(res => res.ok));
-
-        isDeleted$.subscribe(res =>{
-            this.init();
-        });
-
-        return isDeleted$;
+        const url = Endpoints.article.softdelete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 
     undoSoftDelete(id: number): Observable<boolean> {
-        const isUndoDeleted$ = fromPromise(fetch(`/api/articles/undosoftdelete/${id}`, {
-            method: 'PATCH'
-        }))
-        .pipe(map(res => res.ok));
-
-        isUndoDeleted$.subscribe(res =>{
-            this.init();
-        });
-
-        return isUndoDeleted$;
+        const url = Endpoints.article.undosoftdelete.endpoint + id;
+        return httpPatch<boolean>(this.http, url, null);
     }
     
-
     delete(id: number): Observable<boolean> {
-        const isDeleted$ = fromPromise(fetch(`/api/articles/${id}`, {
-            method: 'DELETE'
-        }))
-        .pipe(map(res => res.ok));
-        
-        isDeleted$.subscribe(res =>{
-            this.init();
-        });
-
-        return isDeleted$;
+        const url = Endpoints.article.delete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 }

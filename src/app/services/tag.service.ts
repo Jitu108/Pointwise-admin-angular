@@ -1,60 +1,81 @@
 import { TagRepository } from './../repositories/tag-repository.service';
 import { Tag } from './../models/tag';
 import { Injectable } from '@angular/core'
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TagService {
 
-  public tags: Tag[] = [];
+    private tagListSubject = new BehaviorSubject<Tag[]>([]);
+    tagList$: Observable<Tag[]> = this.tagListSubject.asObservable();
 
   constructor(private repository: TagRepository) { }
 
+  init() {
+    this.repository.getTags()
+    .subscribe(
+        items => this.tagListSubject.next(items)
+    );
+  }
+
+  // Get all Tags
+  getTags() : Observable<Tag[]> {
+    this.init();
+    const items = this.tagListSubject.getValue();
+    return this.tagList$;
+  }
+
   // Save Tag
-  save(id: number, source: Tag) {
-    return this.repository.save(id, source);
+  save(id: number, tag: Tag) : Observable<Tag> {
+    return this.repository.save(id, tag)
+    .pipe(tap(res => {
+        this.init();
+    }));
   }
 
   // Soft Delete Tag
-  softDelete(id: number) {
-    return this.repository.softDelete(id);
+  softDelete(id: number) : Observable<boolean> {
+    return this.repository.softDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Undo Soft Delete Tag
-  undoSoftDelete(id: number) {
-    return this.repository.undoSoftDelete(id);
+  undoSoftDelete(id: number) : Observable<boolean> {
+    return this.repository.undoSoftDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Delete Tag
-  delete(id: number) {
-    return this.repository.delete(id);
+  delete(id: number) : Observable<boolean> {
+    return this.repository.delete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Get Tag By Id
   getById(id: number) : Observable<Tag> {
-    return this.repository.getById(id);
+    return this.repository.getById(id)
+    .pipe(tap(x => {
+        this.init();
+    }));
   }
-
-  // Get all Tags
-  getAllTags() : Observable<Tag[]> {
-    var tags$ = this.repository.getAllTags();
-    return tags$;
-  }
-
-    // Get all Tags - Non-soft deleted
-    getTags() : Observable<Tag[]> {
-      var tags$ = this.repository.getTags();
-      return tags$;
-    }
 
   // Search Tags
   getAllBySearchString(searchString: string){
-    var tags$ = this.repository.getAllTags();
+    this.init();
 
-    return tags$.pipe(
+    return this.tagList$.pipe(
       map(tags => tags.filter(source => source.name.toLowerCase().includes(searchString.toLowerCase())))
     );
   }

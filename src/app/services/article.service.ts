@@ -1,40 +1,69 @@
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Article } from 'src/app/models/article';
 import { Observable, BehaviorSubject, ReplaySubject, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ArticleRepository } from '../repositories/article-repository.service';
-import { getLocalTime } from '../common/util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
+    private articleListSubject = new BehaviorSubject<Article[]>([]);
+    articleList$: Observable<Article[]> = this.articleListSubject.asObservable();
+
     private subject = new ReplaySubject<Article>();
     article$: Observable<Article> = this.subject.asObservable();
+
     selectedArticle: Article;
-    ArticleObject: Article;
   
   constructor(private repository: ArticleRepository) { }
 
+  init() {
+    this.repository.getArticles()
+    .subscribe(
+        items => this.articleListSubject.next(items)
+    );
+  }
+  // Get all Articles
+  getArticles() : Observable<Article[]> {
+    this.init();
+    const articles = this.articleListSubject.getValue();
+    return this.articleList$;
+}
 
   // Save Article
-  save(id: number, article: Article) {
-    return this.repository.save(id, article);
+  save(id: number, article: Article): Observable<Article> {
+    return this.repository.save(id, article)
+    .pipe(tap(res => {
+        this.init();
+    }));
   }
 
   // Soft Delete Article
   softDelete(id: number): Observable<boolean> {
-    return this.repository.softDelete(id);
+    return this.repository.softDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Undo Soft Delete Article
   undoSoftDelete(id: number): Observable<boolean> {
-    return this.repository.undoSoftDelete(id);
+    return this.repository.undoSoftDelete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Delete Article
   delete(id: number): Observable<boolean> {
-    return this.repository.delete(id);
+    return this.repository.delete(id)
+    .pipe(map(x => {
+        this.init();
+        return true;
+    }));
   }
 
   // Get Article By Id
@@ -43,9 +72,9 @@ export class ArticleService {
         return this.repository.getById(id)
         .pipe(
             map((x:Article) => {
-                //x.ArticlePublicationDate = getLocalTime(x.ArticlePublicationDate);
                 this.selectedArticle = x;
                 this.subject.next(this.selectedArticle);
+                this.init();
              return true;
         }));
       }
@@ -57,34 +86,22 @@ export class ArticleService {
   }
 
   refreshSelectedArticle(article: Article){
-      console.log(article);
       this.subject.next(article);
   }
 
-  // Get all Articles
-  getAllArticles() : Observable<Article[]> {
-    var articles$ = this.repository.getAllArticles();
-    return articles$;
-  }
-
-    // Get all Articles - Non-soft deleted
-    getArticles() : Observable<Article[]> {
-      var articles$ = this.repository.getArticles();
-      return articles$;
-    }
-
   // Search Articles
   getAllBySearchString(searchString: string){
-    var articles$ = this.repository.getAllArticles();
-
-    return articles$.pipe(
+    this.init();
+    return this.articleList$
+    .pipe(
       map(articles => 
-        articles.filter(
+        articles
+        .filter(
             article => 
                 article.articleTitle.toLowerCase().includes(searchString.toLowerCase())
                 || article.articleSummary.toLowerCase().includes(searchString.toLowerCase())
-                || article.articleContent.toLowerCase().includes(searchString.toLowerCase())
-            ))
+        )
+      )
     );
   }
 }

@@ -1,106 +1,51 @@
+import { Source } from './../models/source';
 import { Endpoints } from './../endpoints/endpoints';
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, filter, defaultIfEmpty } from 'rxjs/operators';
-import { createHttpObservable } from '../common/util';
-import {fromPromise} from 'rxjs/internal-compatibility';
-import { Source } from '../models/source';
-
-
+import { HttpClient } from '@angular/common/http';
+import { httpGet, httpPost, httpPut, httpDelete, httpPatch } from '../common/util';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SourceRepository {
 
-    private subject = new BehaviorSubject<Source[]>([]);
+    constructor(private http: HttpClient) {}
 
-    sources$: Observable<Source[]> = this.subject.asObservable();
-
-    init() {
-        const http$ = createHttpObservable(Endpoints.source.getall.endpoint);
-
-        http$
-            .pipe(
-                //tap(() => console.log('HTTP request executed - - Source')),
-                map(res => Object.values(res))
-            )
-            .subscribe(
-                sources => this.subject.next(sources)
-            );
+    getSources() : Observable<Source[]> {
+        const url = Endpoints.source.get.endpoint;
+        return httpGet<Source[]>(this.http, url);
     }
 
-    getById(id: number) {
-        var defaultValue: Source = new Source(0, '', false);
-        return this.sources$
-            .pipe(
-                map(sources => sources.find(source => source.id == id)),
-                filter(source => !!source)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-    }
+    getById(id: number) : Observable<Source> {
+        const url = Endpoints.source.getbyid.endpoint + id;
+        return httpGet<Source>(this.http, url);
+    }   
 
-    getSources() {
-        var defaultValue: Source[] = [];
-        return this.sources$
-            .pipe(
-                map(sources => {
-                    return sources.filter(source => source.isDeleted == false);
-                }),
-                filter(source => !!source)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-
-    }
-
-    getAllSources() {
-        const sources = this.subject.getValue();
-        return this.sources$;
-    }
-
-    save(id: number, source: Source) {
+    save(id: number, source: Source) : Observable<Source> {
+        const body = source;
         if(id === 0){
-            fromPromise(fetch(Endpoints.source.create.endpoint, {
-                method: Endpoints.source.create.method,
-                body: JSON.stringify(source),
-                headers: Endpoints.source.create.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.source.create.endpoint;
+            return httpPost<Source>(this.http, url, body);
         }
         else {
-            fromPromise(fetch(Endpoints.source.update.endpoint + id, {
-                method: Endpoints.source.update.method,
-                body: JSON.stringify(source),
-                headers: Endpoints.source.update.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.source.update.endpoint + id;
+            return httpPut<Source>(this.http, url, body);
         }
     }
 
-    softDelete(id: number) {
-        fromPromise(fetch(Endpoints.source.softdelete.endpoint + id, {
-            method: Endpoints.source.softdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    softDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.source.softdelete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 
-    undoSoftDelete(id: number) {
-        fromPromise(fetch(Endpoints.source.undosoftdelete.endpoint + id, {
-            method: Endpoints.source.undosoftdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    undoSoftDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.source.undosoftdelete.endpoint + id;
+        return httpPatch<boolean>(this.http, url, null);
     }
     
-
-    delete(id: number) {
-        fromPromise(fetch(Endpoints.source.delete.endpoint + id, {
-            method: Endpoints.source.delete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    delete(id: number) : Observable<boolean> {
+        const url = Endpoints.source.delete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 }

@@ -1,9 +1,12 @@
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Article } from 'src/app/models/article';
 import { ArticleService } from 'src/app/services/article.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { OpenMatSnackBar } from 'src/app/common/mat-items';
+import { EntityType, AccessType } from 'src/app/common/enum';
 
 @Component({
   selector: 'app-article-list',
@@ -25,6 +28,7 @@ export class ArticleListComponent implements OnInit {
     DeleteMessage: "Article deleted permanently.",
     TableHeaders: {
       SlColumn: "#",
+        IdColumn: "Id",
       AuthorColumn: "Author",
       TitleColumn: "Title",
       SummaryColumn: "Summary",
@@ -41,31 +45,37 @@ export class ArticleListComponent implements OnInit {
   public articles$: Observable<Article[]>;
   public articleDetail$: Observable<Article>;
   public loadedArticleId: number;
-  search: string;
+
+  public isEditable: boolean = false;
+  public isSoftDeletable: boolean = false;
+  public isUndoSoftDeletable: boolean = false;
+  public isDeletable: boolean = false;
+
   constructor(
       private router: Router, 
       private articleService: ArticleService,
-      private _snackBar: MatSnackBar) { }
+      private snackBar: MatSnackBar,
+      public authService: AuthService) { }
 
   ngOnInit() {
-    this.getArticles();
+      this.isEditable = this.authService.hasRight(EntityType.Article, AccessType.Update);
+      this.isSoftDeletable = this.authService.hasRight(EntityType.Article, AccessType.SoftDelete);
+      this.isUndoSoftDeletable = this.authService.hasRight(EntityType.Article, AccessType.UndoSoftDelete);
+      this.isDeletable = this.authService.hasRight(EntityType.Article, AccessType.Delete);
+      this.getArticles();
   }
 
   // Load all Articles
   getArticles() {
-
-    this.articles$ = this.articleService.getAllArticles();
-    return this.articles$;
+    this.articles$ = this.articleService.getArticles();
+    //return this.articles$;
   }
 
   loadArticle(id: number) {
-      console.log(id);
       this.loadedArticleId = id;
       this.articleService.getById(id)
     .subscribe(x => {
         this.articleDetail$ = this.articleService.article$;
-
-        this.articleDetail$.subscribe(x => console.log(x));
     });
   }
 
@@ -84,7 +94,8 @@ export class ArticleListComponent implements OnInit {
     this.articleService.softDelete(id)
     .subscribe(x => {
         this.loadArticle(this.loadedArticleId);
-        this.openSnackBar(this.Resources.SoftDeleteMessage);
+        this.getArticles();
+        OpenMatSnackBar(this.snackBar, this.Resources.SoftDeleteMessage);
     });
   }
 
@@ -92,28 +103,22 @@ export class ArticleListComponent implements OnInit {
   undoSoftDeleteArticle(id: number) {
     this.articleService.undoSoftDelete(id)
     .subscribe(x => {
+        this.getArticles();
         this.loadArticle(this.loadedArticleId);
-        this.openSnackBar(this.Resources.UndoSoftDeleteMessage);
+        OpenMatSnackBar(this.snackBar, this.Resources.UndoSoftDeleteMessage);
     });
   }
 
   // Delete Article
   deleteArticle(id: number) {
     this.articleService.delete(id).subscribe(x => {
+        this.getArticles();
         this.loadArticle(this.loadedArticleId);
-        this.openSnackBar(this.Resources.DeleteMessage);
+        OpenMatSnackBar(this.snackBar, this.Resources.DeleteMessage);
     });
   }
 
   searchArticle(searchString: string) {
     this.articles$ = this.articleService.getAllBySearchString(searchString);
-  }
-
-  openSnackBar(message: string) {
-    let config = new MatSnackBarConfig();
-    config.verticalPosition = 'bottom';
-    config.horizontalPosition = 'right';
-    config.duration = 10000;
-    this._snackBar.open(message, 'close', config);
   }
 }

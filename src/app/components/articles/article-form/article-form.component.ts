@@ -40,31 +40,26 @@ export class ArticleFormComponent implements OnInit {
   public Resources = {
     Header: "Article",
     ImageCaption: "Select Image",
-    AuthorCaption: "Author",
-    AuthorPlaceholder: "Author",
+    ImageCaptionPlaceholder: "Caption",
     TitleCaption: "Title",
     TitlePlaceholder: "Title",
-    SummaryCaption: "Summary",
-    SummaryPlaceholder: "Summary",
+    SubTitleCaption: "SubTitle",
+    SubTitlePlaceholder: "SubTitle",
     UrlCaption: "Url",
     UrlPlaceholder: "Url",
     PublicationDateCaption: "Publication Date",
-    ContentCaption: "Content",
-    ContentPlaceholder: "Content",
-    SynopsisCaption: "Synopsis",
-    SynopsisPlaceholder: "Synopsis",
+    SummaryCaption: "Summary",
+    SummaryPlaceholder: "Summary",
     SourceCaption: "Source",
     CategoryCaption: "Category",
     TagCaption: "Tag",
     SaveCaption: "Save",
     CancelCaption: "Cancel",
     Validation: {
-      AuthorRequiredMessage: "Author is required.",
       TitleRequiredMessage: "Title is required.",
-      SummaryRequiredMessage: "Summary is required.",
+      SubTitleRequiredMessage: "SubTitle is required.",
       UrlRequiredMessage: "Url is required.",
-      ContentRequiredMessage: "Content is required.",
-      SynopsisRequiredMessage: "Synopsis is required."
+      SummaryRequiredMessage: "Summary is required.",
     },
 
     PanelHeader: {
@@ -184,18 +179,16 @@ export class ArticleFormComponent implements OnInit {
   onArticleSubmit(form) {
     if(form.valid) {
         this.articleId = this.articleId === undefined? 0: this.articleId;
-        this.articleService.save(this.articleId, this.objArticleDetail);
-        this.router.navigate(['/articles']);
+        this.articleService.save(this.articleId, this.objArticleDetail)
+        .subscribe(x=> {
+            this.router.navigate(['/articles']);
+        });
+        
       }
   }
 
   onCancelClick() {
     this.router.navigate(['/articles']);
-  }
-
-  onAuthorChange(event) {
-      this.objArticleDetail.articleAuthor = event.target.value;
-      this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onUrlChange(event) {
@@ -214,18 +207,14 @@ export class ArticleFormComponent implements OnInit {
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
+  onSubTitleChange(event) {
+    this.objArticleDetail.articleSubTitle = event.target.value;
+      this.articleService.refreshSelectedArticle(this.objArticleDetail);
+  }
+
+
   onSummaryChange(event) {
     this.objArticleDetail.articleSummary = event.target.value;
-      this.articleService.refreshSelectedArticle(this.objArticleDetail);
-  }
-
-  onContentChange(event) {
-    this.objArticleDetail.articleContent = event.target.value;
-      this.articleService.refreshSelectedArticle(this.objArticleDetail);
-  }
-
-  onSynopsisChange(event) {
-    this.objArticleDetail.articleSynopsis = event.target.value;
       this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
@@ -249,6 +238,11 @@ export class ArticleFormComponent implements OnInit {
         this.articleService.refreshSelectedArticle(this.objArticleDetail);
     }
 
+  }
+
+  onImageCaptionChange(event) {
+    this.objArticleDetail.imageCaption = event.target.value;
+      this.articleService.refreshSelectedArticle(this.objArticleDetail);
   }
 
   onFileSelected(event) {

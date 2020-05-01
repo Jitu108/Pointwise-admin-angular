@@ -1,4 +1,8 @@
 .deleted {
   background-color: #fee !important;
 }
+
+.pointer {
+  cursor: pointer;
+}
 /*# sourceMappingURL=article-list.component.css.map */

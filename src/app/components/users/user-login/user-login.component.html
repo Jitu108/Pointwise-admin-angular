@@ -1,11 +1,15 @@
 <div class="d-flex justify-content-center vw-100 mt-5">
-    <div class="w-50">
+    <div *ngIf="isLoading" class="mt-5">
+        <loading-spinner></loading-spinner>
+    </div>
+    <div *ngIf="!isLoading" class="w-50">
         <form id="loginForm" #loginForm="ngForm" (ngSubmit)="onLoginClick(loginForm)">
+            
             <mat-card>
              <legend class="scheduler-border">{{Resources.Header}}</legend>
                 <div class="m-3">
+                    <div *ngIf="error.hasError" class="alert alert-danger">{{error.message}}</div>
                     <mat-form-field class="w-100">
-
                         <mat-label>{{Resources.UserNameCaption}}</mat-label>
 
                         <input type="text"
@@ -36,8 +40,8 @@
     
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <button mat-raised-button color="primary" class="mr-2">{{Resources.LoginCaption}}</button>
-                        <button mat-raised-button (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                        <button type="submit" mat-raised-button color="primary" class="mr-2">{{Resources.LoginCaption}}</button>
+                        <button type="button" mat-raised-button (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
                     </div>
 
                 </div>

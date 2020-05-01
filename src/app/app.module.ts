@@ -1,3 +1,4 @@
+import { AuthInterceptorService } from './services/auth.interceptor.service';
 import { MatComponentsModule } from './modules/mat-components.module';
 import { PipeModule } from './pipes/pipe.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,7 +14,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { SynopsisComponent } from './components/shared/synopsis/synopsis.component';
 import { DropDownListComponent } from './components/shared/drop-down-list/drop-down-list.component';
 import { ChipsetComponent } from './components/shared/chipset/chipset.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CategoryFormComponent } from './components/categories/category-form/category-form.component';
 import { CategoryListComponent } from './components/categories/category-list/category-list.component';
 import { ArticleListComponent } from './components/articles/article-list/article-list.component';
@@ -27,6 +28,7 @@ import { UserLoginComponent } from './components/users/user-login/user-login.com
 import { UserRegistrationComponent } from './components/users/user-registration/user-registration.component';
 import { UserManagementComponent } from './components/users/user-management/user-management.component';
 import { DropdownDirective } from './components/shared/dropdown-directive/dropdown.directive';
+import { LoadingSpinnerComponent } from './components/shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { DropdownDirective } from './components/shared/dropdown-directive/dropdo
     UserLoginComponent,
     UserRegistrationComponent,
     UserManagementComponent,
-    DropdownDirective
+    DropdownDirective,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,7 @@ import { DropdownDirective } from './components/shared/dropdown-directive/dropdo
     NgbModule,
     PipeModule.forRoot()
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

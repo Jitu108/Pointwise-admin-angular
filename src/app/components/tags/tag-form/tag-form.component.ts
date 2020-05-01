@@ -64,8 +64,10 @@ export class TagFormComponent implements OnInit {
   onTagSubmit(form) {
     if(form.valid) {
       this.tagId = this.tagId === undefined? 0: this.tagId;
-      this.tagService.save(this.tagId, new Tag(this.tagId, this.nameInput.nativeElement.value, false));
-      this.router.navigate(['/tags']);
+      this.tagService.save(this.tagId, new Tag(this.tagId, this.nameInput.nativeElement.value, false))
+      .subscribe(x=> {
+        this.router.navigate(['/tags']);
+      }); 
     }
   }
   

@@ -1,103 +1,51 @@
 import { Endpoints } from './../endpoints/endpoints';
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, filter, defaultIfEmpty } from 'rxjs/operators';
-import { createHttpObservable } from '../common/util';
-import {fromPromise} from 'rxjs/internal-compatibility';
+import { Observable } from 'rxjs';
+import { httpGet, httpPost, httpPut, httpPatch, httpDelete } from '../common/util';
 import { Tag } from '../models/tag';
-
-
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TagRepository {
 
-    private subject = new BehaviorSubject<Tag[]>([]);
+    constructor(private http: HttpClient) {}
 
-    tags$: Observable<Tag[]> = this.subject.asObservable();
-
-    init() {
-        const http$ = createHttpObservable(Endpoints.tag.getall.endpoint);
-
-        http$
-            .pipe(
-                map(res => Object.values(res))
-            )
-            .subscribe(
-                tags => this.subject.next(tags)
-            );
+    getTags() : Observable<Tag[]> {
+        const url = Endpoints.tag.get.endpoint;
+        return httpGet<Tag[]>(this.http, url);
     }
 
-    getById(id: number) {
-        var defaultValue: Tag = new Tag(0, '', false);
-        return this.tags$
-            .pipe(
-                map(tags => tags.find(tag => tag.id == id)),
-                filter(tag => !!tag)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-    }
+    getById(id: number) : Observable<Tag> {
+        const url = Endpoints.tag.getbyid.endpoint + id;
+        return httpGet<Tag>(this.http, url);
+    }   
 
-    getTags() {
-        var defaultValue: Tag[] = [];
-        return this.tags$
-            .pipe(
-                map(tags => tags.filter(tag => tag.isDeleted == false)),
-                filter(tag => !!tag)
-            )
-            .pipe(defaultIfEmpty(defaultValue));
-
-    }
-
-    getAllTags() {
-        const tags = this.subject.getValue();
-        return this.tags$;
-    }
-
-    save(id: number, tag: Tag) {
+    save(id: number, tag: Tag) : Observable<Tag> {
+        const body = tag;
         if(id === 0){
-            fromPromise(fetch(Endpoints.tag.create.endpoint, {
-                method: Endpoints.tag.create.method,
-                body: JSON.stringify(tag),
-                headers: Endpoints.tag.create.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.tag.create.endpoint;
+            return httpPost<Tag>(this.http, url, body);
         }
         else {
-            fromPromise(fetch(Endpoints.tag.update.endpoint + id, {
-                method: Endpoints.tag.update.method,
-                body: JSON.stringify(tag),
-                headers: Endpoints.tag.update.headers
-            })).subscribe(res =>{
-                this.init();
-            });
+            const url = Endpoints.tag.update.endpoint + id;
+            return httpPut<Tag>(this.http, url, body);
         }
     }
 
-    softDelete(id: number) {
-        fromPromise(fetch(Endpoints.tag.softdelete.endpoint + id, {
-            method: Endpoints.tag.softdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    softDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.tag.softdelete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 
-    undoSoftDelete(id: number) {
-        fromPromise(fetch(Endpoints.tag.undosoftdelete.endpoint + id, {
-            method: Endpoints.tag.undosoftdelete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    undoSoftDelete(id: number) : Observable<boolean> {
+        const url = Endpoints.tag.undosoftdelete.endpoint + id;
+        return httpPatch<boolean>(this.http, url, null);
     }
     
-
-    delete(id: number) {
-        fromPromise(fetch(Endpoints.tag.delete.endpoint + id, {
-            method: Endpoints.tag.delete.method
-        })).subscribe(res =>{
-            this.init();
-        });
+    delete(id: number) : Observable<boolean> {
+        const url = Endpoints.tag.delete.endpoint + id;
+        return httpDelete<boolean>(this.http, url);
     }
 }

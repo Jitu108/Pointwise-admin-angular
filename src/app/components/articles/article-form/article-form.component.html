@@ -11,20 +11,6 @@
                     {{ Resources.PanelHeader.MetadataCaption }}
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-            
-            <div>
-                <mat-form-field  class="col-md-12">
-                    <mat-label>{{Resources.AuthorCaption}}</mat-label>
-                    <input type="text" matInput
-                        #author="ngModel" name="author" [ngModel]="(articleDetail$ | async)?.articleAuthor" 
-                        placeholder="{{Resources.AuthorPlaceholder}}"
-                        (change)="onAuthorChange($event)">
-
-                    <mat-error *ngIf="!author.valid || !(author.pristine && !articleForm.submitted)">
-                        {{Resources.Validation.AuthorRequiredMessage}}
-                    </mat-error>
-                </mat-form-field>
-            </div>
 
             <div>
                 <dropdown
@@ -89,6 +75,16 @@
                     {{ Resources.PanelHeader.ImageCaption }}
                   </mat-panel-title>
                 </mat-expansion-panel-header>
+                <div>
+                    <mat-form-field class="col-md-12">
+                        <mat-label>{{Resources.ImageCaptionPlaceholder}}</mat-label>
+                        <input type="text" matInput
+                            #imageCaption="ngModel" name="imageCaption" [ngModel]="(articleDetail$ | async)?.imageCaption" 
+                            placeholder="{{Resources.ImageCaptionPlaceholder}}"
+                            (change)="onImageCaptionChange($event)">
+                    </mat-form-field>
+                </div>
+                
                 <div class="image-div">
                     <div>
                         <span class="image-label">{{ Resources.ImageCaption }}</span>
@@ -98,7 +94,10 @@
                             (change)="onFileSelected($event)">
                         <label class="custom-file-label">{{ (articleDetail$ | async)?.imageName }}</label>
                       </div>
-                </div>  
+                </div>
+
+                
+
             </mat-expansion-panel>
             <mat-expansion-panel expanded="true">
                 <mat-expansion-panel-header>
@@ -121,40 +120,24 @@
 
             <div>
                 <mat-form-field class="col-md-12">
-                    <mat-label>{{Resources.SummaryCaption}}</mat-label>
+                    <mat-label>{{Resources.SubTitleCaption}}</mat-label>
                     <textarea matInput
-                        #summary="ngModel" name="summary" [ngModel]="(articleDetail$ | async)?.articleSummary" 
-                        placeholder="{{Resources.SummaryPlaceholder}}"
-                        (change)="onSummaryChange($event)"></textarea>
-                    <mat-error *ngIf="!summary.valid || !(summary.pristine && !articleForm.submitted)">
-                        {{Resources.Validation.SummaryRequiredMessage}}
+                        #subTitle="ngModel" name="subTitle" [ngModel]="(articleDetail$ | async)?.articleSubTitle" 
+                        placeholder="{{Resources.SubTitlePlaceholder}}"
+                        (change)="onSubTitleChange($event)"></textarea>
+                    <mat-error *ngIf="!subTitle.valid || !(subTitle.pristine && !articleForm.submitted)">
+                        {{Resources.Validation.SubTitleRequiredMessage}}
                     </mat-error>
                 </mat-form-field>
             </div>
 
-            
-
             <div>
                 <mat-form-field class="col-md-12">
-                    <mat-label>{{Resources.ContentCaption}}</mat-label>
-                    <textarea matInput
-                        #content="ngModel" name="content" [ngModel]="(articleDetail$ | async)?.articleContent" 
-                        placeholder="{{Resources.ContentPlaceholder}}"
-                        (change)="onContentChange($event)">
-                    </textarea>
-                        <mat-error *ngIf="!content.valid || !(content.pristine && !articleForm.submitted)">
-                            {{Resources.Validation.UrlRequiredMessage}}
-                        </mat-error>
-                </mat-form-field>
-            </div>
-
-            <div>
-                <mat-form-field class="col-md-12">
-                    <mat-label>{{Resources.SynopsisCaption}}</mat-label>
+                    <mat-label>{{Resources.SummaryCaption}}</mat-label>
                     <textarea matInput matTextareaAutosize
-                        #synopsis="ngModel" name="synopsis" [ngModel]="(articleDetail$ | async)?.articleSynopsis" 
-                        placeholder="{{Resources.SynopsisPlaceholder}}"
-                        (change)="onSynopsisChange($event)">
+                        #summary="ngModel" name="summary" [ngModel]="(articleDetail$ | async)?.articleSummary" 
+                        placeholder="{{Resources.SummaryPlaceholder}}"
+                        (change)="onSummaryChange($event)">
                     </textarea>
                 </mat-form-field>
             </div>

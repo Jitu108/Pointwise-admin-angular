@@ -10,8 +10,15 @@ export class Endpoints {
     static category: any = {
 
         //#region getall
-        getall: {
+        get: {
             endpoint: '/api/categories/all',
+            method: RESTMethod.Get
+        },
+        //#endregion
+
+        //#region getall
+        getbyid: {
+            endpoint: '/api/categories/',
             method: RESTMethod.Get
         },
         //#endregion
@@ -67,8 +74,15 @@ export class Endpoints {
     //#region source
     static source: any = {
         //#region getall
-        getall: {
+        get: {
             endpoint: '/api/sources/all',
+            method: RESTMethod.Get
+        },
+        //#endregion
+
+        //#region getall
+        getbyid: {
+            endpoint: '/api/sources/',
             method: RESTMethod.Get
         },
         //#endregion
@@ -119,8 +133,15 @@ export class Endpoints {
     //#region tag
     static tag: any = {
         //#region getall
-        getall: {
+        get: {
             endpoint: '/api/tags/all',
+            method: RESTMethod.Get
+        },
+        //#endregion
+
+        //#region getall
+        getbyid: {
+            endpoint: '/api/tags/',
             method: RESTMethod.Get
         },
         //#endregion
@@ -210,10 +231,17 @@ export class Endpoints {
     //#endregion
     //#region article
     static article: any = {
-        //#region getall
-        getall: {
-            endpoint: '/api/articles/all',
+        //#region get
+        get: {
+            endpoint: '/api/articles',
             method: RESTMethod.Get
+        },
+        //#endregion
+
+        //#region getbyid
+        getbyid: {
+            endpoint: `api/articles/`,
+            method: RESTMethod.Get,
         },
         //#endregion
 

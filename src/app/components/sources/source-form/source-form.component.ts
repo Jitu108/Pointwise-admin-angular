@@ -41,7 +41,6 @@ export class SourceFormComponent implements OnInit {
         if(isNumeric(params['id']))
         {
           this.sourceId = parseInt(params['id']);
-
         }
 
         //Edit
@@ -63,8 +62,10 @@ export class SourceFormComponent implements OnInit {
   onSourceSubmit(form) {
     if(form.valid) {
       this.sourceId = this.sourceId === undefined? 0: this.sourceId;
-      this.sourceService.save(this.sourceId,  new Source(this.sourceId, this.nameInput.nativeElement.value, false));
-      this.router.navigate(['/sources']);
+      this.sourceService.save(this.sourceId,  new Source(this.sourceId, this.nameInput.nativeElement.value, false))
+        .subscribe(x=> {
+            this.router.navigate(['/sources']);
+        }); 
     }
   }
   

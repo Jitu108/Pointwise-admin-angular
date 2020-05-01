@@ -13,13 +13,29 @@ export class User {
         public userTypeId?: number,
         public userType?: string,
         public userNameType?: string,
-        public isBlocked?: boolean
+        public isBlocked?: boolean,
+        private _token?: string,
+        private _expiryDate?: Date,
+        public roles?: Role[],
     ) { }
 
+    get token() {
+        if(!this._expiryDate || new Date() > this._expiryDate) {
+            return null;
+        }
+        return this._token;
+    }
     fromJSON(json) {
         for (var propName in json)
         debugger;
             this[propName] = json[propName];
         return this;
     }
+}
+
+export class Role {
+    constructor(
+        public entityType: string,
+        public accessType: string
+    ) { }
 }

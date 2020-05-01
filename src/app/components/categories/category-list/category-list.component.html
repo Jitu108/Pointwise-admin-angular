@@ -25,7 +25,8 @@
                     <th scope="col" class="text-center">{{Resources.TableHeaders.SlColumn}}</th>
                     <th scope="col">{{Resources.TableHeaders.NameColumn}}</th>
                     <th scope="col">{{Resources.TableHeaders.DeletedColumn}}</th>
-                    <th class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
+                    <th *ngIf="isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable"  
+                    class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,17 +34,18 @@
                     <td width="200" class="text-center">{{ i+1 }}</td>
                     <td>{{ category.name }}</td>
                     <td><span *ngIf="category.isDeleted">Deleted</span></td>
-                    <td width="350" class="text-center">
-                        <button mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
+                    <td *ngIf="isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable"  
+                    width="350" class="text-center">
+                        <button *ngIf="isEditable" mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
                             <mat-icon (click)="editCategory(category.id)">create</mat-icon>
                         </button>
-                        <button mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
+                        <button *ngIf="isSoftDeletable" mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
                             <mat-icon (click)="softDeleteCategory(category.id)">delete</mat-icon>
                         </button>
-                        <button mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
+                        <button *ngIf="isUndoSoftDeletable" mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
                             <mat-icon (click)="undoSoftDeleteCategory(category.id)">delete_sweep</mat-icon>
                         </button>
-                        <button mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
+                        <button *ngIf="isDeletable" mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
                             <mat-icon (click)="deleteCategory(category.id)">delete_forever</mat-icon>
                         </button>
                     </td>
