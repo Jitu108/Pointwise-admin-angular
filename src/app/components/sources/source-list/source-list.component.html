@@ -73,7 +73,11 @@
               <mat-row 
                 *matRowDef="let row; columns: displayedColumns;" 
                 (click)="selection.toggle(row)" 
-                [ngClass]="{deleted: row.isDeleted, hovered: row.hovered}"
+                [ngClass]="{
+                    'deleted': row.isDeleted, 
+                    'hovered': row.hovered && row.isDeleted == false, 
+                    'hovered-deleted': row.hovered && row.isDeleted == true
+                }"
                 (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
               </mat-row>
             </mat-table>

@@ -118,10 +118,17 @@ h2.header {
 // Mat-table related styles - Start
 $odd-row-color: #eee;
 $even-row-color: #F2F8F8;
+$row-deleted-color:#fbdcdc;
+
 $hover-color: #C5EAEC;
+$hover-deleted-color: #fbcaca;
+
+$row-selection-color: #3fbac2;
+$row-deleted-selection-color: #f7baba;
+
 $header-color: #C5EAEC;
 $paginator-color: #e2edee;
-$row-selection-color: #3fbac2;
+
 
 .mat-header-row {
     //min-height: 50px;
@@ -163,8 +170,18 @@ $row-selection-color: #3fbac2;
     font-size: .85rem;
 }
 .mat-row.deleted {
-    background-color: #fbdcdc !important;
+    background-color: $row-deleted-color;
 }
+
+.mat-row.hovered-deleted {
+    background: $hover-deleted-color;
+}
+.mat-row.highlighted-deleted {
+    background: $row-deleted-selection-color;
+}
+
+
+
 
 .title-class {
     flex: 0 0 30%;

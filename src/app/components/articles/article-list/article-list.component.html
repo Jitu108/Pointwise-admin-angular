@@ -92,7 +92,13 @@
               <mat-row 
                 *matRowDef="let row; columns: displayedColumns;" 
                 (click)="selection.toggle(row); loadArticle(row.articleId);" 
-                [ngClass]="{deleted: row.articleIsDeleted, hovered: row.hovered, highlighted: row.articleId == loadedArticleId}"
+                [ngClass]="{
+                    'deleted': row.articleIsDeleted, 
+                    'hovered': row.hovered && row.articleIsDeleted == false, 
+                    'hovered-deleted': row.hovered && row.articleIsDeleted == true, 
+                    'highlighted': row.articleId == loadedArticleId && row.articleIsDeleted == false,
+                    'highlighted-deleted': row.articleId == loadedArticleId && row.articleIsDeleted == true
+                }"
                 (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
               </mat-row>
             </mat-table>
