@@ -1,8 +1,8 @@
-import { AuthService } from './../../services/auth.service';
-import { EntityType, AccessType } from './../../common/enum';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { AuthUser } from 'src/app/models/auth-user';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { EntityType, AccessType } from 'src/app/common/enum';
 
 @Component({
   selector: 'top-header',
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class TopHeaderComponent implements OnInit, OnDestroy {
     private userSub: Subscription;
-    user: User;
+    authUser: AuthUser;
     public isArticleSelectable: boolean = false;
     public isSourceSelectable: boolean = false;
     public isCategorySelectable: boolean = false;
@@ -20,12 +20,13 @@ export class TopHeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
       this.userSub = this.authService.loggedInUser$.subscribe(x => {
-          this.user = x;
-          //console.log(x);
-          this.isArticleSelectable = this.authService.hasRight(EntityType.Article, AccessType.Select);
-          this.isSourceSelectable = this.authService.hasRight(EntityType.Source, AccessType.Select);
-          this.isCategorySelectable = this.authService.hasRight(EntityType.Category, AccessType.Select);
-          this.isTagSelectable = this.authService.hasRight(EntityType.Tag, AccessType.Select);
+          this.authUser = x;
+          if(this.authUser !== null) {
+            this.isArticleSelectable = this.authService.hasRight(EntityType.Article, AccessType.Select);
+            this.isSourceSelectable = this.authService.hasRight(EntityType.Source, AccessType.Select);
+            this.isCategorySelectable = this.authService.hasRight(EntityType.Category, AccessType.Select);
+            this.isTagSelectable = this.authService.hasRight(EntityType.Tag, AccessType.Select);
+          }
       });
   }
 
@@ -34,6 +35,7 @@ export class TopHeaderComponent implements OnInit, OnDestroy {
 }
 
   logout() {
-      this.user = null;
+      //this.user = null;
+      this.authService.logout();
   }
 }

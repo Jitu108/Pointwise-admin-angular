@@ -10,7 +10,6 @@ import { User } from 'src/app/models/user';
   styleUrls: ['./user-registration.component.scss']
 })
 export class UserRegistrationComponent implements OnInit {
-    public userId: number;
     public user$: Observable<User>;
 
     @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
@@ -60,15 +59,15 @@ export class UserRegistrationComponent implements OnInit {
                 form.value.lastName,
                 form.value.emailAddress,
                 form.value.phoneNumber,
-                0,
+                //0,
                 null,
-                "1",
+                null,
                 false
                 ))
                 .subscribe(res => {
                     debugger;
                     console.log(res);
-                    this.router.navigate(['/sources']);
+                    this.router.navigate(['/login']);
                 });
     }
   }

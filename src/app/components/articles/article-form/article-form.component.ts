@@ -4,8 +4,8 @@ import { SourceService } from 'src/app/services/source.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { map, first, take } from 'rxjs/operators';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { Article } from 'src/app/models/article';
 import { DropDownModel } from '../../shared/drop-down-list/drop-down-list.component';
 import { Tag } from 'src/app/models/tag';
@@ -34,7 +34,8 @@ export class ArticleFormComponent implements OnInit {
 
   public tagList$: Observable<Tag[]>;
   public tags$: Observable<string[]>;
-  public selectedTags$: Observable<string[]>;
+  //private selectedTagsSubject = new Subject<string[]>();
+  public selectedTags$: Observable<string[]> ;//= this.selectedTagsSubject.asObservable();
   base64Image;
     
   public Resources = {
@@ -147,23 +148,36 @@ export class ArticleFormComponent implements OnInit {
   }
 
   getArticleDetailById(id?: number) {
-    this.articleService.getById(id)
+    //debugger;
+    console.log("Id = " + id);
+    this.articleService.getById(id).pipe(first())
     .subscribe(x => {
+        //debugger;
         this.articleDetail$ = this.articleService.article$;
         this.objArticleDetail = this.articleService.selectedArticle;
 
+        // if(this.objArticleDetail.articleTags !== undefined) {
+        //     this.selectedTagsSubject.next(this.objArticleDetail.articleTags);
+        // }
+        // else {
+        //     this.selectedTagsSubject.next([]);
+        // }
+
         this.selectedCategory$ = this.articleDetail$.pipe(
-            map(x => x.articleCategoryId.toString())
+            map(x => {
+                return x.articleCategoryId !== undefined? x.articleCategoryId.toString() : "";
+            })
         );
         
         this.selectedSource$ = this.articleDetail$.pipe(
             map(x => {
-                return x.articleSourceId.toString();
+                return x.articleSourceId !== undefined? x.articleSourceId.toString() : "";
             })
         );
 
-        this.selectedTags$ = this.articleDetail$.pipe(
+        this.selectedTags$ = this.articleDetail$.pipe(take(1),
             map(x => {
+                debugger;
                 if(x.articleTags !== undefined) {
                     return x.articleTags;
                 }
@@ -233,8 +247,10 @@ export class ArticleFormComponent implements OnInit {
   }
 
   onTagSelectionChange(selectedTags: string[]) {
+    //debugger;
     if(this.objArticleDetail.articleTags != selectedTags) {
       this.objArticleDetail.articleTags = selectedTags === null? selectedTags = [] : selectedTags;
+      //debugger;
         this.articleService.refreshSelectedArticle(this.objArticleDetail);
     }
 

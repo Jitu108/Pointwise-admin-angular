@@ -1,4 +1,4 @@
-<div class="col-sm-12 body-header">
+<div class="col-sm-12 mt-2">
    <div class="row">
     <div class="col-md-8">
     <form id="articleForm" #articleForm="ngForm" (ngSubmit)="onArticleSubmit(articleForm)" autocomplete="off">
@@ -147,8 +147,8 @@
 
             <div class="form-group row mt-3">
                 <div class="col-md-12 text-right">
-                    <button mat-raised-button color="primary" class="mr-2">{{Resources.SaveCaption}}</button>
-                    <button mat-raised-button (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                    <button type="submit" mat-raised-button class="btn-primary mr-2">{{Resources.SaveCaption}}</button>
+                    <button type="button" mat-raised-button class="btn-basic" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
                 </div>
 
             </div>

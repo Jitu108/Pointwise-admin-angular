@@ -1,21 +1,19 @@
-import { AuthService } from 'src/app/services/auth.service';
-import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { isNumeric } from 'src/app/common/util';
 import { Observable } from 'rxjs';
 import { User, IAccess } from 'src/app/models/user';
+import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { StaticDataService } from 'src/app/services/static-data.service';
-
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { OpenMatSnackBar } from 'src/app/common/mat-items';
 
 @Component({
-  selector: 'app-user-management',
-  templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.scss']
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss']
 })
-export class UserManagementComponent implements OnInit {
-
+export class UserProfileComponent implements OnInit {
     public userId: number;
     public mode: string;
     public userDetail$: Observable<User>;
@@ -27,10 +25,9 @@ export class UserManagementComponent implements OnInit {
     public entities: string[] = [];
     public accesses: string[] = [];
     public userAccesses: {entity: string, accesses: IAccess[]}[] = [];
-    public isLoggedInUser: boolean = false;
 
     public Resources = {
-        Header: "User",
+        Header: "Profile Info",
         NamePanelCaption: "Name",
         AdminPanelCaption: "Admin Right",
         RolePanelCaption: "Privileges",
@@ -43,6 +40,8 @@ export class UserManagementComponent implements OnInit {
         LastNamePlaceholder: "Last Name",
         UserNameCaption: "Username",
         UserNamePlaceholder: "Username",
+        PasswordCaption: "Password",
+        PasswordPlaceholder: "Password",
         EmailCaption: "Email",
         EmailPlaceholder: "Email",
         PhoneCaption: "Phone Number",
@@ -56,17 +55,19 @@ export class UserManagementComponent implements OnInit {
         IsDeletedPlaceholder: "Is Deleted?",
 
         SaveCaption: "Save",
+        SaveMessage: "Profile saved successfully.",
         CancelCaption: "Cancel",
         Validation: {
-          FirstNameRequiredMessage: "First name is required."
+          FirstNameRequiredMessage: "First name is required.",
+          PasswordRequiredMessage: "Password is required."
         }
       }
 
     constructor(
-        private activatedRoute: ActivatedRoute,
         private userService: UserService,
         private authService: AuthService,
         private staticDataService: StaticDataService,
+        private snackBar: MatSnackBar,
         private router: Router
       ) { }
 
@@ -99,37 +100,18 @@ export class UserManagementComponent implements OnInit {
             });
         });
 
-        this.activatedRoute.queryParams.subscribe(
-            (params: Params) => {
-            if(isNumeric(params['id']))
-            {
-                this.userId = parseInt(params['id']);
-            }
-    
-            //Edit
-            if(this.userId !== undefined){
-                this.getUserDetailById(this.userId);
-    
-                this.mode = "Edit";
-            } else { // Add
-                //this.mode = "Add";
-                this.router.navigate(['/users']);
-            }
-            });
+        this.getUserDetail();
     }
 
-    getUserDetailById(id: number) {
-        this.userDetail$ = this.userService.getById(id);
+    getUserDetail() {
+        this.userDetail$ = this.userService.getById(this.authService.loggedUser.id);
         this.userDetail$.subscribe(user => {
             this.objUserDetail = user;
-            this.isLoggedInUser = this.authService.loggedUser.id === user.id;
             if(user.userType == "Admin") {
                 this.isAdmin = true;
             }
             this.isBlocked = user.isBlocked;
             this.isDeleted = user.isDeleted;
-        }, error => {
-            this.router.navigate(['/users']);
         })
       }
 
@@ -138,7 +120,6 @@ export class UserManagementComponent implements OnInit {
               this.objUserDetail.roles.push({entityType: entity, accessType: access});
           }
           else {
-              debugger;
               this.objUserDetail.roles = this.objUserDetail.roles
                                             .filter(x => {return !(x.entityType === entity && x.accessType === access)});
           }
@@ -192,18 +173,28 @@ export class UserManagementComponent implements OnInit {
         this.objUserDetail.phoneNumber = event.target.value;
       }
 
+      onPasswordChange(event) {
+        this.objUserDetail.password = event.target.value;
+      }
+
     // Submit
     onUserSubmit(form) {
         if(form.valid) {
             this.userService.save(this.objUserDetail.id, this.objUserDetail)
-        .subscribe(x=> {
-            this.router.navigate(['/users']);
+        .subscribe(x => {
+            this.authService.loggedUser.firstName = x.firstName;
+            this.authService.loggedUser.middleName = x.middleName;
+            this.authService.loggedUser.lastName = x.lastName;
+
+            this.authService.refreshLoggedInUser();
+            OpenMatSnackBar(this.snackBar, this.Resources.SaveMessage);
+            this.router.navigate(['/']);
         });
         }
     }
 
     onCancelClick()
     {
-        this.router.navigate(['/users']);
+        this.router.navigate(['/']);
     }
 }

@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserLogin } from 'src/app/models/user-login';
-import { User } from 'src/app/models/user';
+import { AuthUser } from 'src/app/models/auth-user';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,8 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class UserLoginComponent implements OnInit {
 
-    public userId: number;
-    public user$: Observable<User>;
+    public user$: Observable<AuthUser>;
     public isLoading: boolean = false;
     public error: {hasError: boolean, message: string} = {hasError: false, message:""};
 
@@ -46,8 +45,6 @@ export class UserLoginComponent implements OnInit {
         this.error.hasError = false;
         this.authService.login(new UserLogin(form.value.userName, form.value.password))
         .subscribe(res => {
-            //console.log(this.authService.loggedInuser);
-            //console.log(this.authService.loggedInuser.token);
             this.isLoading = false;
             this.router.navigate(['/articles']);
         }, error => {

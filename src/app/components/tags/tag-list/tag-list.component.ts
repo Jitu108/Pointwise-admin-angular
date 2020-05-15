@@ -1,5 +1,6 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TagService } from 'src/app/services/tag.service';
 import { Tag } from 'src/app/models/tag';
@@ -7,6 +8,9 @@ import { EntityType, AccessType } from 'src/app/common/enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OpenMatSnackBar } from 'src/app/common/mat-items';
 import { AuthService } from 'src/app/services/auth.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-tag-list',
@@ -21,13 +25,14 @@ export class TagListComponent implements OnInit {
     AddCaption: "Tag",
     EditCaption: "Edit",
     SoftDeleteCaption: "Soft Delete",
-    SoftDeleteMessage: "Source deleted successfully.",
+    SoftDeleteMessage: "Tag deleted successfully.",
     UndoSoftDeleteCaption: "Undo Soft Delete",
-    UndoSoftDeleteMessage: "Source deletion undone.",
+    UndoSoftDeleteMessage: "Tag deletion undone.",
     DeleteCaption: "Delete",
-    DeleteMessage: "Source deleted permanently.",
+    DeleteMessage: "Tag deleted permanently.",
     TableHeaders: {
       SlColumn: "#",
+      IdColumn: "Id",
       NameColumn: "Name",
       DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
@@ -35,10 +40,18 @@ export class TagListComponent implements OnInit {
   }
 
   public tags$: Observable<Tag[]>;
+  public isCreatable: boolean = false;
   public isEditable: boolean = false;
   public isSoftDeletable: boolean = false;
   public isUndoSoftDeletable: boolean = false;
   public isDeletable: boolean = false;
+
+  displayedColumns: string[] = ['id', 'name', 'isDeleted', 'action'];
+  dataSource = new MatTableDataSource<Tag>();
+  selection = new SelectionModel<Tag>(false);
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
       private router: Router, 
@@ -47,6 +60,7 @@ export class TagListComponent implements OnInit {
       public authService: AuthService) { }
 
   ngOnInit() {
+    this.isCreatable = this.authService.hasRight(EntityType.Tag, AccessType.Add);
     this.isEditable = this.authService.hasRight(EntityType.Tag, AccessType.Update);
     this.isSoftDeletable = this.authService.hasRight(EntityType.Tag, AccessType.SoftDelete);
     this.isUndoSoftDeletable = this.authService.hasRight(EntityType.Tag, AccessType.UndoSoftDelete);
@@ -57,6 +71,11 @@ export class TagListComponent implements OnInit {
   // Load all Tags
   getTags() {
     this.tags$ = this.tagService.getTags();
+    this.tags$.subscribe(x => {
+        this.dataSource.data = x;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    });
   }
 
   // Add Tag
@@ -98,5 +117,14 @@ export class TagListComponent implements OnInit {
 
   searchTag(searchString: string) {
     this.tags$ = this.tagService.getAllBySearchString(searchString);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

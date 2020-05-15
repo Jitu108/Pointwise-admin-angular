@@ -1,0 +1,104 @@
+<div class="col-sm-12 mt-2">
+    <div class="row">
+        <div class="mat-elevation-z0 col-md-12" style="margin:auto;">
+        
+            <div class="col-sm-12">
+                <h3 class="header">
+                    {{Resources.Header}}
+                    <!-- <button
+                        class="btn-add-item"
+                        mat-icon-button color="warn"
+                        matTooltip="Add User">
+                        <mat-icon>add</mat-icon>
+                    </button> -->
+                </h3>
+            </div>
+    
+            <mat-form-field>
+                <mat-label class="pl-4">Search</mat-label>
+                <input class="pl-4" matInput (keyup)="applyFilter($event)" placeholder="Ex. Corona">
+              </mat-form-field>
+        
+            <mat-table [dataSource]="dataSource" matSort>
+          
+              <div>
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'id-class'"> {{ Resources.TableHeaders.IdColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'id-class'"> {{row.id}} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.NameColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row">  
+                        {{ row.firstName + " " + (row.middleName !== "" && row.middleName !== null ? row.middleName.substring(0,1) + ". " : "") + row.lastName   }}
+                    </mat-cell>
+                  </ng-container>
+              </div>
+    
+              <div>
+                <ng-container matColumnDef="userType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.UserTypeColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.userType}} </mat-cell>
+                  </ng-container>
+              </div>
+    
+              <div>
+                <ng-container matColumnDef="userName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.UserNameColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.userName}} </mat-cell>
+                  </ng-container>
+              </div>
+    
+              <div>
+                <ng-container matColumnDef="roles">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'class-40-percent'"> {{ Resources.TableHeaders.RoleColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'class-40-percent'">
+    
+                        <span *ngFor="let role of row.roles; let j = index">
+                            {{ j == (row.roles.length - 1) ? (role.entityType +"-"+ role.accessType) : (role.entityType +"-"+ role.accessType + ",&nbsp;") }}
+                        </span>
+                    </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="isBlocked">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'class-5-percent'"> {{ Resources.TableHeaders.BlockColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'class-5-percent'"> <span *ngIf="row.isBlocked">Blocked</span> </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef [ngClass]="'action-class'"> {{ Resources.TableHeaders.ActionColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'action-class'">
+    
+                        <button mat-icon-button class="action-btn" matTooltip="{{Resources.EditCaption}}">
+                            <mat-icon (click)="editUser(row.id)">create</mat-icon>
+                        </button>
+                        <button mat-icon-button class="action-btn" [disabled]="loggedUserId == row.id" matTooltip="{{Resources.BlockCaption}}">
+                            <mat-icon (click)="blockUser(row.id)">lock</mat-icon>
+                        </button>
+                        <button mat-icon-button class="action-btn" [disabled]="loggedUserId == row.id" matTooltip="{{Resources.UnblockCaption}}">
+                            <mat-icon (click)="unblockUser(row.id)">lock_open</mat-icon>
+                        </button>
+        
+                    </mat-cell>
+                  </ng-container>
+              </div>
+        
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row 
+                *matRowDef="let row; columns: displayedColumns;" 
+                (click)="selection.toggle(row)" 
+                [ngClass]="{deleted: row.isBlocked, hovered: row.hovered}"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+              </mat-row>
+            </mat-table>
+          
+            <mat-paginator [pageSize]="10"></mat-paginator>
+          </div>
+    </div>
+</div>

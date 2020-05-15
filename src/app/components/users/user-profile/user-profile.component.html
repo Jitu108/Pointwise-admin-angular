@@ -15,7 +15,6 @@
                                 <mat-label>{{Resources.FirstNameCaption}}</mat-label>
                                 <input type="text"
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #firstName="ngModel" name="firstName" [ngModel]="(userDetail$ | async)?.firstName" 
                                     placeholder="{{Resources.FirstNamePlaceholder}}" 
                                     (change)="onFirstNameChange($event)"
@@ -30,7 +29,6 @@
                                 <mat-label>{{Resources.MiddleNameCaption}}</mat-label>
                                 <input type="text"
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #middleName="ngModel" name="middleName" [ngModel]="(userDetail$ | async)?.middleName" 
                                     placeholder="{{Resources.MiddleNamePlaceholder}}"
                                     (change)="onMiddleNameChange($event)">
@@ -40,7 +38,6 @@
                                 <mat-label>{{Resources.LastNameCaption}}</mat-label>
                                 <input type="text"
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #lastName="ngModel" name="lastName" [ngModel]="(userDetail$ | async)?.lastName" 
                                     placeholder="{{Resources.LastNamePlaceholder}}"
                                     (change)="onLastNameChange($event)">
@@ -50,7 +47,6 @@
                                 <mat-label>{{Resources.EmailCaption}}</mat-label>
                                 <input type="text"
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #emailAddress="ngModel" name="emailAddress" [ngModel]="(userDetail$ | async)?.emailAddress" 
                                     placeholder="{{Resources.EmailPlaceholder}}"
                                     (change)="onEmailChange($event)">
@@ -60,20 +56,40 @@
                                 <mat-label>{{Resources.PhoneCaption}}</mat-label>
                                 <input type="number"
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #phoneNumber="ngModel" name="phoneNumber" [ngModel]="(userDetail$ | async)?.phoneNumber" 
                                     placeholder="{{Resources.PhonePlaceholder}}"
                                     (change)="onPhoneChange($event)">
                             </mat-form-field>
 
-                            <mat-form-field class="col-md-12">
+                            <mat-form-field class="col-md-6">
                                 <mat-label>{{Resources.UserNameCaption}}</mat-label>
                                 <input type="text" disabled
                                     matInput
-                                    [disabled]="isLoggedInUser"
                                     #userName="ngModel" name="userName" [ngModel]="(userDetail$ | async)?.userName" 
                                     placeholder="{{Resources.UserNamePlaceholder}}">
                             </mat-form-field>
+
+                            <mat-form-field class="col-md-6">
+                                <mat-label>{{Resources.PasswordCaption}}</mat-label>
+                                <input type="password"
+                                    matInput
+                                    #password="ngModel" name="password" [ngModel]="(userDetail$ | async)?.password" 
+                                    placeholder="{{Resources.PasswordPlaceholder}}"
+                                    (change)="onPasswordChange($event)"
+                                    required>
+
+                                <mat-error *ngIf="!(password.valid || (password.pristine && !userForm.submitted))">
+                                    {{Resources.Validation.PasswordRequiredMessage}}
+                                </mat-error>
+                            </mat-form-field>
+
+                            <div class="form-group row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" mat-raised-button class="btn-primary mr-2">{{Resources.SaveCaption}}</button>
+                                    <button type="button" mat-raised-button class="btn-basic" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
+                                </div>
+                
+                            </div>
                         </div>
                     </mat-expansion-panel>
                     <mat-expansion-panel expanded="true">
@@ -85,7 +101,7 @@
                         <section class="example-section">
                             <mat-checkbox name="isAdmin" 
                                 [(ngModel)]="isAdmin" 
-                                [disabled]="isLoggedInUser"
+                                disabled
                                 class="example-margin"
                                 (change)="onIsAdminChange($event)">
                                     {{ Resources.IsAdminPlaceholder }}
@@ -93,7 +109,7 @@
 
                             <mat-checkbox name="isBlocked" 
                                 [(ngModel)]="isBlocked" 
-                                [disabled]="isLoggedInUser"
+                                disabled
                                 class="example-margin"
                                 (change)="onIsBlockedChange($event)">
                                 {{ Resources.IsBlockedCaption }}
@@ -101,7 +117,7 @@
 
                             <mat-checkbox name="isDeleted" 
                                 [(ngModel)]="isDeleted" 
-                                [disabled]="isLoggedInUser"
+                                disabled
                                 class="example-margin"
                                 (change)="onIsDeletedChange($event)">
                                 {{ Resources.IsDeletedCaption }}
@@ -123,7 +139,7 @@
                                       <span *ngFor="let access of useraccess.accesses; let j = index">
                                         <mat-checkbox name="{{access.name}}" 
                                             [(ngModel)]="access.hasAccess"
-                                            [disabled]="isLoggedInUser"
+                                            disabled
                                             class="example-margin"
                                             (change)="onEntityAccessChange(useraccess.entity, access.access, $event)"
                                         >
@@ -137,13 +153,6 @@
                     </mat-expansion-panel>
                     
                 </mat-accordion>
-                <div class="form-group row mt-3">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" mat-raised-button class="btn-primary mr-2">{{Resources.SaveCaption}}</button>
-                        <button type="button" mat-raised-button class="btn-basic" (click)="onCancelClick()">{{Resources.CancelCaption}}</button>
-                    </div>
-    
-                </div>
             </mat-card>
         </form>
     </div>

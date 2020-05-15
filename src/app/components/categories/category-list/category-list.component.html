@@ -1,56 +1,84 @@
-<div class="col-sm-12 pt-5 row body-header">
-    <div class="col-sm-6 col-lg-8">
-        <div class="col-sm-12">
-            <h2 class="header">{{Resources.Header}}
-                <button
-                    class="btn-add-item"
-                    mat-mini-fab color="primary"
-                    matTooltip="{{ Resources.AddToolTip }}"
-                    (click)="addCategory()">
+<div class="col-sm-12 mt-2">
+    <div class="row">
+        <div class="mat-elevation-z0 col-md-12" style="margin:auto;">
+        
+            <div class="col-sm-12">
+                <h3 class="header">
+                    {{Resources.Header}}<button
+                        *ngIf="isCreatable"
+                        class="btn-add-item"
+                        mat-icon-button color="warn"
+                        matTooltip="{{ Resources.AddToolTip }}"
+                        (click)="addCategory()">
                         <mat-icon>add</mat-icon>
-                </button>
-            </h2>
-        </div>
+                    </button>
+                </h3>
+            </div>
+    
+            <mat-form-field>
+                <mat-label class="pl-4">Search</mat-label>
+                <input class="pl-4" matInput (keyup)="applyFilter($event)" placeholder="Ex. Corona">
+              </mat-form-field>
+        
+            <mat-table [dataSource]="dataSource" matSort>
+          
+              <div>
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'class-10-percent'"> {{ Resources.TableHeaders.IdColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'class-10-percent'"> {{row.id}} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'class-60-percent'"> {{ Resources.TableHeaders.NameColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"[ngClass]="'class-60-percent'"> {{row.name}} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="isDeleted">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.DeletedColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <span *ngIf="row.isDeleted">Deleted</span> </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="action">
+                    <mat-header-cell 
+                        [hidden]="!(isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable)"
+                        *matHeaderCellDef 
+                        [ngClass]="'action-class'"> {{ Resources.TableHeaders.ActionColumn }} </mat-header-cell>
+                    <mat-cell 
+                        [hidden]="!(isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable)"
+                        *matCellDef="let row" [ngClass]="'action-class'">
+                        <button *ngIf="isEditable" mat-icon-button class="action-btn" matTooltip="{{Resources.EditCaption}}">
+                            <mat-icon  (click)="editCategory(row.id)">create</mat-icon>
+                        </button>
+                        <button *ngIf="isSoftDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.SoftDeleteCaption}}">
+                            <mat-icon (click)="softDeleteCategory(row.id)">delete</mat-icon>
+                        </button>
+                        <button *ngIf="isUndoSoftDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.UndoSoftDeleteCaption}}">
+                            <mat-icon (click)="undoSoftDeleteCategory(row.id)">delete_sweep</mat-icon>
+                        </button>
+                        <button *ngIf="isDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.DeleteCaption}}">
+                            <mat-icon (click)="deleteCategory(row.id)">delete_forever</mat-icon>
+                        </button>
+        
+                    </mat-cell>
+                  </ng-container>
+              </div>
+        
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row 
+                *matRowDef="let row; columns: displayedColumns;" 
+                (click)="selection.toggle(row)" 
+                [ngClass]="{deleted: row.isDeleted, hovered: row.hovered}"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+              </mat-row>
+            </mat-table>
+          
+            <mat-paginator [pageSize]="10"></mat-paginator>
+          </div>
     </div>
-    <div class="col-sm-6 col-lg-4">
-        <input #search (keyup)="searchCategory(search.value);" type="search" class="form-control" placeholder="{{Resources.SearchPlaceholder}}">
-    </div>
-</div>
-
-<div class="col-sm-12 pt-3">
-    <div class="col-md-12">
-        <table class="table table-bordered table-hover table-striped">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col" class="text-center">{{Resources.TableHeaders.SlColumn}}</th>
-                    <th scope="col">{{Resources.TableHeaders.NameColumn}}</th>
-                    <th scope="col">{{Resources.TableHeaders.DeletedColumn}}</th>
-                    <th *ngIf="isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable"  
-                    class="text-center">{{Resources.TableHeaders.ActionColumn}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let category of categories$ | async; let i = index">
-                    <td width="200" class="text-center">{{ i+1 }}</td>
-                    <td>{{ category.name }}</td>
-                    <td><span *ngIf="category.isDeleted">Deleted</span></td>
-                    <td *ngIf="isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable"  
-                    width="350" class="text-center">
-                        <button *ngIf="isEditable" mat-mini-fab color="accent" matTooltip="{{Resources.EditCaption}}" class="mr-3">
-                            <mat-icon (click)="editCategory(category.id)">create</mat-icon>
-                        </button>
-                        <button *ngIf="isSoftDeletable" mat-mini-fab color="warn" matTooltip="{{Resources.SoftDeleteCaption}}" class="mr-3">
-                            <mat-icon (click)="softDeleteCategory(category.id)">delete</mat-icon>
-                        </button>
-                        <button *ngIf="isUndoSoftDeletable" mat-mini-fab color="accent" matTooltip="{{Resources.UndoSoftDeleteCaption}}" class="mr-3">
-                            <mat-icon (click)="undoSoftDeleteCategory(category.id)">delete_sweep</mat-icon>
-                        </button>
-                        <button *ngIf="isDeletable" mat-mini-fab color="warn"matTooltip="{{Resources.DeleteCaption}}">
-                            <mat-icon (click)="deleteCategory(category.id)">delete_forever</mat-icon>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+</div> 

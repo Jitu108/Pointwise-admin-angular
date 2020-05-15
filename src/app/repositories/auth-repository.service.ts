@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createHttpObservable, httpPost } from '../common/util';
-import { User } from '../models/user';
+import { AuthUser } from '../models/auth-user';
 import { UserLogin } from '../models/user-login';
 import { HttpClient } from '@angular/common/http';
 import { Endpoints } from '../endpoints/endpoints';
@@ -11,15 +11,15 @@ import { Endpoints } from '../endpoints/endpoints';
   })
   export class AuthRepositoryService {
     constructor(private http: HttpClient) {}
-    getById(id: number) : Observable<User> {
+    getById(id: number) : Observable<AuthUser> {
         return createHttpObservable(Endpoints.user.getbyid.endpoint + id);
     }
 
-    login(login: UserLogin) : Observable<User> {
+    login(login: UserLogin) : Observable<AuthUser> {
         const url = Endpoints.auth.authenticate.endpoint;
         const body = login;
         const headers = Endpoints.auth.authenticate.headers;
 
-        return httpPost<User>(this.http, url, body, headers);
+        return httpPost<AuthUser>(this.http, url, body, headers);
     }
   }

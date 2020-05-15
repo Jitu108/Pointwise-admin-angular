@@ -1,8 +1,106 @@
-
-
-<div class="col-sm-12 pt-3">
+<div class="col-sm-12 mt-2">
     <div class="row">
-        <div [ngClass]="{'col-md-12': loadedArticleId === undefined, 'col-md-8': loadedArticleId !== undefined}">
+        <div class="mat-elevation-z0"  [ngClass]="{'col-md-12': loadedArticleId === undefined, 'col-md-8': loadedArticleId !== undefined}">
+            <div class="col-sm-12">
+                <h3 class="header">
+                    {{Resources.Header}}<button
+                        *ngIf="isCreatable"
+                        class="btn-add-item"
+                        mat-icon-button color="warn"
+                        matTooltip="{{ Resources.AddToolTip }}"
+                        (click)="addArticle()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </h3>
+            </div>
+            <mat-form-field>
+                <mat-label class="pl-4">Search</mat-label>
+                <input class="pl-4" matInput (keyup)="applyFilter($event)" placeholder="Ex. Corona">
+              </mat-form-field>
+        
+            <mat-table [dataSource]="dataSource" matSort>
+          
+              <div>
+                <ng-container matColumnDef="articleId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'id-class'"> {{ Resources.TableHeaders.IdColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'id-class'"> {{row.articleId}} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="articleTitle">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'title-class'"> {{ Resources.TableHeaders.TitleColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [ngClass]="'title-class'"> {{row.articleTitle | summary:50}} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="articlePublicationDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.PublicationDateColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.articlePublicationDate.toString() | date :'mediumDate' }} </mat-cell>
+                  </ng-container>
+              </div>
+          
+              <div>
+                <ng-container matColumnDef="articleSource">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.SourceColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.articleSource}} </mat-cell>
+                  </ng-container>
+              </div>
+
+              <div>
+                <ng-container matColumnDef="articleCategory">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.CategoryColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.articleCategory}} </mat-cell>
+                  </ng-container>
+              </div>
+
+              <div>
+                <ng-container matColumnDef="articleTags">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> {{ Resources.TableHeaders.TagColumn }} </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.articleTags.join(', ')}} </mat-cell>
+                  </ng-container>
+              </div>
+        
+              <div>
+                <ng-container matColumnDef="action">
+                    <mat-header-cell 
+                        [hidden]="!(isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable)"
+                        *matHeaderCellDef 
+                        [ngClass]="'action-class'"> {{ Resources.TableHeaders.ActionColumn }} </mat-header-cell>
+                    <mat-cell 
+                        [hidden]="!(isEditable || isSoftDeletable || isUndoSoftDeletable || isDeletable)"
+                        *matCellDef="let row" [ngClass]="'action-class'">
+                        <button *ngIf="isEditable" mat-icon-button class="action-btn" matTooltip="{{Resources.EditCaption}}">
+                            <mat-icon  (click)="editArticle(row.articleId)">create</mat-icon>
+                        </button>
+                        <button *ngIf="isSoftDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.SoftDeleteCaption}}">
+                            <mat-icon (click)="softDeleteArticle(row.articleId)">delete</mat-icon>
+                        </button>
+                        <button *ngIf="isUndoSoftDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.UndoSoftDeleteCaption}}">
+                            <mat-icon (click)="undoSoftDeleteArticle(row.articleId)">delete_sweep</mat-icon>
+                        </button>
+                        <button *ngIf="isDeletable" mat-icon-button class="action-btn" matTooltip="{{Resources.DeleteCaption}}">
+                            <mat-icon (click)="deleteArticle(row.articleId)">delete_forever</mat-icon>
+                        </button>
+        
+                    </mat-cell>
+                  </ng-container>
+              </div>
+        
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row 
+                *matRowDef="let row; columns: displayedColumns;" 
+                (click)="selection.toggle(row); loadArticle(row.articleId);" 
+                [ngClass]="{deleted: row.articleIsDeleted, hovered: row.hovered, highlighted: row.articleId == loadedArticleId}"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+              </mat-row>
+            </mat-table>
+          
+            <mat-paginator [pageSize]="10"></mat-paginator>
+          </div>
+
+        <!-- <div [ngClass]="{'col-md-12': loadedArticleId === undefined, 'col-md-8': loadedArticleId !== undefined}">
             <div class="col-sm-12 row body-header">
                 <div class="col-sm-6 col-lg-6">
                     <div class="col-sm-12">
@@ -64,8 +162,8 @@
                 </tbody>
             </table>
             </div>
-        </div>
-        <div class="col-md-4 row body-header" [hidden]="loadedArticleId === undefined">
+        </div> -->
+        <div class="col-md-4 row" [hidden]="loadedArticleId === undefined">
             <article class="col-md-12 article">
                 <article-card
                 [article-data]="articleDetail$"></article-card>

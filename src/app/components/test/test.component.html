@@ -1,0 +1,73 @@
+  <div class="mat-elevation-z0 mt-3">
+    <mat-form-field>
+        <mat-label class="pl-4">Search</mat-label>
+        <input class="pl-4" matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+      </mat-form-field>
+
+    <mat-table [dataSource]="dataSource" matSort>
+  
+      <!-- ID Column -->
+      <div>
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'id-class'"> ID </mat-header-cell>
+            <mat-cell *matCellDef="let row" [ngClass]="'id-class'"> {{row.id}} </mat-cell>
+          </ng-container>
+      </div>
+  
+      <!-- Progress Column -->
+      <div>
+        <ng-container matColumnDef="progress">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.progress}} </mat-cell>
+          </ng-container>
+      </div>
+  
+      <!-- Name Column -->
+      <div>
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+          </ng-container>
+      </div>
+  
+      <!-- Color Column -->
+      <div>
+        <ng-container matColumnDef="color">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Color </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.color}} </mat-cell>
+          </ng-container>
+      </div>
+
+      <!-- Action Column -->
+      <div>
+        <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef [ngClass]="'action-class'">Actions</mat-header-cell>
+            <mat-cell *matCellDef="let row" [ngClass]="'action-class'">
+                <button mat-icon-button class="action-btn" matTooltip="Edit">
+                    <mat-icon>create</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn" matTooltip="Soft Delete">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn" matTooltip="Undo Soft Delete">
+                    <mat-icon>delete_sweep</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn" matTooltip="Delete">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+
+            </mat-cell>
+          </ng-container>
+      </div>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row 
+            *matRowDef="let row; columns: displayedColumns;" 
+            (click)="selection.toggle(row)" 
+            [ngClass]="{deleted: row.isdeleted, hovered: row.hovered, highlighted: selection.isSelected(row)}"
+            (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+        </mat-row>
+    </mat-table>
+  
+    <mat-paginator [pageSize]="10"></mat-paginator>
+  </div>

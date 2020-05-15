@@ -1,3 +1,4 @@
+import { UserListComponent } from './components/users/user-list/user-list.component';
 import { AuthInterceptorService } from './services/auth.interceptor.service';
 import { MatComponentsModule } from './modules/mat-components.module';
 import { PipeModule } from './pipes/pipe.module';
@@ -29,6 +30,8 @@ import { UserRegistrationComponent } from './components/users/user-registration/
 import { UserManagementComponent } from './components/users/user-management/user-management.component';
 import { DropdownDirective } from './components/shared/dropdown-directive/dropdown.directive';
 import { LoadingSpinnerComponent } from './components/shared/loading-spinner/loading-spinner.component';
+import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,10 @@ import { LoadingSpinnerComponent } from './components/shared/loading-spinner/loa
     UserRegistrationComponent,
     UserManagementComponent,
     DropdownDirective,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    UserListComponent,
+    UserProfileComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,

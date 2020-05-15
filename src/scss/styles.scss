@@ -1,6 +1,6 @@
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import '../../node_modules/bootstrap/dist/css/bootstrap';
+@import "~bootstrap/dist/css/bootstrap.css";
 
 $ionicons-font-path: "~ionicons/dist/fonts";
 @import "~ionicons/dist/scss/ionicons.scss";
@@ -13,6 +13,22 @@ $ionicons-font-path: "~ionicons/dist/fonts";
     background-color: $c31;;
     &:hover {
         background-color: $c30;
+    }
+}
+
+button {
+    outline: none;
+    &:hover {
+        outline: none;
+    }
+    &:active {
+        outline: none;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:visited {
+        outline: none;
     }
 }
 
@@ -37,6 +53,27 @@ $ionicons-font-path: "~ionicons/dist/fonts";
     }
 }
 
+.btn-basic {
+    background-color: $c00;
+    border-color: $c00;
+    &:hover {
+        background-color: $c01;
+        border-color: $c01;
+    }
+    &:active {
+        background-color: $c01 !important;
+        border-color: $c01 !important;
+    }
+    &:focus {
+        background-color: $c01;
+        border-color: $c01;
+    }
+    &:visited {
+        background-color: $c00;
+        border-color: $c00;
+    }
+}
+
 .btn-info {
     background-color: $c70;
     border-color: $c70;
@@ -55,6 +92,10 @@ $ionicons-font-path: "~ionicons/dist/fonts";
     }
 }
 
+h3.header {
+    height: 40px;
+}
+
 h2.header {
     color: $header-background;
     text-transform:capitalize;
@@ -71,3 +112,112 @@ h2.header {
 .pointer {
     cursor: pointer;
 }
+
+
+
+// Mat-table related styles - Start
+$odd-row-color: #eee;
+$even-row-color: #F2F8F8;
+$hover-color: #C5EAEC;
+$header-color: #C5EAEC;
+$paginator-color: #e2edee;
+$row-selection-color: #3fbac2;
+
+.mat-header-row {
+    //min-height: 50px;
+    background-color: $header-color;
+}
+.mat-paginator {
+    min-height: 50px;
+    background-color: transparent;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-bottom-color: rgba(0,0,0,.12);
+}
+
+.mat-row:nth-child(even){
+    background-color:$odd-row-color;
+}
+
+.mat-row:nth-child(odd){
+    background-color:$even-row-color;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-row.hovered {
+    background: $hover-color;
+}
+
+.mat-row.highlighted {
+    background: $row-selection-color;
+}
+
+.mat-header-cell {
+    color: rgba(0,0,0,.54);
+    font-weight: bolder;
+    font-size: .85rem;
+}
+.mat-row.deleted {
+    background-color: #fbdcdc !important;
+}
+
+.title-class {
+    flex: 0 0 30%;
+}
+
+.action-btn {
+    color:#1a3c40;
+}
+
+
+.id-class {
+    flex: 0 0 75px;
+}
+
+.action-class {
+    flex: 0 0 250px;
+    justify-content: center;
+}
+
+.class-5-percent {
+    flex: 0 0 5%;
+}
+
+.class-10-percent {
+    flex: 0 0 10%;
+}
+
+.class-20-percent {
+    flex: 0 0 20%;
+}
+
+.class-30-percent {
+    flex: 0 0 30%;
+}
+
+.class-40-percent {
+    flex: 0 0 40%;
+}
+
+.class-50-percent {
+    flex: 0 0 50%;
+}
+
+.class-60-percent {
+    flex: 0 0 60%;
+}
+
+.class-70-percent {
+    flex: 0 0 70%;
+}
+
+.class-80-percent {
+    flex: 0 0 80%;
+}
+
+// Mat-table related styles - End

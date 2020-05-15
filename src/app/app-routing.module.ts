@@ -1,5 +1,9 @@
-import { NgModule, Component } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { TestComponent } from './components/test/test.component';
+import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
+import { UserManagementComponent } from './components/users/user-management/user-management.component';
+import { UserListComponent } from './components/users/user-list/user-list.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule, CanActivate } from '@angular/router';
 import { UserRegistrationComponent } from './components/users/user-registration/user-registration.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { CategoryListComponent } from './components/categories/category-list/category-list.component';
@@ -12,7 +16,6 @@ import { TagListComponent } from './components/tags/tag-list/tag-list.component'
 import { TagFormComponent } from './components/tags/tag-form/tag-form.component';
 import { UserLoginComponent } from './components/users/user-login/user-login.component';
 import { AuthGuard } from './services/auth.guard';
-
 
 const routes: Routes = [
 //   {
@@ -28,9 +31,13 @@ const routes: Routes = [
   { path: 'sources/detail', component: SourceFormComponent, canActivate:[AuthGuard] },
   { path: 'tags', component: TagListComponent, canActivate:[AuthGuard] },
   { path: 'tags/detail', component: TagFormComponent, canActivate:[AuthGuard] },
+  { path: 'users', component: UserListComponent, canActivate:[AuthGuard] },
+  { path: 'users/manage', component: UserManagementComponent, canActivate:[AuthGuard] },
+  { path: 'profile', component: UserProfileComponent, canActivate:[AuthGuard] },
   { path: 'login', component: UserLoginComponent },
   { path: 'register', component: UserRegistrationComponent },
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  //{ path: '', redirectTo: 'articles', pathMatch: 'full', canActivate:[AuthGuard]  },
+  { path: '', component: TestComponent  },
   { path: 'not-found', component: PageNotFoundComponent },
   { path: '**', redirectTo: 'not-found' }
 ];

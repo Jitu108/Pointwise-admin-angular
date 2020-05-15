@@ -2,7 +2,8 @@ export enum EntityType {
     Category = 'Category',
     Source = 'Source',
     Tag = 'Tag',
-    Article = 'Article'
+    Article = 'Article',
+    User = 'User'
   }
 
 export enum AccessType {

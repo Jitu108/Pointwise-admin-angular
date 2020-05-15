@@ -1,5 +1,6 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/category.service';
@@ -7,6 +8,9 @@ import { EntityType, AccessType } from 'src/app/common/enum';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OpenMatSnackBar } from 'src/app/common/mat-items';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-category-list',
@@ -28,6 +32,7 @@ export class CategoryListComponent implements OnInit {
     DeleteMessage: "Category deleted permanently.",
     TableHeaders: {
       SlColumn: "#",
+      IdColumn: "Id",
       NameColumn: "Name",
       DeletedColumn: "IsDeleted?",
       ActionColumn: "Action"
@@ -35,10 +40,18 @@ export class CategoryListComponent implements OnInit {
   }
 
   public categories$: Observable<Category[]>;
+  public isCreatable: boolean = false;
   public isEditable: boolean = false;
   public isSoftDeletable: boolean = false;
   public isUndoSoftDeletable: boolean = false;
   public isDeletable: boolean = false;
+
+  displayedColumns: string[] = ['id', 'name', 'isDeleted', 'action'];
+  dataSource = new MatTableDataSource<Category>();
+  selection = new SelectionModel<Category>(false);
+
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
     private router: Router, 
@@ -47,6 +60,7 @@ export class CategoryListComponent implements OnInit {
     public authService: AuthService) { }
 
   ngOnInit() {
+    this.isCreatable = this.authService.hasRight(EntityType.Category, AccessType.Add);
     this.isEditable = this.authService.hasRight(EntityType.Category, AccessType.Update);
     this.isSoftDeletable = this.authService.hasRight(EntityType.Category, AccessType.SoftDelete);
     this.isUndoSoftDeletable = this.authService.hasRight(EntityType.Category, AccessType.UndoSoftDelete);
@@ -57,6 +71,11 @@ export class CategoryListComponent implements OnInit {
   // Load all Categories
   getCategories() {
     this.categories$ = this.categoryService.getCategories();
+    this.categories$.subscribe(x => {
+        this.dataSource.data = x;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    });
   }
 
   // Add Category
@@ -98,5 +117,14 @@ export class CategoryListComponent implements OnInit {
 
   searchCategory(searchString: string) {
     this.categories$ = this.categoryService.getAllBySearchString(searchString);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

@@ -27,9 +27,6 @@ export class Endpoints {
         create: {
             endpoint: `api/categories`,
             method: RESTMethod.Post,
-            headers: {
-                'content-type': 'application/json'
-            }
         },
         //#endregion
     
@@ -38,9 +35,6 @@ export class Endpoints {
             //  `/api/categories/${id}`
             endpoint: `/api/categories/`,
             method: RESTMethod.Put,
-            headers: {
-                'content-type': 'application/json'
-            }
         },
         //#endregion
     
@@ -159,10 +153,7 @@ export class Endpoints {
         //#region update
         update: {
             endpoint: `/api/tags/`,
-            method: RESTMethod.Put,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Put
         },
         //#endregion
 
@@ -193,38 +184,79 @@ export class Endpoints {
     static auth: any = {
         authenticate: {
             endpoint: `/api/auth/authenticate`,
-            method: RESTMethod.Post,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Post
         }
+    };
+    //#endregion
+
+    //#region auth
+    static staticdata: any = {
+        entities: {
+            endpoint: `/api/staticdata/entities`,
+            method: RESTMethod.Get
+        },
+        accesstypes: {
+            endpoint: `/api/staticdata/accesstypes`,
+            method: RESTMethod.Get
+        },
     };
     //#endregion
 
     //#region user
     static user: any = {
+        //#region get
+        get: {
+            endpoint: '/api/users',
+            method: RESTMethod.Get
+        },
+        //#endregion
+
+        //#region getbyid
         getbyid: {
             endpoint: `api/users/`,
-            method: RESTMethod.Get,
+            method: RESTMethod.Get
         },
+        //#endregion
 
         //#region create
         create: {
             endpoint: `api/users`,
-            method: RESTMethod.Post,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Post
         },
         //#endregion
 
         //#region update
         update: {
             endpoint: `/api/users/`,
-            method: RESTMethod.Put,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Put
+        },
+        //#endregion
+
+        //#region softdelete
+        softdelete: {
+            endpoint: `/api/users/softdelete/`,
+            method: RESTMethod.Delete
+        },
+        //#endregion
+
+        //#region undosoftdelete
+        undosoftdelete: {
+            endpoint: `/api/users/undosoftdelete/`,
+            method: RESTMethod.Patch
+        },
+        //#endregion
+
+        //#region softdelete
+        block: {
+            endpoint: `/api/users/block/`,
+            method: RESTMethod.Patch
+        },
+        //#endregion
+
+        //#region undosoftdelete
+        unblock: {
+            endpoint: `/api/users/unblock/`,
+            method: RESTMethod.Patch
         },
         //#endregion
     }
@@ -241,27 +273,21 @@ export class Endpoints {
         //#region getbyid
         getbyid: {
             endpoint: `api/articles/`,
-            method: RESTMethod.Get,
+            method: RESTMethod.Get
         },
         //#endregion
 
         //#region create
         create: {
             endpoint: `api/articles`,
-            method: RESTMethod.Post,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Post
         },
         //#endregion
 
         //#region update
         update: {
             endpoint: `/api/articles/`,
-            method: RESTMethod.Put,
-            headers: {
-                'content-type': 'application/json'
-            }
+            method: RESTMethod.Put
         },
         //#endregion
 
@@ -288,9 +314,3 @@ export class Endpoints {
     };
     //#endregion
 }
-
-// class endpointmethod {
-//     endpoint: string;
-//     method: RESTMethod;
-//     headers?: any;
-// }

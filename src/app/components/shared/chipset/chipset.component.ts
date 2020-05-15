@@ -4,7 +4,7 @@ import { FormControl } from "@angular/forms";
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from "@angular/material/autocomplete";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { Observable, of } from "rxjs";
-import { map, startWith, mergeMap, debounceTime } from "rxjs/operators";
+import { map, startWith, mergeMap } from "rxjs/operators";
 
 @Component({
   selector: "chipset",
@@ -65,19 +65,22 @@ export class ChipsetComponent implements OnInit, OnChanges {
        this.selectedItems$.subscribe
        (items => {
                // Remove item from filteredItems$
-                this.filteredItems$ = this.filteredItems$.pipe(
-                    map(arrItems => {
-                    for(var item of items) {
-                        var index = arrItems.indexOf(item);
-                
-                        if (index >= 0) {
-                            arrItems.splice(index, 1);
+               if(this.filteredItems$ !== undefined)
+                {
+                    this.filteredItems$ = this.filteredItems$.pipe(
+                        map(arrItems => {
+                        for(var item of items) {
+                            var index = arrItems.indexOf(item);
+                    
+                            if (index >= 0) {
+                                arrItems.splice(index, 1);
+                            }
                         }
-                    }
-                    arrItems.sort();
-                    return arrItems;
-                    })
-                );
+                        arrItems.sort();
+                        return arrItems;
+                        })
+                    );
+                }
        });
     }
    }
@@ -176,13 +179,13 @@ export class ChipsetComponent implements OnInit, OnChanges {
 
     // Add item to selectedItems$
     this.selectedItems$ = this.selectedItems$.pipe(
-      map(arrItems => {
-        if(arrItems.indexOf(item) == -1){
-          arrItems.push(item);
-        }
-        return arrItems;
-      })
-    );
+        map(arrItems => {
+          if(arrItems.indexOf(item) == -1){
+            arrItems.push(item);
+          }
+          return arrItems;
+        })
+      );
 
     if (this.chipInput !== undefined) this.chipInput.nativeElement.value = "";
     this.chipCtrl.setValue(null);

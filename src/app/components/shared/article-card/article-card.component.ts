@@ -12,7 +12,6 @@ export class ArticleCardComponent implements OnInit {
     @Input("article-data") articleDetail$: Observable<Article>;
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }

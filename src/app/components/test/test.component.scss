@@ -1,0 +1,51 @@
+
+// Mat-table related styles - Start
+$odd-row-color: #eee;
+$even-row-color: #F2F8F8;
+$hover-color: #C5EAEC;
+$row-selection-color: #3fbac2;
+
+.mat-row:nth-child(even){
+    background-color:$odd-row-color;
+}
+
+.mat-row:nth-child(odd){
+    background-color:$even-row-color;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-row.hovered {
+    background: $hover-color;
+}
+
+.mat-row.highlighted {
+    background: $row-selection-color;
+}
+
+.mat-header-cell {
+    color: rgba(0,0,0,.54);
+    font-weight: bolder;
+    font-size: .85rem;
+}
+.mat-row.deleted {
+    background-color: #fbdcdc !important;
+}
+
+.id-class {
+    flex: 0 0 75px;
+}
+
+.action-class {
+    flex: 0 0 250px;
+    justify-content: center;
+}
+
+.action-btn {
+    color:#1a3c40;
+}
+
+// Mat-table related styles - End

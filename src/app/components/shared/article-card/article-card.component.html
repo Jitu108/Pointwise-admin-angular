@@ -1,5 +1,16 @@
-<mat-card class="mat-card-custom disable-text-selection" [ngClass]="{deleted: (articleDetail$ | async)?.articleIsDeleted === true}">
-    <figure *ngIf="(articleDetail$ | async)?.imageData !== null">
+<mat-card 
+    *ngIf="(articleDetail$ | async)?.imageData !== undefined
+    || (articleDetail$ | async)?.imageCaption !== undefined
+    || (articleDetail$ | async)?.articleTitle !== undefined
+    || (articleDetail$ | async)?.articleSubTitle !== undefined
+    || (articleDetail$ | async)?.articleSummary !== undefined
+    || (articleDetail$ | async)?.articleSource !== undefined
+    || (articleDetail$ | async)?.articleCategory !== undefined
+    || (articleDetail$ | async)?.articlePublicationDate !== undefined
+    || (articleDetail$ | async)?.articleTags !== undefined"
+    class="mat-card-custom disable-text-selection" 
+    [ngClass]="{deleted: (articleDetail$ | async)?.articleIsDeleted === true}">
+    <figure *ngIf="(articleDetail$ | async)?.imageData !== null && (articleDetail$ | async)?.imageData !== undefined">
         <div class="image-container">
             <img alt="Article Image" [src]="(articleDetail$ | async)?.imageData" class="image">
         </div>
@@ -12,14 +23,16 @@
                     {{ (articleDetail$ | async)?.articleTitle }}
                 </a>
             </h2>
-            <h6>{{ (articleDetail$ | async)?.articleSubTitle | summary:100 }}</h6>
+            <h6>
+                {{ (articleDetail$ | async)?.articleSubTitle | summary:160 }}
+            </h6>
         </header>
-        <div class="articlebody">                    
+        <div class="articlebody mat-card-content-height">                    
             <synopsis [synopsis-text]="(articleDetail$ | async)?.articleSummary"></synopsis>
         </div>   
     </section>             
     <section class="footer clearfix">
-        <div class="author">{{ (articleDetail$ | async)?.articleSource }} | <code>{{ (articleDetail$ | async)?.articleCategory }}</code></div>
+        <div class="author">{{ (articleDetail$ | async)?.articleSource }} | {{ (articleDetail$ | async)?.articleCategory }}</div>
         <div class="publish-at">
         <span>Published At: </span>
         <span>{{ (articleDetail$ | async)?.articlePublicationDate | date }}</span></div>
