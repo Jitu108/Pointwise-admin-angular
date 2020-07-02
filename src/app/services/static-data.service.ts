@@ -4,15 +4,17 @@ import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
-  })
-  export class StaticDataService {
+})
+export class StaticDataService {
     constructor(private repository: StaticDataRepository) { }
 
-    entities() : Observable<string[]> {
-        return this.repository.entities();
-    }
+    entities =
+        (): Observable<string[]> => {
+            return this.repository.entities();
+        }
 
-    accesstypes() : Observable<string[]> {
-        return this.repository.accesstypes();
-    }
-  }
+    accesstypes =
+        (): Observable<string[]> => {
+            return this.repository.accesstypes();
+        }
+}

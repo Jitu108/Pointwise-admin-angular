@@ -34,8 +34,7 @@ export class ArticleFormComponent implements OnInit {
 
   public tagList$: Observable<Tag[]>;
   public tags$: Observable<string[]>;
-  //private selectedTagsSubject = new Subject<string[]>();
-  public selectedTags$: Observable<string[]> ;//= this.selectedTagsSubject.asObservable();
+  public selectedTags$: Observable<string[]>;
   base64Image;
     
   public Resources = {
@@ -178,7 +177,7 @@ export class ArticleFormComponent implements OnInit {
         this.selectedTags$ = this.articleDetail$.pipe(take(1),
             map(x => {
                 debugger;
-                if(x.articleTags !== undefined) {
+                if(x.articleTags) {
                     return x.articleTags;
                 }
                 else {

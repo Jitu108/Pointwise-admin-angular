@@ -5,75 +5,70 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 
 @Component({
-  selector: 'user-registration',
-  templateUrl: './user-registration.component.html',
-  styleUrls: ['./user-registration.component.scss']
+    selector: 'user-registration',
+    templateUrl: './user-registration.component.html',
+    styleUrls: ['./user-registration.component.scss']
 })
 export class UserRegistrationComponent implements OnInit {
     public user$: Observable<User>;
 
-    @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
+    @ViewChild('nameInput', { read: ElementRef }) private nameInput: ElementRef;
 
-  public Resources = {
-    Header: "Register",
-    FirstNameCaption: "First Name",
-    FirstNamePlaceholder: "First Name",
-    MiddleNameCaption: "Middle Name",
-    MiddleNamePlaceholder: "Middle Name",
-    LastNameCaption: "Last Name",
-    LastNamePlaceholder: "Last Name",
-    EmailAddressCaption: "Email Address",
-    EmailAddressPlaceholder: "Email Address",
+    public Resources = {
+        Header: "Register",
+        FirstNameCaption: "First Name",
+        FirstNamePlaceholder: "First Name",
+        MiddleNameCaption: "Middle Name",
+        MiddleNamePlaceholder: "Middle Name",
+        LastNameCaption: "Last Name",
+        LastNamePlaceholder: "Last Name",
+        EmailAddressCaption: "Email Address",
+        EmailAddressPlaceholder: "Email Address",
 
-    UserNameCaption: "Username",
-    UserNamePlaceholder: "Username",
-    PasswordCaption: "Password",
-    PasswordPlaceholder: "Password",
-    RegisterCaption: "Register",
-    CancelCaption: "Cancel",
-    Validation: {
-        FirstNameRequiredMessage: "First name is required.",
-        EmailAddressRequiredMessage: "Email is required.",
-        UsernameRequiredMessage: "Username is required.",
-        PasswordRequiredMessage: "Password is required."
+        UserNameCaption: "Username",
+        UserNamePlaceholder: "Username",
+        PasswordCaption: "Password",
+        PasswordPlaceholder: "Password",
+        RegisterCaption: "Register",
+        CancelCaption: "Cancel",
+        Validation: {
+            FirstNameRequiredMessage: "First name is required.",
+            EmailAddressRequiredMessage: "Email is required.",
+            UsernameRequiredMessage: "Username is required.",
+            PasswordRequiredMessage: "Password is required."
+        }
     }
-  }
 
-  constructor(private userService: UserService, private router: Router) { }
+    constructor(private userService: UserService, private router: Router) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
-  // Submit
-  onRegisterClick(form) {
-    if(form.valid) {
-        debugger;
-        console.log(form);
-        this.userService.save(0, 
-            new User(
-                0, 
-                form.value.userName, 
-                form.value.password,
+    // Submit
+    onRegisterClick(form) {
+        if (form.valid) {
+            console.log(form);
+            const newUser = new User();
+
+            newUser.setRegistrationData(
                 form.value.firstName,
                 form.value.middleName,
                 form.value.lastName,
                 form.value.emailAddress,
                 form.value.phoneNumber,
-                //0,
-                null,
-                null,
-                false
-                ))
+                form.value.userName,
+                form.value.password);
+
+            this.userService.save(0, newUser)
                 .subscribe(res => {
-                    debugger;
                     console.log(res);
                     this.router.navigate(['/login']);
                 });
+        }
     }
-  }
-  
-  // Cancel
-  onCancelClick() {
-  }
+
+    // Cancel
+    onCancelClick() {
+    }
 
 }

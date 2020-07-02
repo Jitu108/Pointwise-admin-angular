@@ -6,71 +6,76 @@ import { isNumeric } from 'src/app/common/util';
 import { SourceService } from 'src/app/services/source.service';
 
 @Component({
-  selector: 'app-source-form',
-  templateUrl: './source-form.component.html',
-  styleUrls: ['./source-form.component.scss']
+    selector: 'app-source-form',
+    templateUrl: './source-form.component.html',
+    styleUrls: ['./source-form.component.scss']
 })
 export class SourceFormComponent implements OnInit {
 
-  public sourceId: number;
-  public sourceDetail$: Observable<Source>
-  public mode: string;
+    public sourceId: number;
+    public sourceDetail$: Observable<Source>
+    public mode: string;
 
-  @ViewChild('nameInput', {read: ElementRef}) private nameInput: ElementRef;
+    @ViewChild('nameInput', { read: ElementRef }) private nameInput: ElementRef;
 
-  public Resources = {
-    Header: "Source",
-    NameCaption: "Name",
-    NamePlaceholder: "Name",
-    SaveCaption: "Save",
-    CancelCaption: "Cancel",
-    Validation: {
-      RequiredMessage: "Source name is required."
-    }
-  }
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private sourceService: SourceService
-  ) { }
-
-  ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(
-      (params: Params) => {
-        if(isNumeric(params['id']))
-        {
-          this.sourceId = parseInt(params['id']);
+    public Resources = {
+        Header: "Source",
+        NameCaption: "Name",
+        NamePlaceholder: "Name",
+        SaveCaption: "Save",
+        CancelCaption: "Cancel",
+        Validation: {
+            RequiredMessage: "Source name is required."
         }
-
-        //Edit
-        if(this.sourceId !== undefined){
-          this.getSourceDetailById(this.sourceId);
-
-          this.mode = "Edit";
-        } else { // Add
-          this.mode = "Add";
-        }
-      });
-  }
-
-  getSourceDetailById(id: number) {
-    this.sourceDetail$ = this.sourceService.getById(id);
-  }
-
-  // Submit
-  onSourceSubmit(form) {
-    if(form.valid) {
-      this.sourceId = this.sourceId === undefined? 0: this.sourceId;
-      this.sourceService.save(this.sourceId,  new Source(this.sourceId, this.nameInput.nativeElement.value, false))
-        .subscribe(x=> {
-            this.router.navigate(['/sources']);
-        }); 
     }
-  }
-  
-  // Cancel
-  onCancelClick() {
-    this.router.navigate(['/sources']);
-  }
+
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private router: Router,
+        private sourceService: SourceService
+    ) { }
+
+    ngOnInit() {
+        this.activatedRoute.queryParams.subscribe(
+            (params: Params) => {
+                if (isNumeric(params['id'])) {
+                    this.sourceId = parseInt(params['id']);
+                }
+
+                //Edit
+                if (this.sourceId !== undefined) {
+                    this.getSourceDetailById(this.sourceId);
+
+                    this.mode = "Edit";
+                } else { // Add
+                    this.mode = "Add";
+                }
+            });
+    }
+
+    getSourceDetailById(id: number) {
+        this.sourceDetail$ = this.sourceService.getById(id);
+    }
+
+    // Submit
+    onSourceSubmit(form) {
+        if (form.valid) {
+            this.sourceId = this.sourceId === undefined ? 0 : this.sourceId;
+
+            var source = {
+                id: this.sourceId,
+                name: this.nameInput.nativeElement.value,
+            } as Source;
+
+            this.sourceService.save(this.sourceId, source)
+                .subscribe(x => {
+                    this.router.navigate(['/sources']);
+                });
+        }
+    }
+
+    // Cancel
+    onCancelClick() {
+        this.router.navigate(['/sources']);
+    }
 }

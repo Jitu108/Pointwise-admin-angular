@@ -1,13 +1,9 @@
 import { RESTMethod } from './../common/util';
-import { Injectable } from '@angular/core';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class Endpoints {
+export const Endpoints = {
 
     //#region category
-    static category: any = {
+    category: {
 
         //#region getall
         get: {
@@ -61,12 +57,11 @@ export class Endpoints {
             method: RESTMethod.Delete
         }
         //#endregion
-    };
-
+    },
     //#endregion
 
     //#region source
-    static source: any = {
+    source: {
         //#region getall
         get: {
             endpoint: '/api/sources/all',
@@ -121,11 +116,11 @@ export class Endpoints {
             method: RESTMethod.Delete
         }
         //#endregion
-    };
+    },
     //#endregion
 
     //#region tag
-    static tag: any = {
+    tag: {
         //#region getall
         get: {
             endpoint: '/api/tags/all',
@@ -177,20 +172,23 @@ export class Endpoints {
             method: RESTMethod.Delete
         }
         //#endregion
-    };
+    },
     //#endregion
 
     //#region auth
-    static auth: any = {
+    auth: {
         authenticate: {
             endpoint: `/api/auth/authenticate`,
-            method: RESTMethod.Post
+            method: RESTMethod.Post,
+            headers: {
+                'content-type': 'application/json'
+            }
         }
-    };
+    },
     //#endregion
 
     //#region auth
-    static staticdata: any = {
+    staticdata: {
         entities: {
             endpoint: `/api/staticdata/entities`,
             method: RESTMethod.Get
@@ -199,11 +197,11 @@ export class Endpoints {
             endpoint: `/api/staticdata/accesstypes`,
             method: RESTMethod.Get
         },
-    };
+    },
     //#endregion
 
     //#region user
-    static user: any = {
+    user: {
         //#region get
         get: {
             endpoint: '/api/users',
@@ -259,10 +257,11 @@ export class Endpoints {
             method: RESTMethod.Patch
         },
         //#endregion
-    }
+    },
     //#endregion
+
     //#region article
-    static article: any = {
+    article: {
         //#region get
         get: {
             endpoint: '/api/articles',
@@ -311,6 +310,6 @@ export class Endpoints {
             method: RESTMethod.Delete
         }
         //#endregion
-    };
+    }
     //#endregion
 }
